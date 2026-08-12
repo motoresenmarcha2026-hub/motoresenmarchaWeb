@@ -1,26 +1,74 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+  Motores en Marcha — Design tokens
+  Fuente de verdad: diseño Pencil (meca2.pen). Tailwind v4 config CSS-first.
+  Cada --color-* genera utilidades bg-*, text-*, border-*, etc.
+*/
+@theme {
+  /* Marca / acentos */
+  --color-accent-primary: #8f5a3c;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* Acción principal */
+  --color-action-primary: #1e56a8;
+  --color-action-primary-dark: #163f80;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Urgente */
+  --color-action-urgent: #dd7a1f;
+  --color-action-urgent-dark: #b4620f;
+
+  /* Emergencia / SOS */
+  --color-emergency: #cc2e27;
+  --color-emergency-dark: #a11f19;
+
+  /* WhatsApp */
+  --color-whatsapp: #25d366;
+  --color-whatsapp-dark: #128c7e;
+
+  /* Estatus */
+  --color-status-available: #2f9e58;
+  --color-status-busy: #8c8880;
+
+  /* Texto */
+  --color-foreground-primary: #1a1a1a;
+  --color-foreground-secondary: #666666;
+  --color-foreground-inverse: #ffffff;
+  --color-foreground-inverse-secondary: #b8b5b0;
+
+  /* Superficies */
+  --color-surface-page: #e8e9eb;
+  --color-surface-card: #ffffff;
+  --color-surface-inverse: #1a1a1a;
+
+  /* Bordes */
+  --color-border-primary: #1a1a1a;
+  --color-border-subtle: #d6d3ce;
+
+  /* Tipografías (las var --font-* provienen de next/font en layout.tsx) */
+  --font-heading: var(--font-funnel), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-caption: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-data: var(--font-geist-mono), ui-monospace, monospace;
+
+  /* Espaciado (escala del diseño) */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
+}
+
+/* Headings usan Funnel Sans por defecto */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
 }

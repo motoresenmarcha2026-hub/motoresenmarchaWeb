@@ -1,69 +1,223 @@
 import Image from "next/image";
+import Link from "next/link";
+import { Search, MapPin, MessageCircle, Siren, ArrowRight } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
+import { SOSFloatingButton } from "@/components/layout/SOSFloatingButton";
+import { buttonVariants } from "@/components/ui/Button";
+import { CategoryCard } from "@/components/ui/CategoryCard";
+import { TarjetaTaller } from "@/features/talleres/components/TarjetaTaller";
+import { TALLERES_DESTACADOS } from "@/features/talleres/mock";
+import { TIPOS_PROBLEMA } from "@/features/solicitudes/mock";
 
-export default function Home() {
+const COMO_FUNCIONA = [
+  {
+    n: "1",
+    titulo: "Describe tu problema",
+    texto: "Cuéntanos qué le pasa a tu auto y marca tu ubicación.",
+  },
+  {
+    n: "2",
+    titulo: "Conecta por WhatsApp",
+    texto: "Contacta al instante al mecánico o taller más cercano.",
+  },
+  {
+    n: "3",
+    titulo: "Recibe ayuda rápida",
+    texto: "El mecánico llega a ti o te agenda una cita. Sin complicaciones.",
+  },
+];
+
+export default function HomePage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <>
+      <Header />
+
+      <main className="flex-1">
+        {/* HERO */}
+        <section className="bg-surface-inverse">
+          <div className="mx-auto grid max-w-7xl items-center gap-xl px-md py-2xl md:grid-cols-2 md:px-lg">
+            <div className="flex flex-col gap-lg">
+              <span className="inline-flex w-fit items-center gap-xs rounded-full bg-emergency/15 px-md py-xs font-caption text-sm font-semibold text-emergency">
+                <Siren size={14} /> Ayuda de emergencia 24/7
+              </span>
+              <h1 className="font-heading text-4xl font-extrabold leading-tight text-foreground-inverse md:text-5xl">
+                Ayuda mecánica confiable, a un mensaje de{" "}
+                <span className="text-whatsapp">WhatsApp</span> de distancia
+              </h1>
+              <p className="max-w-[28rem] font-body text-lg text-foreground-inverse-secondary">
+                Conecta con mecánicos y talleres cercanos en segundos. Ya sea una
+                revisión o una emergencia en la carretera, la ayuda está a un
+                mensaje de distancia.
+              </p>
+
+              {/* Buscador */}
+              <form
+                action="/talleres"
+                className="flex flex-col gap-sm rounded-2xl bg-surface-card p-sm shadow-lg sm:flex-row"
+              >
+                <div className="relative flex-1">
+                  <Search
+                    size={18}
+                    className="absolute left-md top-1/2 -translate-y-1/2 text-foreground-secondary"
+                  />
+                  <input
+                    name="q"
+                    placeholder="¿Qué servicio necesitas?"
+                    className="w-full rounded-lg bg-surface-page py-2.5 pl-10 pr-md font-body text-sm text-foreground-primary placeholder:text-foreground-secondary focus:outline-none"
+                  />
+                </div>
+                <div className="relative flex-1">
+                  <MapPin
+                    size={18}
+                    className="absolute left-md top-1/2 -translate-y-1/2 text-foreground-secondary"
+                  />
+                  <input
+                    name="ubicacion"
+                    placeholder="Ubicación"
+                    className="w-full rounded-lg bg-surface-page py-2.5 pl-10 pr-md font-body text-sm text-foreground-primary placeholder:text-foreground-secondary focus:outline-none"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className={cn(buttonVariants({ variant: "primary" }))}
+                >
+                  Buscar
+                </button>
+              </form>
+
+              <div className="flex flex-wrap items-center gap-md text-sm text-foreground-inverse-secondary">
+                <span>+500 mecánicos verificados</span>
+                <span className="h-1 w-1 rounded-full bg-foreground-inverse-secondary" />
+                <span>Respuesta en minutos</span>
+              </div>
+            </div>
+
+            {/* Imagen */}
+            <div className="relative hidden h-96 overflow-hidden rounded-3xl md:block">
+              <Image
+                src="https://images.unsplash.com/photo-1487754180451-c456f719a1fc?auto=format&fit=crop&w=1000&q=70"
+                alt="Mecánico trabajando en un motor"
+                fill
+                sizes="50vw"
+                className="object-cover"
+                priority
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* SERVICIOS */}
+        <section className="mx-auto max-w-7xl px-md py-2xl md:px-lg">
+          <div className="mb-lg flex flex-col gap-xs">
+            <h2 className="font-heading text-3xl font-bold text-foreground-primary">
+              Elige el servicio que necesitas
+            </h2>
+            <p className="font-body text-foreground-secondary">
+              Selecciona el tipo de problema y te conectamos con el especialista
+              indicado.
+            </p>
+          </div>
+          <div className="grid grid-cols-2 gap-md sm:grid-cols-3 lg:grid-cols-5">
+            {TIPOS_PROBLEMA.slice(0, 10).map((t) => (
+              <Link key={t.key} href={`/solicitar?tipo=${t.key}`}>
+                <CategoryCard icono={t.icono} label={t.label} className="w-full" />
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* BANDA DE EMERGENCIA */}
+        <section className="bg-emergency">
+          <div className="mx-auto flex max-w-7xl flex-col items-center gap-md px-md py-xl text-center md:flex-row md:justify-between md:px-lg md:text-left">
+            <div className="flex items-center gap-md">
+              <Siren size={40} className="shrink-0 text-foreground-inverse" />
+              <div>
+                <h2 className="font-heading text-2xl font-extrabold text-foreground-inverse">
+                  ¿Tu auto se quedó en la carretera?
+                </h2>
+                <p className="font-body text-foreground-inverse/90">
+                  Activa el SOS y contacta ayuda de emergencia de inmediato por
+                  WhatsApp.
+                </p>
+              </div>
+            </div>
+            <Link
+              href="/solicitar?prioridad=emergencia"
+              className={cn(
+                "bg-surface-card text-emergency hover:bg-surface-page",
+                buttonVariants({ variant: "primary", size: "lg" })
+              )}
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              <Siren size={20} /> Solicitar ayuda urgente
+            </Link>
+          </div>
+        </section>
+
+        {/* DESTACADOS */}
+        <section className="mx-auto max-w-7xl px-md py-2xl md:px-lg">
+          <div className="mb-lg flex items-end justify-between gap-md">
+            <div className="flex flex-col gap-xs">
+              <h2 className="font-heading text-3xl font-bold text-foreground-primary">
+                Mecánicos y talleres destacados
+              </h2>
+              <p className="font-body text-foreground-secondary">
+                Los mejor calificados cerca de ti.
+              </p>
+            </div>
+            <Link
+              href="/talleres"
+              className="hidden items-center gap-xs font-caption text-sm font-semibold text-action-primary hover:underline sm:flex"
             >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+              Ver todos <ArrowRight size={16} />
+            </Link>
+          </div>
+          <div className="grid gap-lg sm:grid-cols-2 lg:grid-cols-3">
+            {TALLERES_DESTACADOS.map((taller) => (
+              <TarjetaTaller key={taller.id} taller={taller} />
+            ))}
+          </div>
+        </section>
+
+        {/* CÓMO FUNCIONA */}
+        <section id="como-funciona" className="bg-surface-inverse">
+          <div className="mx-auto max-w-7xl px-md py-2xl md:px-lg">
+            <h2 className="mb-lg text-center font-heading text-3xl font-bold text-foreground-inverse">
+              Cómo funciona
+            </h2>
+            <div className="grid gap-lg md:grid-cols-3">
+              {COMO_FUNCIONA.map((paso) => (
+                <div
+                  key={paso.n}
+                  className="flex flex-col items-center gap-sm rounded-2xl border border-white/10 p-lg text-center"
+                >
+                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-accent-primary font-heading text-xl font-bold text-foreground-inverse">
+                    {paso.n}
+                  </span>
+                  <h3 className="font-heading text-lg font-bold text-foreground-inverse">
+                    {paso.titulo}
+                  </h3>
+                  <p className="font-body text-sm text-foreground-inverse-secondary">
+                    {paso.texto}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-xl flex justify-center">
+              <Link
+                href="/solicitar"
+                className={cn(buttonVariants({ variant: "whatsapp", size: "lg" }))}
+              >
+                <MessageCircle size={20} /> Solicitar ayuda ahora
+              </Link>
+            </div>
+          </div>
+        </section>
       </main>
-    </div>
+
+      <Footer />
+      <SOSFloatingButton />
+    </>
   );
 }
