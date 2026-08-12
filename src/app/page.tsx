@@ -8,7 +8,7 @@ import { SOSFloatingButton } from "@/components/layout/SOSFloatingButton";
 import { buttonVariants } from "@/components/ui/Button";
 import { CategoryCard } from "@/components/ui/CategoryCard";
 import { TarjetaTaller } from "@/features/talleres/components/TarjetaTaller";
-import { TALLERES_DESTACADOS } from "@/features/talleres/mock";
+import { getTalleresDestacados } from "@/features/talleres/data";
 import { TIPOS_PROBLEMA } from "@/features/solicitudes/mock";
 
 const COMO_FUNCIONA = [
@@ -29,7 +29,9 @@ const COMO_FUNCIONA = [
   },
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  const destacados = await getTalleresDestacados();
+
   return (
     <>
       <Header />
@@ -174,7 +176,7 @@ export default function HomePage() {
             </Link>
           </div>
           <div className="grid gap-lg sm:grid-cols-2 lg:grid-cols-3">
-            {TALLERES_DESTACADOS.map((taller) => (
+            {destacados.map((taller) => (
               <TarjetaTaller key={taller.id} taller={taller} />
             ))}
           </div>

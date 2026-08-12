@@ -4,20 +4,19 @@ import { Footer } from "@/components/layout/Footer";
 import { SOSFloatingButton } from "@/components/layout/SOSFloatingButton";
 import { PerfilTaller } from "@/features/talleres/components/PerfilTaller";
 import { ListaResenas } from "@/features/resenas/components/ListaResenas";
-import { getTallerPorId } from "@/features/talleres/mock";
-import { getResenasPorTaller } from "@/features/resenas/mock";
+import { getTaller } from "@/features/talleres/data";
+import { getResenas } from "@/features/resenas/data";
 
-// TODO: conectar a Supabase — reemplazar getTallerPorId por consulta a `talleres`.
 export default async function PerfilMecanicoPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const taller = getTallerPorId(id);
+  const taller = await getTaller(id);
   if (!taller) notFound();
 
-  const resenas = getResenasPorTaller(taller.id);
+  const resenas = await getResenas(taller.id);
 
   return (
     <>
