@@ -48,35 +48,59 @@
 
 ---
 
+## ✅ Fase 3 — Auth (HECHO, verificado en local — sesión 2026-08-13)
+
+- **Email + password** para conductor y taller, y **Google OAuth** (con onboarding para elegir rol).
+- **Migración** `supabase/migrations/0002_auth.sql` (ejecutada en Supabase):
+  tabla `profiles` (rol/nombre/telefono/ciudad ligada a `auth.users`), `talleres.owner_id`,
+  trigger `handle_new_user` (crea perfil + fila `talleres` si el signup trae `rol`),
+  RLS: `profiles_*`, `talleres_insert_own`/`update_own`, `solicitudes_taller_read` (listo para #3).
+- **Sesión (Next 16):** `src/proxy.ts` (¡NO `middleware.ts`! — en Next 16 se llama **Proxy**) +
+  `src/lib/supabase/session.ts`. DAL en `src/lib/auth/dal.ts` (`getUser`/`getPerfil`/`requirePerfil`).
+- **Server actions:** `src/features/usuarios/actions.ts` (registrar/iniciarSesion/cerrarSesion/
+  iniciarConGoogle/completarPerfil). Formularios conectados con `useActionState`.
+- **Google:** callback `src/app/auth/callback/route.ts`; onboarding `/onboarding` (elige conductor/taller);
+  `BotonGoogle` en login + ambos registros. Header con estado de sesión (`AuthNav`).
+- **Verificado en local:** registro conductor/taller (con fila `talleres` + owner_id + especialidades),
+  login con redirect por rol (taller→`/panel/solicitudes`), logout, proxy protegiendo rutas.
+- **Config de dashboards hecha:** SQL corrido · "Confirm email" OFF (MVP) · Redirect URLs
+  (`localhost:3000/**` + `motoresenmarcha-web.vercel.app/**`).
+- ⚠️ **Falta para que Google funcione:** crear el OAuth Client en Google Cloud y pegar
+  Client ID + Secret en Supabase → Auth → Providers → Google (pasos al final de esta sección).
+- 🧹 **Datos de prueba** creados en local (borrar cuando quieras): usuarios
+  `ana.conductora@mecaweb.mx`, `taller.rapido@mecaweb.mx` + su taller "Taller El Rápido Prueba".
+- Nota menor: el `slugify` SQL no quita acentos (`Rápido`→`r-pido`); cosmético, el slug es único.
+
+### 🔧 Pasos para activar Google OAuth (pendiente — requiere tu cuenta de Google Cloud)
+1. **Google Cloud Console** → APIs & Services → Credentials → *Create OAuth client ID* → **Web**.
+   - Authorized redirect URI: `https://ygxxsgypnoflqbwrrlxq.supabase.co/auth/v1/callback`
+   - (Si pide configurar la *OAuth consent screen* primero: tipo **External**, nombre de la app,
+     tu correo de soporte, y añádete como *test user*.)
+2. Copia **Client ID** y **Client Secret**.
+3. **Supabase** → Auth → Providers → **Google**: activar, pegar Client ID + Secret, **Save**.
+4. Probar en `http://localhost:3000/login` → "Continuar con Google" → debe caer en `/onboarding`
+   (elegir conductor/taller) la primera vez. Redirect URLs ya están configuradas.
+
 ## 🔜 Pendientes (EN ORDEN — empezar por el 1)
 
-### 1. Supabase Auth (base de todo lo demás) 🔑
-- Registro/login real de **conductores** y **talleres** con Supabase Auth (email+password).
-- Middleware de sesión (`@supabase/ssr` + `middleware.ts`) para refrescar cookies.
-- Tabla `profiles` (o `conductores` / `talleres_perfil`) ligada a `auth.users`; trigger
-  `on auth.users insert` para crear el perfil según el rol elegido en el registro.
-- Conectar los formularios que hoy solo navegan:
-  `FormRegistroConductor`, `FormRegistroTaller`, `/login` (buscar los `// TODO: conectar a Supabase Auth`).
-- Relacionar el rol taller con un registro de la tabla `talleres` (hoy `talleres.id` es texto `t1..t8`;
-  decidir si el taller autenticado *es dueño* de una fila de `talleres`).
-
-### 2. Escritura de datos (INSERT) ✍️
+### 1. Escritura de datos (INSERT) ✍️
 - **Solicitar servicio** (`/solicitar`) → insertar en `solicitudes` antes de abrir WhatsApp.
 - **Agendar cita** (`/citas/agendar/[tallerId]`) → insertar en `citas`.
 - **Calificar** (`/calificar/[servicioId]`) → insertar en `resenas` (ya hay policy `resenas_insert_own`).
-- Todos requieren usuario autenticado (depende del punto 1). Buscar los `// TODO: conectar a Supabase`.
+- Todos requieren usuario autenticado (ya hay Auth). Buscar los `// TODO: conectar a Supabase`.
+- Usar `requirePerfil()` del DAL para obtener el usuario/rol en las server actions.
 
-### 3. Panel del taller con datos reales + policy
+### 2. Panel del taller con datos reales
 - Hoy `/panel/solicitudes` y `/panel/cuenta` usan mock.
-- Falta **policy RLS para que el taller vea las solicitudes dirigidas a él**
-  (hay un `TODO` en `0001_init.sql`, línea de `solicitudes_own`). Requiere modelar taller↔auth.user.
-- Conectar el panel a `solicitudes`/`citas` reales.
+- La **policy RLS ya existe** (`solicitudes_taller_read` en `0002_auth.sql`): el taller ve las
+  solicitudes de los talleres que posee (`owner_id`). Solo falta conectar el panel a datos reales.
+- Ligar el panel al taller del usuario: `select * from talleres where owner_id = auth.uid()`.
 
-### 4. Realtime ⚡
+### 3. Realtime ⚡
 - Canal de Supabase Realtime para que el panel del taller reciba **solicitudes nuevas al instante**.
 - Opcional: estado de citas en vivo para el conductor.
 
-### 5. Limpieza y mejoras (cuando el core esté listo)
+### 4. Limpieza y mejoras (cuando el core esté listo)
 - **Quitar el fallback a mock** en `data.ts` cuando la BD sea la única fuente.
 - **Imágenes reales** → Supabase Storage (hoy se usan placeholders de `picsum.photos`).
 - Migrar las demás features (citas/solicitudes/usuarios) a capas `data.ts` como se hizo con talleres.

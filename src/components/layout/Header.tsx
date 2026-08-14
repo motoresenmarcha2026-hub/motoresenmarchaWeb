@@ -4,7 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { Wrench, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/Button";
+import { AuthNav } from "@/components/layout/AuthNav";
 
 const NAV = [
   { href: "/", label: "Inicio" },
@@ -53,19 +53,8 @@ export function Header() {
         </nav>
 
         {/* Acciones desktop */}
-        <div className="hidden items-center gap-sm md:flex">
-          <Link
-            href="/login"
-            className="font-body text-sm font-medium text-foreground-inverse-secondary transition-colors hover:text-foreground-inverse"
-          >
-            Iniciar sesión
-          </Link>
-          <Link
-            href="/registro"
-            className={cn(buttonVariants({ variant: "emergency", size: "sm" }))}
-          >
-            Registrarse
-          </Link>
+        <div className="hidden md:flex">
+          <AuthNav variant="desktop" />
         </div>
 
         {/* Toggle móvil */}
@@ -95,27 +84,7 @@ export function Header() {
               </Link>
             ))}
           </nav>
-          <div className="flex flex-col gap-sm pt-sm">
-            <Link
-              href="/login"
-              onClick={() => setAbierto(false)}
-              className={cn(
-                buttonVariants({ variant: "outline", size: "md", fullWidth: true }),
-                "border-white/30 text-foreground-inverse hover:bg-white hover:text-foreground-primary"
-              )}
-            >
-              Iniciar sesión
-            </Link>
-            <Link
-              href="/registro"
-              onClick={() => setAbierto(false)}
-              className={cn(
-                buttonVariants({ variant: "emergency", size: "md", fullWidth: true })
-              )}
-            >
-              Registrarse
-            </Link>
-          </div>
+          <AuthNav variant="mobile" onNavigate={() => setAbierto(false)} />
         </div>
       )}
     </header>
