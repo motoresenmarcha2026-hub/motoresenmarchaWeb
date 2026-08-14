@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { Textarea } from "@/components/ui/FormField";
 import { EstrellasCalificacion } from "./EstrellasCalificacion";
+import { enviarResena } from "../actions";
 
 const DESTACADOS = [
   "Rápido",
@@ -19,11 +20,19 @@ const DESTACADOS = [
 const TEXTO_RATING = ["", "Muy malo", "Malo", "Regular", "Bueno", "Excelente"];
 
 /** Formulario de calificación de un servicio. */
-export function FormularioCalificacion() {
+export function FormularioCalificacion({
+  tallerId,
+  servicio,
+}: {
+  tallerId: string;
+  servicio?: string;
+}) {
   const router = useRouter();
   const [rating, setRating] = useState(0);
   const [tags, setTags] = useState<string[]>([]);
   const [comentario, setComentario] = useState("");
+  const [enviando, setEnviando] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   function toggle(t: string) {
     setTags((prev) =>
@@ -31,8 +40,17 @@ export function FormularioCalificacion() {
     );
   }
 
-  function enviar() {
-    // TODO: conectar a Supabase — insertar reseña en la tabla `resenas`.
+  async function enviar() {
+    if (rating === 0 || enviando) return;
+    setEnviando(true);
+    setError(null);
+
+    const res = await enviarResena({ tallerId, rating, comentario, servicio, tags });
+    if (res.error) {
+      setError(res.error);
+      setEnviando(false);
+      return;
+    }
     router.push("/citas/mis-citas");
   }
 
@@ -89,15 +107,21 @@ export function FormularioCalificacion() {
         placeholder="Cuéntanos cómo fue tu experiencia (opcional)…"
       />
 
+      {error && (
+        <p className="rounded-lg bg-emergency/10 px-md py-2.5 font-caption text-sm text-emergency">
+          {error}
+        </p>
+      )}
+
       <div className="flex flex-col gap-sm sm:flex-row">
         <Button
           variant="primary"
           size="lg"
           fullWidth
-          disabled={rating === 0}
+          disabled={rating === 0 || enviando}
           onClick={enviar}
         >
-          Enviar calificación
+          {enviando ? "Enviando…" : "Enviar calificación"}
         </Button>
         <Button
           variant="ghost"

@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { FormField, Textarea } from "@/components/ui/FormField";
 import { FRANJAS_HORARIAS } from "../mock";
+import { agendarCita } from "../actions";
 import { especialidadMeta } from "@/features/talleres/mock";
 import type { Taller } from "@/features/talleres/types";
 
@@ -34,11 +35,32 @@ export function AgendarCita({ taller }: { taller: Taller }) {
   const [diaSel, setDiaSel] = useState(0);
   const [hora, setHora] = useState<string | null>(null);
   const [comentario, setComentario] = useState("");
+  const [enviando, setEnviando] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const listo = hora !== null;
 
-  function confirmar() {
-    // TODO: conectar a Supabase — insertar cita en la tabla `citas`.
+  async function confirmar() {
+    if (!listo || !hora || enviando) return;
+    setEnviando(true);
+    setError(null);
+
+    const d = dias[diaSel];
+    const fechaISO = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+
+    const res = await agendarCita({
+      tallerId: taller.id,
+      tallerNombre: taller.nombre,
+      fecha: fechaISO,
+      hora,
+      servicio: especialidadMeta(servicio).label,
+    });
+
+    if (res.error) {
+      setError(res.error);
+      setEnviando(false);
+      return;
+    }
     router.push("/confirmacion?tipo=solicitud");
   }
 
@@ -166,14 +188,20 @@ export function AgendarCita({ taller }: { taller: Taller }) {
             </p>
           </div>
 
+          {error && (
+            <p className="rounded-lg bg-emergency/10 px-md py-2.5 font-caption text-sm text-emergency">
+              {error}
+            </p>
+          )}
+
           <Button
             variant="primary"
             size="lg"
             fullWidth
-            disabled={!listo}
+            disabled={!listo || enviando}
             onClick={confirmar}
           >
-            <Calendar size={18} /> Confirmar cita
+            <Calendar size={18} /> {enviando ? "Agendando…" : "Confirmar cita"}
           </Button>
         </div>
       </aside>

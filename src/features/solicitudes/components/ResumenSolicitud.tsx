@@ -2,6 +2,7 @@ import { MessageCircle } from "lucide-react";
 import { cn, enlaceWhatsApp } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/Button";
 import { tipoProblemaMeta } from "../mock";
+import { guardarSolicitud } from "../actions";
 import type { TipoProblema, Prioridad } from "../types";
 import type { Taller } from "@/features/talleres/types";
 
@@ -73,12 +74,24 @@ export function ResumenSolicitud({
         aria-disabled={!listo}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={() => {
+          // Persiste la solicitud (si hay sesión) sin bloquear la apertura de
+          // WhatsApp: fire-and-forget para que el flujo SOS sea instantáneo.
+          if (listo && tipo) {
+            guardarSolicitud({
+              tipoProblema: tipo,
+              descripcion,
+              ubicacion,
+              prioridad,
+              tallerId: taller?.id,
+            });
+          }
+        }}
         className={cn(
           buttonVariants({ variant: "whatsapp", size: "lg", fullWidth: true }),
           !listo && "pointer-events-none opacity-50"
         )}
       >
-        {/* TODO: conectar a Supabase — guardar la solicitud antes de abrir WhatsApp */}
         <MessageCircle size={20} /> Enviar por WhatsApp
       </a>
       {!listo && (

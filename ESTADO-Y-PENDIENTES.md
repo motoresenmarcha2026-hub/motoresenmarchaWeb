@@ -82,29 +82,35 @@
   `https://ygxxsgypnoflqbwrrlxq.supabase.co/auth/v1/callback`. Consent screen: **External**,
   app "Motores en Marcha", soporte `motoresenmarcha2026@gmail.com`.
 - Client ID `305350890435-...apps.googleusercontent.com` + Secret pegados en Supabase → Google.
-- **Único pendiente:** publicar la app OAuth (sale de modo prueba) → Google Cloud → Auth Platform →
-  Público → **Publicar app**. Mientras siga en prueba, solo entran cuentas agregadas como *test user*.
+- ✅ **App OAuth PUBLICADA** (modo producción) — cualquier usuario con cuenta Google puede entrar.
+
+## ✅ Fase 4 — Escritura de datos (HECHO, sesión 2026-08-13)
+- **Server actions** por feature: `features/solicitudes/actions.ts` (`guardarSolicitud`),
+  `features/citas/actions.ts` (`agendarCita`), `features/resenas/actions.ts` (`enviarResena`).
+  Todas usan el DAL (`getUser`/`getPerfil`) y escriben con RLS por dueño.
+- **Solicitar servicio** (`/solicitar`): guarda en `solicitudes` al enviar por WhatsApp
+  (fire-and-forget, no bloquea el SOS; solo persiste si hay sesión).
+- **Agendar cita** (`/citas/agendar/[tallerId]`): inserta en `citas`. **Verificado end-to-end**
+  (fila creada: Taller El Rápido / Motor / pendiente, ligada al conductor por RLS).
+- **Calificar** (`/calificar/[servicioId]`): inserta en `resenas` (policy `resenas_insert_own`);
+  combina comentario + etiquetas destacadas.
+- Nota: los agregados `talleres.rating`/`num_resenas` NO se recalculan al insertar reseña
+  (haría falta un trigger). Pendiente menor para más adelante.
+- ⚠️ **Sin commitear aún** — hay que commit + push para desplegar a producción.
 
 ## 🔜 Pendientes (EN ORDEN — empezar por el 1)
 
-### 1. Escritura de datos (INSERT) ✍️
-- **Solicitar servicio** (`/solicitar`) → insertar en `solicitudes` antes de abrir WhatsApp.
-- **Agendar cita** (`/citas/agendar/[tallerId]`) → insertar en `citas`.
-- **Calificar** (`/calificar/[servicioId]`) → insertar en `resenas` (ya hay policy `resenas_insert_own`).
-- Todos requieren usuario autenticado (ya hay Auth). Buscar los `// TODO: conectar a Supabase`.
-- Usar `requirePerfil()` del DAL para obtener el usuario/rol en las server actions.
-
-### 2. Panel del taller con datos reales
+### 1. Panel del taller con datos reales
 - Hoy `/panel/solicitudes` y `/panel/cuenta` usan mock.
 - La **policy RLS ya existe** (`solicitudes_taller_read` en `0002_auth.sql`): el taller ve las
   solicitudes de los talleres que posee (`owner_id`). Solo falta conectar el panel a datos reales.
 - Ligar el panel al taller del usuario: `select * from talleres where owner_id = auth.uid()`.
 
-### 3. Realtime ⚡
+### 2. Realtime ⚡
 - Canal de Supabase Realtime para que el panel del taller reciba **solicitudes nuevas al instante**.
 - Opcional: estado de citas en vivo para el conductor.
 
-### 4. Limpieza y mejoras (cuando el core esté listo)
+### 3. Limpieza y mejoras (cuando el core esté listo)
 - **Quitar el fallback a mock** en `data.ts` cuando la BD sea la única fuente.
 - **Imágenes reales** → Supabase Storage (hoy se usan placeholders de `picsum.photos`).
 - Migrar las demás features (citas/solicitudes/usuarios) a capas `data.ts` como se hizo con talleres.

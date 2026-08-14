@@ -72,7 +72,10 @@ export default async function CalificarPage({
           </div>
 
           {/* Formulario */}
-          <FormularioCalificacion />
+          <FormularioCalificacion
+            tallerId={servicio.tallerId}
+            servicio={servicio.servicio}
+          />
         </div>
       </main>
       <Footer />
