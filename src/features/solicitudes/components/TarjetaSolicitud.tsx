@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { Car, MapPin, Clock, MessageCircle, Calendar, X } from "lucide-react";
+import { Car, MapPin, Clock, MessageCircle, Calendar } from "lucide-react";
 import { cn, enlaceWhatsApp } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/Button";
 import { tipoProblemaMeta } from "../mock";
+import { BotonRechazar } from "./BotonRechazar";
 import type { Solicitud, EstadoSolicitud, Prioridad } from "../types";
 
 const ESTADO: Record<EstadoSolicitud, { label: string; class: string }> = {
@@ -103,13 +104,7 @@ export function TarjetaSolicitud({ solicitud }: { solicitud: Solicitud }) {
             <MessageCircle size={16} /> Escribir por WhatsApp
           </a>
           {solicitud.estado === "pendiente" && (
-            <button
-              type="button"
-              className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
-            >
-              {/* TODO: conectar a Supabase — actualizar estado a 'rechazado' */}
-              <X size={16} /> Rechazar
-            </button>
+            <BotonRechazar id={solicitud.id} />
           )}
         </div>
       )}

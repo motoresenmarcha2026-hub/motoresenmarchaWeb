@@ -1,7 +1,8 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import { getUser, getPerfil } from "@/lib/auth/dal";
+import { getUser, getPerfil, requirePerfil } from "@/lib/auth/dal";
 import type { TipoProblema, Prioridad } from "./types";
 
 export interface SolicitudInput {
@@ -40,4 +41,28 @@ export async function guardarSolicitud(
 
   if (error) console.warn("[solicitudes] no se pudo guardar:", error.message);
   return { guardada: !error };
+}
+
+/**
+ * El taller rechaza una solicitud dirigida a él (estado → 'rechazado').
+ * La autorización real la da la policy RLS `solicitudes_taller_update`.
+ */
+export async function rechazarSolicitud(
+  id: string
+): Promise<{ error?: string }> {
+  const perfil = await requirePerfil();
+  if (perfil.rol !== "taller") return { error: "No autorizado." };
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("solicitudes")
+    .update({ estado: "rechazado" })
+    .eq("id", id);
+
+  if (error) {
+    console.warn("[solicitudes] no se pudo rechazar:", error.message);
+    return { error: "No se pudo rechazar la solicitud." };
+  }
+  revalidatePath("/panel/solicitudes");
+  return {};
 }

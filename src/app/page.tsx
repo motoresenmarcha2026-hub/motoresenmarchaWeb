@@ -158,29 +158,31 @@ export default async function HomePage() {
         </section>
 
         {/* DESTACADOS */}
-        <section className="mx-auto max-w-7xl px-md py-2xl md:px-lg">
-          <div className="mb-lg flex items-end justify-between gap-md">
-            <div className="flex flex-col gap-xs">
-              <h2 className="font-heading text-3xl font-bold text-foreground-primary">
-                Mecánicos y talleres destacados
-              </h2>
-              <p className="font-body text-foreground-secondary">
-                Los mejor calificados cerca de ti.
-              </p>
+        {destacados.length > 0 && (
+          <section className="mx-auto max-w-7xl px-md py-2xl md:px-lg">
+            <div className="mb-lg flex items-end justify-between gap-md">
+              <div className="flex flex-col gap-xs">
+                <h2 className="font-heading text-3xl font-bold text-foreground-primary">
+                  Mecánicos y talleres destacados
+                </h2>
+                <p className="font-body text-foreground-secondary">
+                  Los mejor calificados cerca de ti.
+                </p>
+              </div>
+              <Link
+                href="/talleres"
+                className="hidden items-center gap-xs font-caption text-sm font-semibold text-action-primary hover:underline sm:flex"
+              >
+                Ver todos <ArrowRight size={16} />
+              </Link>
             </div>
-            <Link
-              href="/talleres"
-              className="hidden items-center gap-xs font-caption text-sm font-semibold text-action-primary hover:underline sm:flex"
-            >
-              Ver todos <ArrowRight size={16} />
-            </Link>
-          </div>
-          <div className="grid gap-lg sm:grid-cols-2 lg:grid-cols-3">
-            {destacados.map((taller) => (
-              <TarjetaTaller key={taller.id} taller={taller} />
-            ))}
-          </div>
-        </section>
+            <div className="grid gap-lg sm:grid-cols-2 lg:grid-cols-3">
+              {destacados.map((taller) => (
+                <TarjetaTaller key={taller.id} taller={taller} />
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* CÓMO FUNCIONA */}
         <section id="como-funciona" className="bg-surface-inverse">

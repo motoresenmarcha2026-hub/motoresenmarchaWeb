@@ -98,26 +98,33 @@
   (haría falta un trigger). Pendiente menor para más adelante.
 - ⚠️ **Sin commitear aún** — hay que commit + push para desplegar a producción.
 
-## 🔜 Pendientes (EN ORDEN — empezar por el 1)
+## ✅ Fase 5 — Panel del taller + Realtime + limpieza (HECHO, sesión 2026-08-13)
+- **Migración** `supabase/migrations/0003_panel_realtime.sql` (ejecutada): policies
+  `citas_taller_read` y `solicitudes_taller_update`; trigger `recalcular_rating_taller`
+  (recalcula `talleres.rating`/`num_resenas` al cambiar reseñas); realtime en `solicitudes`+`citas`;
+  bucket Storage `talleres` (público) + policies por carpeta `auth.uid()`.
+- **Capa de lectura sin fallback:** `solicitudes/data.ts` (`getSolicitudesDelTaller`),
+  `citas/data.ts` (`getCitasDelTaller`), `talleres/data.ts` (`getTallerDelUsuario`).
+  Mapper puro `solicitudes/mappers.ts` (compartido server↔client). Quitado el fallback a mock
+  en `talleres/data.ts` y `resenas/data.ts` (empty states en Home/Talleres/Reseñas).
+- **Panel real:** `/panel/solicitudes` muestra solicitudes+citas reales del taller (RLS),
+  **Realtime** empuja solicitudes nuevas y cambios de estado al instante, botón **Rechazar**
+  (`rechazarSolicitud`). `/panel/cuenta` edita datos reales (`actualizarTaller`) + **subida de
+  foto** a Storage (`FormCuentaTaller` → `actualizarFotoTaller`). **Verificado end-to-end**.
+- **Gotcha Realtime resuelto:** el socket necesita `supabase.realtime.setAuth(session.access_token)`
+  para que RLS entregue eventos; y el canal debe tener **nombre único por montaje** (evita
+  "on after subscribe" por reuso en React StrictMode).
+- `next.config.ts`: agregado el host de Supabase Storage a `remotePatterns`.
+- ⚠️ **Sin commitear aún** — commit + push para desplegar.
 
-### 1. Panel del taller con datos reales
-- Hoy `/panel/solicitudes` y `/panel/cuenta` usan mock.
-- La **policy RLS ya existe** (`solicitudes_taller_read` en `0002_auth.sql`): el taller ve las
-  solicitudes de los talleres que posee (`owner_id`). Solo falta conectar el panel a datos reales.
-- Ligar el panel al taller del usuario: `select * from talleres where owner_id = auth.uid()`.
-
-### 2. Realtime ⚡
-- Canal de Supabase Realtime para que el panel del taller reciba **solicitudes nuevas al instante**.
-- Opcional: estado de citas en vivo para el conductor.
-
-### 3. Limpieza y mejoras (cuando el core esté listo)
-- **Quitar el fallback a mock** en `data.ts` cuando la BD sea la única fuente.
-- **Imágenes reales** → Supabase Storage (hoy se usan placeholders de `picsum.photos`).
-- Migrar las demás features (citas/solicitudes/usuarios) a capas `data.ts` como se hizo con talleres.
-- **Borrar el proyecto Vercel duplicado** `motoresenmarcha-web-ay37` (el bueno es `motoresenmarcha-web`).
-- Variantes móviles del diseño (hoy todo es responsive con un solo componente; el `.pen`
-  tiene componentes Header Mobile / SOS FAB Mobile si se quisiera fidelidad extra).
-- Tests + CI.
+## 🔜 Pendientes menores (cuando quieras)
+- **Migrar imágenes del seed** (picsum) a Storage — la subida de foto ya existe; falta mover las
+  fotos de los 8 talleres del seed a fotos reales.
+- `getTallerPorId`/`getTallerPorSlug` (mock) aún se usan en `citas/agendar/[tallerId]` y
+  `FormularioSolicitud` — migrarlos a `getTaller` (DB) para consistencia total.
+- **Tests + CI** (Vitest + GitHub Actions) — se pospuso.
+- **Borrar el proyecto Vercel duplicado** `motoresenmarcha-web-ay37`.
+- 🧹 **Datos de prueba** acumulados (usuarios/taller/solicitudes/reseñas de prueba) — limpiar.
 
 ---
 

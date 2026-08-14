@@ -1,12 +1,11 @@
 import { createClient } from "@/lib/supabase/server";
-import { TALLERES } from "./mock";
+import { getUser } from "@/lib/auth/dal";
 import type { Taller, Especialidad, Horario, Disponibilidad } from "./types";
 
 /**
- * Acceso a datos de talleres.
- * Lee de Supabase; si no hay configuración o falla, cae a los mocks para que
- * la app nunca se rompa durante la migración. TODO: quitar el fallback cuando
- * la BD sea la única fuente.
+ * Acceso a datos de talleres. Supabase es la única fuente de verdad
+ * (sin fallback a mock): si falla, devuelve vacío y la UI muestra su
+ * estado vacío correspondiente.
  */
 
 /** Fila cruda de la tabla `talleres` (snake_case). */
@@ -72,14 +71,32 @@ export async function getTalleres(): Promise<Taller[]> {
       .from("talleres")
       .select("*")
       .order("distancia_km", { ascending: true });
-    if (error || !data || data.length === 0) {
-      if (error) console.warn("[talleres] Supabase error, usando mock:", error.message);
-      return TALLERES;
+    if (error || !data) {
+      if (error) console.warn("[talleres] error al leer:", error.message);
+      return [];
     }
     return (data as TallerRow[]).map(rowToTaller);
   } catch (e) {
-    console.warn("[talleres] Supabase no disponible, usando mock:", e);
-    return TALLERES;
+    console.warn("[talleres] Supabase no disponible:", e);
+    return [];
+  }
+}
+
+/** El taller del usuario autenticado (por owner_id). null si no tiene fila. */
+export async function getTallerDelUsuario(): Promise<Taller | null> {
+  const user = await getUser();
+  if (!user) return null;
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("talleres")
+      .select("*")
+      .eq("owner_id", user.id)
+      .maybeSingle();
+    if (error || !data) return null;
+    return rowToTaller(data as TallerRow);
+  } catch {
+    return null;
   }
 }
 
@@ -98,11 +115,9 @@ export async function getTaller(id: string): Promise<Taller | null> {
       .select("*")
       .eq("id", id)
       .maybeSingle();
-    if (error || !data) {
-      return TALLERES.find((t) => t.id === id) ?? null;
-    }
+    if (error || !data) return null;
     return rowToTaller(data as TallerRow);
   } catch {
-    return TALLERES.find((t) => t.id === id) ?? null;
+    return null;
   }
 }

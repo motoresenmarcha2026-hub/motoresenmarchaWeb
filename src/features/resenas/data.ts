@@ -1,5 +1,4 @@
 import { createClient } from "@/lib/supabase/server";
-import { getResenasPorTaller as mockResenas } from "./mock";
 import type { Resena } from "./types";
 
 interface ResenaRow {
@@ -28,7 +27,7 @@ function rowToResena(r: ResenaRow): Resena {
   };
 }
 
-/** Reseñas de un taller (con fallback a mock). */
+/** Reseñas de un taller (Supabase como única fuente; [] si falla). */
 export async function getResenas(tallerId: string): Promise<Resena[]> {
   try {
     const supabase = await createClient();
@@ -38,10 +37,11 @@ export async function getResenas(tallerId: string): Promise<Resena[]> {
       .eq("taller_id", tallerId)
       .order("created_at", { ascending: false });
     if (error || !data) {
-      return mockResenas(tallerId);
+      if (error) console.warn("[resenas] error al leer:", error.message);
+      return [];
     }
     return (data as ResenaRow[]).map(rowToResena);
   } catch {
-    return mockResenas(tallerId);
+    return [];
   }
 }
