@@ -4,7 +4,7 @@
 > ayuda de emergencia (SOS/WhatsApp). Stack: **Next.js 16 (App Router) · React 19 ·
 > TypeScript · Tailwind v4 · Supabase**. Arquitectura **feature-based** en `src/features/*`.
 >
-> Última actualización: sesión del 2026-08-12.
+> Última actualización: sesión del 2026-08-14.
 
 ---
 
@@ -42,7 +42,7 @@
 - Repo GitHub: `motoresenmarcha2026-hub/motoresenmarchaWeb` (rama `main`).
 - **SSH** configurado: llave dedicada `~/.ssh/id_ed25519_motoresenmarcha`, host alias
   `github-motoresenmarcha` en `~/.ssh/config`. `git push`/`pull` normales ya usan SSH.
-- **Vercel**: proyecto `motoresenmarcha-web` → https://motoresenmarcha-web.vercel.app
+- **Vercel**: proyecto `motoresenmarcha-web` (único — el duplicado `-ay37` fue eliminado).
   - Env vars `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` configuradas (Prod+Preview).
   - **Producción verificada leyendo de Supabase** (orden por distancia ≠ orden mock).
 
@@ -68,21 +68,17 @@
 - ✅ **Google OAuth HECHO y verificado en producción** (sesión 2026-08-13): OAuth Client creado
   en Google Cloud (proyecto `talleres-505501`), Client ID + Secret en Supabase, provider habilitado.
   Login con Google probado end-to-end en `localhost` y en `https://www.motoresenmarcha.com`.
-- ✅ **Desplegado a producción** (commit `0dfacf8`) y **dominio en vivo**: `motoresenmarcha.com`
+- ✅ **Desplegado a producción** y **dominio en vivo**: `motoresenmarcha.com`
   (redirige a `www`), DNS en IONOS (A `@`→`216.198.79.1`, CNAME `www`→Vercel), SSL automático.
 - ✅ **Supabase Redirect URLs** incluyen `motoresenmarcha.com/**` y `www.motoresenmarcha.com/**`.
-- ⚠️ **Pendiente Google:** la app OAuth está en **modo prueba** — solo entran cuentas *test users*
-  o la dueña. Para abrir a cualquiera: Google Cloud → Auth Platform → Público → **Publicar app**.
-- 🧹 **Datos de prueba** creados (borrar cuando quieras): usuarios
-  `ana.conductora@mecaweb.mx`, `taller.rapido@mecaweb.mx` + su taller "Taller El Rápido Prueba".
+- ✅ **App OAuth PUBLICADA** (modo producción) — cualquier usuario con cuenta Google puede entrar.
 - Nota menor: el `slugify` SQL no quita acentos (`Rápido`→`r-pido`); cosmético, el slug es único.
 
-### 🔧 Google OAuth — HECHO ✅ (referencia)
+### 🔧 Google OAuth — referencia
 - OAuth Client (Web) en Google Cloud proyecto `talleres-505501`; redirect URI del cliente:
   `https://ygxxsgypnoflqbwrrlxq.supabase.co/auth/v1/callback`. Consent screen: **External**,
   app "Motores en Marcha", soporte `motoresenmarcha2026@gmail.com`.
 - Client ID `305350890435-...apps.googleusercontent.com` + Secret pegados en Supabase → Google.
-- ✅ **App OAuth PUBLICADA** (modo producción) — cualquier usuario con cuenta Google puede entrar.
 
 ## ✅ Fase 4 — Escritura de datos (HECHO, sesión 2026-08-13)
 - **Server actions** por feature: `features/solicitudes/actions.ts` (`guardarSolicitud`),
@@ -90,41 +86,42 @@
   Todas usan el DAL (`getUser`/`getPerfil`) y escriben con RLS por dueño.
 - **Solicitar servicio** (`/solicitar`): guarda en `solicitudes` al enviar por WhatsApp
   (fire-and-forget, no bloquea el SOS; solo persiste si hay sesión).
-- **Agendar cita** (`/citas/agendar/[tallerId]`): inserta en `citas`. **Verificado end-to-end**
-  (fila creada: Taller El Rápido / Motor / pendiente, ligada al conductor por RLS).
+- **Agendar cita** (`/citas/agendar/[tallerId]`): inserta en `citas`. **Verificado end-to-end**.
 - **Calificar** (`/calificar/[servicioId]`): inserta en `resenas` (policy `resenas_insert_own`);
   combina comentario + etiquetas destacadas.
-- Nota: los agregados `talleres.rating`/`num_resenas` NO se recalculan al insertar reseña
-  (haría falta un trigger). Pendiente menor para más adelante.
-- ⚠️ **Sin commitear aún** — hay que commit + push para desplegar a producción.
 
 ## ✅ Fase 5 — Panel del taller + Realtime + limpieza (HECHO, sesión 2026-08-13)
 - **Migración** `supabase/migrations/0003_panel_realtime.sql` (ejecutada): policies
   `citas_taller_read` y `solicitudes_taller_update`; trigger `recalcular_rating_taller`
   (recalcula `talleres.rating`/`num_resenas` al cambiar reseñas); realtime en `solicitudes`+`citas`;
   bucket Storage `talleres` (público) + policies por carpeta `auth.uid()`.
-- **Capa de lectura sin fallback:** `solicitudes/data.ts` (`getSolicitudesDelTaller`),
-  `citas/data.ts` (`getCitasDelTaller`), `talleres/data.ts` (`getTallerDelUsuario`).
-  Mapper puro `solicitudes/mappers.ts` (compartido server↔client). Quitado el fallback a mock
-  en `talleres/data.ts` y `resenas/data.ts` (empty states en Home/Talleres/Reseñas).
-- **Panel real:** `/panel/solicitudes` muestra solicitudes+citas reales del taller (RLS),
-  **Realtime** empuja solicitudes nuevas y cambios de estado al instante, botón **Rechazar**
-  (`rechazarSolicitud`). `/panel/cuenta` edita datos reales (`actualizarTaller`) + **subida de
-  foto** a Storage (`FormCuentaTaller` → `actualizarFotoTaller`). **Verificado end-to-end**.
-- **Gotcha Realtime resuelto:** el socket necesita `supabase.realtime.setAuth(session.access_token)`
-  para que RLS entregue eventos; y el canal debe tener **nombre único por montaje** (evita
-  "on after subscribe" por reuso en React StrictMode).
-- `next.config.ts`: agregado el host de Supabase Storage a `remotePatterns`.
-- ⚠️ **Sin commitear aún** — commit + push para desplegar.
+- **Capa de lectura sin fallback:** `solicitudes/data.ts`, `citas/data.ts`, `talleres/data.ts`.
+  Mapper puro `solicitudes/mappers.ts` (compartido server↔client).
+- **Panel real:** `/panel/solicitudes` con Realtime, botón Rechazar, `/panel/cuenta` con
+  edición de datos + subida de foto a Storage. **Verificado end-to-end**.
+- **Gotcha Realtime:** el socket necesita `supabase.realtime.setAuth(session.access_token)`
+  para que RLS entregue eventos; canal con nombre único por montaje (evita bug en StrictMode).
 
-## 🔜 Pendientes menores (cuando quieras)
-- **Migrar imágenes del seed** (picsum) a Storage — la subida de foto ya existe; falta mover las
-  fotos de los 8 talleres del seed a fotos reales.
-- `getTallerPorId`/`getTallerPorSlug` (mock) aún se usan en `citas/agendar/[tallerId]` y
-  `FormularioSolicitud` — migrarlos a `getTaller` (DB) para consistencia total.
-- **Tests + CI** (Vitest + GitHub Actions) — se pospuso.
-- **Borrar el proyecto Vercel duplicado** `motoresenmarcha-web-ay37`.
-- 🧹 **Datos de prueba** acumulados (usuarios/taller/solicitudes/reseñas de prueba) — limpiar.
+## ✅ Fase 6 — Limpieza y consistencia de datos (HECHO, sesión 2026-08-14)
+
+- **`getTallerPorId` / `getTallerPorSlug` eliminados del flujo real:**
+  - `/citas/agendar/[tallerId]/page.tsx` → usa `getTaller(id)` de `data.ts` (DB).
+  - `FormularioSolicitud` → ya no usa mock; recibe `taller` y `clienteNombre` como props
+    desde el page (server), que llama `getTaller` + `getPerfil`.
+- **Imágenes del seed migradas a Storage:** `scripts/migrate-images.mjs` descargó las 16
+  imágenes de picsum.photos (8 foto_url + 8 avatar_url) y las subió al bucket `talleres`;
+  `foto_url`/`avatar_url` en la tabla ahora apuntan a Supabase Storage.
+- **Logo real** en Header, Footer y OpenGraph (`public/logo.png`, `src/app/icon.png`).
+- **Datos de prueba eliminados** (`ana.conductora@mecaweb.mx`, `taller.rapido@mecaweb.mx`
+  y su taller de prueba borrados de `auth.users` en cascada).
+- **Proyecto Vercel duplicado** `motoresenmarcha-web-ay37` eliminado — queda solo
+  `motoresenmarcha-web`.
+- Commit `6f0e078` desplegado en producción.
+
+---
+
+## 🔜 Pendientes (cuando quieras)
+- **Tests + CI** (Vitest + GitHub Actions) — pospuesto desde el inicio.
 
 ---
 
@@ -139,8 +136,10 @@
   viven en Vercel → Settings → Environment Variables.
 - **Ejecutar SQL**: el pegado automatizado en el editor Monaco de Supabase no funciona;
   se corre copiando el SQL al portapapeles (`pbcopy`) y pegando manualmente en el SQL Editor.
-- **Patrón data layer**: cada `data.ts` intenta Supabase y cae a mock si falla → la app nunca se rompe.
 - **Fuente de la verdad del diseño**: archivo Pencil `~/Desktop/meca2.pen` (usar MCP `pencil`).
+- **`SUPABASE_SERVICE_ROLE_KEY`**: solo en `.env.local` local (nunca al repo). Se usa para
+  scripts de administración como `scripts/migrate-images.mjs`. La key legacy (JWT) está en
+  Supabase → Settings → API Keys → "Legacy anon, service_role API keys".
 
 ---
 
@@ -150,8 +149,8 @@
 |---|---|
 | Repo GitHub | `motoresenmarcha2026-hub/motoresenmarchaWeb` (rama `main`) |
 | Remote SSH | `git@github-motoresenmarcha:motoresenmarcha2026-hub/motoresenmarchaWeb.git` |
-| Producción | https://motoresenmarcha-web.vercel.app |
-| Proyecto Vercel | `motores-en-marcha/motoresenmarcha-web` (ignorar duplicado `-ay37`) |
+| Producción | https://www.motoresenmarcha.com |
+| Proyecto Vercel | `motores-en-marcha/motoresenmarcha-web` |
 | Supabase project ref | `ygxxsgypnoflqbwrrlxq` |
 | Supabase URL | `https://ygxxsgypnoflqbwrrlxq.supabase.co` |
 | Supabase dashboard | https://supabase.com/dashboard/project/ygxxsgypnoflqbwrrlxq |
@@ -166,12 +165,5 @@
 
 ```bash
 cd ~/Desktop/MecaWeb
-npm install          # por si acaso
 npm run dev          # http://localhost:3000 (usa .env.local → Supabase)
-```
-
-Empezar por el **pendiente #1 (Auth)**. Buscar en el código los marcadores:
-
-```bash
-grep -rn "TODO: conectar a Supabase" src/
 ```
