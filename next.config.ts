@@ -7,6 +7,8 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       // Supabase Storage (fotos reales de talleres subidas por sus dueños).
       { protocol: "https", hostname: "ygxxsgypnoflqbwrrlxq.supabase.co" },
+      // Avatares de cuentas de Google (login con Google).
+      { protocol: "https", hostname: "lh3.googleusercontent.com" },
       // Placeholders del seed / mock.
       { protocol: "https", hostname: "images.unsplash.com" },
       { protocol: "https", hostname: "picsum.photos" },

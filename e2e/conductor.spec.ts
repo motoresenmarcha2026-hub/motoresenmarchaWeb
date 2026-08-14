@@ -107,6 +107,30 @@ test.describe.serial("Flujo conductor", () => {
     await expect(page.getByText(NOMBRE).first()).toBeVisible();
   });
 
+  test("vehículo, solicitudes y notificaciones renderizan (reales o vacías)", async ({
+    page,
+  }) => {
+    await page.goto("/login");
+    await page.getByLabel("Correo electrónico").fill(EMAIL);
+    await page.getByLabel("Contraseña").fill(PASSWORD);
+    await page.getByRole("button", { name: "Entrar" }).click();
+    await expect(page).toHaveURL("/");
+
+    await page.goto("/cuenta/vehiculo");
+    await expect(
+      page.getByText("Aún no has registrado tu vehículo")
+    ).toBeVisible();
+
+    await page.goto("/cuenta/notificaciones");
+    await expect(page.getByText("No tienes notificaciones")).toBeVisible();
+
+    // Puede tener la solicitud del test de solicitar (fire-and-forget) o estar vacía
+    await page.goto("/cuenta/solicitudes");
+    await expect(
+      page.getByText(/Mis solicitudes|Aún no tienes solicitudes/).first()
+    ).toBeVisible();
+  });
+
   test("conductor no puede entrar al panel admin", async ({ page }) => {
     await page.goto("/login");
     await page.getByLabel("Correo electrónico").fill(EMAIL);

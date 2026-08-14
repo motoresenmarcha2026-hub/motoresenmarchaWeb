@@ -3,6 +3,7 @@ import { DashboardShell } from "@/components/layout/DashboardShell";
 import { Rating } from "@/components/ui/Rating";
 import { requireAdmin } from "@/lib/auth/dal";
 import { getResumenAdmin } from "@/features/admin/data";
+import { BotonLimpiarDemo } from "@/features/admin/components/BotonLimpiarDemo";
 import { formatearFecha } from "@/lib/utils";
 
 export default async function AdminResumenPage() {
@@ -135,6 +136,11 @@ export default async function AdminResumenPage() {
               ))}
             </ul>
           )}
+        </Panel>
+
+        {/* Mantenimiento: datos de demostración */}
+        <Panel titulo="Datos de demostración">
+          <BotonLimpiarDemo demoCount={r.demoTalleres} />
         </Panel>
 
         {/* Usuarios recientes */}

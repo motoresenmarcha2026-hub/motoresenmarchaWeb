@@ -1,21 +1,14 @@
 import { DashboardShell } from "@/components/layout/DashboardShell";
 import { FormularioCuenta } from "@/features/usuarios/components/FormularioCuenta";
 import { requirePerfil, getUser } from "@/lib/auth/dal";
+import { perfilShell } from "@/features/usuarios/shell";
 
 export default async function CuentaConductorPage() {
   const perfil = await requirePerfil();
   const user = await getUser();
 
   return (
-    <DashboardShell
-      profile={{
-        nombre: perfil.nombre ?? "Conductor",
-        subtitulo: perfil.ciudad ?? "Conductor",
-        avatarUrl: perfil.avatar_url ?? undefined,
-        badge: "Conductor",
-      }}
-      navKey="conductor"
-    >
+    <DashboardShell profile={perfilShell(perfil)} navKey="conductor">
       <FormularioCuenta
         titulo="Información de la cuenta"
         descripcion="Administra tus datos personales y de contacto."

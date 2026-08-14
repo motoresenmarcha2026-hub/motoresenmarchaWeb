@@ -52,6 +52,29 @@ test.describe.serial("Flujo taller", () => {
     );
   });
 
+  test("banner de foto casi-obligatoria y páginas del panel", async ({
+    page,
+  }) => {
+    await page.goto("/login");
+    await page.getByLabel("Correo electrónico").fill(EMAIL);
+    await page.getByLabel("Contraseña").fill(PASSWORD);
+    await page.getByRole("button", { name: "Entrar" }).click();
+    await expect(page).toHaveURL(/\/panel\/solicitudes/);
+
+    // Taller nuevo sin foto → banner con CTA a /panel/cuenta
+    await expect(page.getByText("Tu taller aún no tiene foto")).toBeVisible();
+    await expect(page.getByRole("link", { name: "Subir foto" })).toBeVisible();
+
+    await page.goto("/panel/resenas");
+    await expect(page.getByText("Aún no tienes reseñas")).toBeVisible();
+
+    await page.goto("/panel/sucursales");
+    await expect(page.getByText("Aún no tienes sucursales")).toBeVisible();
+
+    await page.goto("/panel/notificaciones");
+    await expect(page.getByText("No tienes notificaciones")).toBeVisible();
+  });
+
   test("logout", async ({ page }) => {
     await page.goto("/login");
     await page.getByLabel("Correo electrónico").fill(EMAIL);

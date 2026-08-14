@@ -15,6 +15,8 @@ export interface ResumenAdmin {
     citas: number;
     resenas: number;
   };
+  /** Talleres del seed (sin owner_id) — datos de demostración. */
+  demoTalleres: number;
   usuarios: {
     id: string;
     rol: string;
@@ -76,6 +78,7 @@ export async function getResumenAdmin(): Promise<ResumenAdmin> {
     solicitudesCount,
     citasCount,
     resenasCount,
+    demoTalleres,
     usuarios,
     talleres,
     solicitudes,
@@ -87,6 +90,11 @@ export async function getResumenAdmin(): Promise<ResumenAdmin> {
     contar(supabase, "solicitudes"),
     contar(supabase, "citas"),
     contar(supabase, "resenas"),
+    supabase
+      .from("talleres")
+      .select("id", { count: "exact", head: true })
+      .is("owner_id", null)
+      .then(({ count }) => count ?? 0),
     supabase
       .from("profiles")
       .select("id, rol, nombre, ciudad")
@@ -122,6 +130,7 @@ export async function getResumenAdmin(): Promise<ResumenAdmin> {
       citas: citasCount,
       resenas: resenasCount,
     },
+    demoTalleres,
     usuarios: usuarios.data ?? [],
     talleres: talleres.data ?? [],
     solicitudes: solicitudes.data ?? [],

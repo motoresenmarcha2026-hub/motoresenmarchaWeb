@@ -7,8 +7,6 @@ import {
   Bell,
   User,
   Car,
-  Users,
-  ShieldAlert,
   BarChart3,
   type LucideIcon,
 } from "lucide-react";
@@ -22,26 +20,24 @@ export interface NavItem {
 
 /** Navegación del panel del taller/mecánico. */
 export const NAV_TALLER: NavItem[] = [
-  { href: "#agenda", label: "Agenda", icon: Calendar },
-  { href: "/panel/cuenta", label: "Mi taller", icon: Store },
   {
     href: "/panel/solicitudes",
     label: "Citas y solicitudes",
     icon: ClipboardList,
-    badge: 2,
   },
-  { href: "#sucursales", label: "Sucursales", icon: MapPin },
-  { href: "#resenas", label: "Reseñas", icon: Star },
-  { href: "#notificaciones", label: "Notificaciones", icon: Bell },
+  { href: "/panel/cuenta", label: "Mi taller", icon: Store },
+  { href: "/panel/resenas", label: "Reseñas", icon: Star },
+  { href: "/panel/sucursales", label: "Sucursales", icon: MapPin },
+  { href: "/panel/notificaciones", label: "Notificaciones", icon: Bell },
 ];
 
 /** Navegación de la cuenta del conductor. */
 export const NAV_CONDUCTOR: NavItem[] = [
   { href: "/cuenta", label: "Cuenta", icon: User },
-  { href: "#vehiculo", label: "Vehículo", icon: Car },
-  { href: "#solicitudes", label: "Mis solicitudes", icon: ClipboardList },
+  { href: "/cuenta/vehiculo", label: "Vehículo", icon: Car },
+  { href: "/cuenta/solicitudes", label: "Mis solicitudes", icon: ClipboardList },
   { href: "/citas/mis-citas", label: "Mis citas", icon: Calendar },
-  { href: "#notificaciones", label: "Notificaciones", icon: Bell },
+  { href: "/cuenta/notificaciones", label: "Notificaciones", icon: Bell },
 ];
 
 /** Navegación del panel de administración. */

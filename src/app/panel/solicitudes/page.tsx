@@ -27,11 +27,32 @@ export default async function PanelSolicitudesPage() {
       navKey="taller"
     >
       {taller ? (
-        <PanelSolicitudes
-          solicitudes={solicitudes}
-          citas={citas}
-          tallerId={taller.id}
-        />
+        <div className="flex flex-col gap-md">
+          {!taller.fotoUrl && (
+            <div className="flex flex-wrap items-center justify-between gap-sm rounded-2xl border border-action-urgent/40 bg-action-urgent/10 p-md">
+              <div>
+                <p className="font-heading font-bold text-foreground-primary">
+                  📸 Tu taller aún no tiene foto
+                </p>
+                <p className="font-caption text-sm text-foreground-secondary">
+                  Los talleres con foto generan más confianza y reciben más
+                  solicitudes. Súbela ahora, toma un minuto.
+                </p>
+              </div>
+              <Link
+                href="/panel/cuenta"
+                className={cn(buttonVariants({ variant: "primary", size: "sm" }))}
+              >
+                Subir foto
+              </Link>
+            </div>
+          )}
+          <PanelSolicitudes
+            solicitudes={solicitudes}
+            citas={citas}
+            tallerId={taller.id}
+          />
+        </div>
       ) : (
         <div className="rounded-2xl border border-dashed border-border-subtle p-2xl text-center">
           <h1 className="font-heading text-xl font-bold text-foreground-primary">
