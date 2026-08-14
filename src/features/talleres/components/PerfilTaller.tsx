@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { MapPin, ShieldCheck, MessageCircle, GitCompare } from "lucide-react";
+import { MapPin, ShieldCheck, MessageCircle, Calendar } from "lucide-react";
 import { cn, enlaceWhatsApp } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/Button";
 import { BadgeDisponibilidad } from "@/components/ui/Badge";
@@ -80,15 +80,15 @@ export function PerfilTaller({ taller }: { taller: Taller }) {
                 >
                   <MessageCircle size={18} /> WhatsApp
                 </a>
-                <button
-                  type="button"
+                <Link
+                  href={`/citas/agendar/${taller.id}`}
                   className={cn(
                     buttonVariants({ variant: "outline" }),
                     "border-white/30 text-foreground-inverse hover:bg-white hover:text-foreground-primary"
                   )}
                 >
-                  <GitCompare size={18} /> Comparar
-                </button>
+                  <Calendar size={18} /> Agendar cita
+                </Link>
                 <Link
                   href={`/solicitar?taller=${taller.id}`}
                   className={cn(buttonVariants({ variant: "primary" }))}

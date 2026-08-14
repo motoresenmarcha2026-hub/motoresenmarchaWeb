@@ -50,6 +50,10 @@ test.describe("Perfil de taller", () => {
     ).toBeVisible();
     await expect(page.getByText("Carlos Medina").first()).toBeVisible();
     await expect(page.getByText("Disponibilidad")).toBeVisible();
+    // CTA de agendar (reemplazó al botón muerto "Comparar")
+    await expect(
+      page.getByRole("link", { name: "Agendar cita" })
+    ).toHaveAttribute("href", "/citas/agendar/t1");
   });
 });
 
