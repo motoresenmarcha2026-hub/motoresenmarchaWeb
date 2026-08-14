@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Wrench } from "lucide-react";
+import Image from "next/image";
 
 const COLUMNAS = [
   {
@@ -38,9 +38,13 @@ export function Footer() {
         {/* Marca */}
         <div className="col-span-2 md:col-span-1">
           <div className="flex items-center gap-sm">
-            <span className="flex h-8 w-8 items-center justify-center rounded-md bg-emergency text-foreground-inverse">
-              <Wrench size={18} />
-            </span>
+            <Image
+              src="/logo.png"
+              alt="Motores en Marcha"
+              width={40}
+              height={40}
+              className="rounded-full"
+            />
             <span className="font-heading text-base font-extrabold uppercase text-foreground-inverse">
               Motores en Marcha
             </span>

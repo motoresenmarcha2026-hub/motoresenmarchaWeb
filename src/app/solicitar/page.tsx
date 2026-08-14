@@ -1,10 +1,26 @@
-import { Suspense } from "react";
 import Link from "next/link";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { FormularioSolicitud } from "@/features/solicitudes/components/FormularioSolicitud";
+import { getTaller } from "@/features/talleres/data";
+import { getPerfil } from "@/lib/auth/dal";
+import type { TipoProblema, Prioridad } from "@/features/solicitudes/types";
 
-export default function SolicitarPage() {
+export default async function SolicitarPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string>>;
+}) {
+  const sp = await searchParams;
+  const tallerId = sp.taller ?? null;
+  const tipoInicial = (sp.tipo as TipoProblema | null) ?? null;
+  const prioridadInicial = (sp.prioridad as Prioridad | null) ?? "normal";
+
+  const [taller, perfil] = await Promise.all([
+    tallerId ? getTaller(tallerId) : Promise.resolve(null),
+    getPerfil(),
+  ]);
+
   return (
     <>
       <Header />
@@ -27,13 +43,12 @@ export default function SolicitarPage() {
             </Link>
           </div>
 
-          <Suspense
-            fallback={
-              <p className="font-body text-foreground-secondary">Cargando…</p>
-            }
-          >
-            <FormularioSolicitud />
-          </Suspense>
+          <FormularioSolicitud
+            taller={taller ?? undefined}
+            tipoInicial={tipoInicial}
+            prioridadInicial={prioridadInicial}
+            clienteNombre={perfil?.nombre ?? ""}
+          />
         </div>
       </main>
       <Footer />

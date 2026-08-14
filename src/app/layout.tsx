@@ -30,6 +30,9 @@ export const metadata: Metadata = {
   title: "Motores en Marcha — Ayuda mecánica confiable",
   description:
     "Marketplace que conecta conductores con mecánicos y talleres. Ayuda mecánica rápida y de emergencia, a un mensaje de WhatsApp de distancia.",
+  openGraph: {
+    images: [{ url: "/logo.png", width: 1080, height: 1080 }],
+  },
 };
 
 export default function RootLayout({

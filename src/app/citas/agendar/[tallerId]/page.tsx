@@ -4,7 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { AgendarCita } from "@/features/citas/components/AgendarCita";
-import { getTallerPorId } from "@/features/talleres/mock";
+import { getTaller } from "@/features/talleres/data";
 
 export default async function AgendarCitaPage({
   params,
@@ -12,7 +12,7 @@ export default async function AgendarCitaPage({
   params: Promise<{ tallerId: string }>;
 }) {
   const { tallerId } = await params;
-  const taller = getTallerPorId(tallerId);
+  const taller = await getTaller(tallerId);
   if (!taller) notFound();
 
   return (

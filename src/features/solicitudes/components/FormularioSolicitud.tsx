@@ -1,26 +1,27 @@
 "use client";
 
 import { useState } from "react";
-import { useSearchParams } from "next/navigation";
 import { MapPin, Pencil } from "lucide-react";
 import { FormField, Textarea, Input } from "@/components/ui/FormField";
 import { SelectorTipoProblema } from "./SelectorTipoProblema";
 import { SelectorPrioridad } from "./SelectorPrioridad";
 import { ResumenSolicitud } from "./ResumenSolicitud";
-import { getTallerPorId } from "@/features/talleres/mock";
-import { CONDUCTOR_ACTUAL } from "@/features/usuarios/mock";
+import type { Taller } from "@/features/talleres/types";
 import type { TipoProblema, Prioridad } from "../types";
 
-/** Formulario completo de solicitud de servicio con panel de resumen. */
-export function FormularioSolicitud() {
-  const params = useSearchParams();
-  const tallerId = params.get("taller") ?? undefined;
-  const taller = tallerId ? getTallerPorId(tallerId) : undefined;
+interface Props {
+  taller?: Taller;
+  tipoInicial?: TipoProblema | null;
+  prioridadInicial?: Prioridad;
+  clienteNombre?: string;
+}
 
-  const tipoInicial = (params.get("tipo") as TipoProblema | null) ?? null;
-  const prioridadInicial =
-    (params.get("prioridad") as Prioridad | null) ?? "normal";
-
+export function FormularioSolicitud({
+  taller,
+  tipoInicial = null,
+  prioridadInicial = "normal",
+  clienteNombre = "",
+}: Props) {
   const [tipo, setTipo] = useState<TipoProblema | null>(tipoInicial);
   const [descripcion, setDescripcion] = useState("");
   const [ubicacion, setUbicacion] = useState("");
@@ -94,7 +95,7 @@ export function FormularioSolicitud() {
           ubicacion={ubicacion}
           prioridad={prioridad}
           taller={taller}
-          cliente={CONDUCTOR_ACTUAL.nombre}
+          cliente={clienteNombre}
         />
       </div>
     </div>

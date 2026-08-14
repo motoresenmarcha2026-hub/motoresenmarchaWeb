@@ -2,7 +2,8 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Wrench, Menu, X } from "lucide-react";
+import Image from "next/image";
+import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AuthNav } from "@/components/layout/AuthNav";
 
@@ -20,9 +21,14 @@ export function Logo({ className }: { className?: string }) {
       href="/"
       className={cn("flex items-center gap-sm font-heading", className)}
     >
-      <span className="flex h-8 w-8 items-center justify-center rounded-md bg-emergency text-foreground-inverse">
-        <Wrench size={18} />
-      </span>
+      <Image
+        src="/logo.png"
+        alt="Motores en Marcha"
+        width={40}
+        height={40}
+        className="rounded-full"
+        priority
+      />
       <span className="text-lg font-extrabold uppercase tracking-tight text-foreground-inverse">
         Motores en Marcha
       </span>
