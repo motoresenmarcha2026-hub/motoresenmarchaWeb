@@ -4,7 +4,8 @@
 > ayuda de emergencia (SOS/WhatsApp). Stack: **Next.js 16 (App Router) · React 19 ·
 > TypeScript · Tailwind v4 · Supabase**. Arquitectura **feature-based** en `src/features/*`.
 >
-> Última actualización: sesión del 2026-08-14.
+> Última actualización: sesión del 2026-08-14 (tarde).
+> **✅ PROYECTO ENTREGADO AL CLIENTE el 2026-08-14.**
 
 ---
 
@@ -118,10 +119,62 @@
   `motoresenmarcha-web`.
 - Commit `6f0e078` desplegado en producción.
 
+## ✅ Fase 7 — Sin mock + Tests E2E + Legales + entrega (HECHO, sesión 2026-08-14 tarde)
+
+### Últimas pantallas mock → datos reales
+- `/citas/mis-citas` → citas reales del conductor (`getCitasDelConductor` en `citas/data.ts`).
+- `/cuenta` → perfil real (`requirePerfil` + email del user); se quitaron Vehículo/Placa (no existen en DB).
+- `/calificar/[servicioId]` → carga la cita real (`getCita`), 404 si no existe.
+- `TarjetaCita`: botón **Calificar** en citas completadas (cierra el ciclo cita → reseña).
+- **Ya no queda ningún dato mock en la app** — solo catálogos estáticos (especialidades,
+  tipos de problema, franjas horarias), lo cual es correcto.
+
+### Tests E2E (Playwright) — 23 tests en verde
+- `playwright.config.ts` + `e2e/{publico,conductor,taller}.spec.ts` + `e2e/README.md`.
+- **Corren en puerto 3100** (el 3000 suele estar ocupado por otro proyecto).
+- Cubren: home/marketplace/perfil desde DB, imágenes de Storage (verifica que no hay picsum),
+  filtros, solicitar + popup wa.me, protección de rutas del proxy, registro/login/logout
+  de conductor y taller, agendar cita end-to-end, mis-citas y cuenta con datos reales,
+  panel del taller, páginas legales.
+- Comando: `npm run test:e2e`. ⚠️ Cada corrida crea usuarios `e2e.*@mecaweb.mx` en el
+  Supabase real — **correr el SQL de limpieza de `e2e/README.md` después**.
+
+### Páginas legales
+- `/terminos`, `/privacidad`, `/cookies` — layout compartido `(legal)` + `legal-ui.tsx`.
+- Footer conectado (los 3 links legales + Contacto como mailto). "Sobre nosotros" se quitó
+  (pendiente de contenido del cliente).
+- Checkboxes de registro: "términos y condiciones" y "aviso de privacidad" son links reales.
+- ⚠️ Recomendado: revisión de los textos por un abogado antes de uso formal.
+
+### Favicon / ícono
+- Eliminado `src/app/favicon.ico` (era el **triángulo default de Next.js** y le ganaba al logo
+  en la pestaña del navegador). Ahora `src/app/icon.png` (logo, 256px) + `apple-icon.png` (180px).
+
+### Limpieza hecha
+- Datos de prueba borrados (usuarios de prueba, "Taller El Rápido Prueba", usuarios e2e).
+- Proyecto Vercel duplicado `motoresenmarcha-web-ay37` eliminado.
+
+### Rol admin + panel de administración
+- **Migración `0004_admin.sql`**: rol `admin` en `profiles`, función `is_admin()`
+  (security definer) y policies `*_admin_read` para leer profiles/solicitudes/citas.
+  Promueve a **motoresenmarcha2026@gmail.com** (si la cuenta no existe aún: registrarla
+  primero y volver a correr solo el UPDATE final).
+- **`/admin`** (nuevo): resumen de la plataforma — conteos (conductores, talleres,
+  solicitudes, citas, reseñas) + últimos 10 de cada tabla. `features/admin/data.ts`.
+- **`/admin/cuenta`**: datos reales del perfil admin (antes era mock).
+- **Guard `requireAdmin()`** en el DAL: sin rol admin redirige a `/`.
+- Login de admin redirige a `/admin`; "Mi cuenta" del header también.
+- Nav admin limpiado (solo Resumen + Mi cuenta; se quitaron links muertos).
+
 ---
 
-## 🔜 Pendientes (cuando quieras)
-- **Tests + CI** (Vitest + GitHub Actions) — pospuesto desde el inicio.
+## 🔜 Posibles encargos futuros (mencionados al entregar)
+- **CI**: correr los tests E2E en GitHub Actions en cada push.
+- **Pagos** (Stripe/Conekta) si el cliente monetiza la plataforma — feature nuevo.
+- **"Sobre nosotros"** cuando el cliente entregue el contenido.
+- **Horarios de cita reales**: las franjas son fijas (09:00–17:30), no se calculan del horario
+  del taller ni evitan doble reserva. Aceptable para MVP; mejora futura.
+- **Confirmación de email**: apagada (decisión MVP); se activa en Supabase cuando quieran.
 
 ---
 
@@ -140,6 +193,12 @@
 - **`SUPABASE_SERVICE_ROLE_KEY`**: solo en `.env.local` local (nunca al repo). Se usa para
   scripts de administración como `scripts/migrate-images.mjs`. La key legacy (JWT) está en
   Supabase → Settings → API Keys → "Legacy anon, service_role API keys".
+- **Tests E2E en puerto 3100** (`npm run test:e2e`): el 3000 suele estar ocupado por otro
+  proyecto local. Después de correr tests, ejecutar el SQL de limpieza de `e2e/README.md`.
+- **CLI de Vercel local autenticada en otra cuenta** — para operaciones del proyecto Vercel
+  usar el dashboard web con la sesión del navegador.
+- **`talleres.owner_id` NO cascadea** al borrar el usuario: borrar primero la fila de
+  `talleres` y después el `auth.users` (así lo hace el SQL de limpieza).
 
 ---
 

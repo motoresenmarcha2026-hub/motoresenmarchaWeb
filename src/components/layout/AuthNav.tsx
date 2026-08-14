@@ -9,7 +9,7 @@ import { buttonVariants } from "@/components/ui/Button";
 import { createClient } from "@/lib/supabase/client";
 import { cerrarSesion } from "@/features/usuarios/actions";
 
-type Rol = "conductor" | "taller";
+type Rol = "conductor" | "taller" | "admin";
 
 /** Lee la sesión de Supabase en el cliente y se actualiza en vivo. */
 function useSesion() {
@@ -55,7 +55,12 @@ export function AuthNav({
   onNavigate?: () => void;
 }) {
   const { user, rol, listo } = useSesion();
-  const cuentaHref = rol === "taller" ? "/panel/cuenta" : "/cuenta";
+  const cuentaHref =
+    rol === "admin"
+      ? "/admin"
+      : rol === "taller"
+        ? "/panel/cuenta"
+        : "/cuenta";
 
   // Evita parpadeo entre estados mientras carga la sesión.
   if (!listo) return <div className="h-9" aria-hidden />;

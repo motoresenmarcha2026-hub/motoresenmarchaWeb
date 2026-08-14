@@ -107,6 +107,18 @@ test.describe.serial("Flujo conductor", () => {
     await expect(page.getByText(NOMBRE).first()).toBeVisible();
   });
 
+  test("conductor no puede entrar al panel admin", async ({ page }) => {
+    await page.goto("/login");
+    await page.getByLabel("Correo electrónico").fill(EMAIL);
+    await page.getByLabel("Contraseña").fill(PASSWORD);
+    await page.getByRole("button", { name: "Entrar" }).click();
+    await expect(page).toHaveURL("/");
+
+    // requireAdmin lo regresa a la home
+    await page.goto("/admin");
+    await expect(page).toHaveURL("/");
+  });
+
   test("logout regresa a estado sin sesión", async ({ page }) => {
     await page.goto("/login");
     await page.getByLabel("Correo electrónico").fill(EMAIL);

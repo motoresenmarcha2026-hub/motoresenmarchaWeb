@@ -1,13 +1,17 @@
 import { DashboardShell } from "@/components/layout/DashboardShell";
 import { FormularioCuenta } from "@/features/usuarios/components/FormularioCuenta";
+import { requireAdmin, getUser } from "@/lib/auth/dal";
 
-// TODO: conectar a Supabase — cuenta del administrador autenticado.
-export default function AdminCuentaPage() {
+export default async function AdminCuentaPage() {
+  const perfil = await requireAdmin();
+  const user = await getUser();
+
   return (
     <DashboardShell
       profile={{
-        nombre: "Admin Motores",
-        subtitulo: "Administrador",
+        nombre: perfil.nombre ?? "Administrador",
+        subtitulo: "Administración",
+        avatarUrl: perfil.avatar_url ?? undefined,
         badge: "Admin",
       }}
       navKey="admin"
@@ -16,9 +20,13 @@ export default function AdminCuentaPage() {
         titulo="Administrar cuenta"
         descripcion="Datos de la cuenta de administración de la plataforma."
         campos={[
-          { label: "Nombre", valor: "Admin Motores" },
-          { label: "Correo electrónico", valor: "admin@motoresenmarcha.mx", type: "email" },
-          { label: "Teléfono", valor: "+52 55 0000 0000" },
+          { label: "Nombre", valor: perfil.nombre ?? "" },
+          {
+            label: "Correo electrónico",
+            valor: user?.email ?? "",
+            type: "email",
+          },
+          { label: "Teléfono", valor: perfil.telefono ?? "" },
           { label: "Rol", valor: "Administrador" },
         ]}
       />

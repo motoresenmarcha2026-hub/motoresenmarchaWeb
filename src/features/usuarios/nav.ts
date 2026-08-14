@@ -46,11 +46,8 @@ export const NAV_CONDUCTOR: NavItem[] = [
 
 /** Navegación del panel de administración. */
 export const NAV_ADMIN: NavItem[] = [
+  { href: "/admin", label: "Resumen", icon: BarChart3 },
   { href: "/admin/cuenta", label: "Mi cuenta", icon: User },
-  { href: "#usuarios", label: "Usuarios", icon: Users },
-  { href: "#talleres", label: "Talleres", icon: Store },
-  { href: "#moderacion", label: "Moderación", icon: ShieldAlert },
-  { href: "#reportes", label: "Reportes", icon: BarChart3 },
 ];
 
 /** Mapa de navegaciones por rol (evita pasar componentes de íconos a través del boundary server→client). */

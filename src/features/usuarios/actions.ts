@@ -132,6 +132,7 @@ export async function iniciarSesion(
     .single();
 
   if (!perfil) redirect("/onboarding");
+  if (perfil.rol === "admin") redirect("/admin");
   redirect(perfil.rol === "taller" ? "/panel/solicitudes" : "/");
 }
 
