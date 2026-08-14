@@ -1,22 +1,19 @@
+import { notFound } from "next/navigation";
 import { Wrench, Calendar, Clock, MapPin } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { FormularioCalificacion } from "@/features/resenas/components/FormularioCalificacion";
 import { formatearFecha } from "@/lib/utils";
-import { CITAS } from "@/features/citas/mock";
+import { getCita } from "@/features/citas/data";
 
-// TODO: conectar a Supabase — cargar el servicio completado por su id.
 export default async function CalificarPage({
   params,
 }: {
   params: Promise<{ servicioId: string }>;
 }) {
   const { servicioId } = await params;
-  // Mock: usamos una cita completada como servicio a calificar.
-  const servicio =
-    CITAS.find((c) => c.id === servicioId && c.estado === "completada") ??
-    CITAS.find((c) => c.estado === "completada") ??
-    CITAS[0];
+  const servicio = await getCita(servicioId);
+  if (!servicio) notFound();
 
   return (
     <>

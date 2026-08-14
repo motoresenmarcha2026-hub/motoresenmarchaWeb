@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Wrench, Calendar, Clock, ChevronRight } from "lucide-react";
+import { Wrench, Calendar, Clock, ChevronRight, Star } from "lucide-react";
 import { cn, formatearFecha } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/Button";
 import type { Cita, EstadoCita } from "../types";
@@ -54,12 +54,22 @@ export function TarjetaCita({ cita }: { cita: Cita }) {
         </div>
       </div>
 
-      <Link
-        href={`/talleres/${cita.tallerId}`}
-        className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
-      >
-        Ver detalle <ChevronRight size={16} />
-      </Link>
+      <div className="flex flex-wrap gap-xs">
+        {cita.estado === "completada" && (
+          <Link
+            href={`/calificar/${cita.id}`}
+            className={cn(buttonVariants({ variant: "primary", size: "sm" }))}
+          >
+            <Star size={16} /> Calificar
+          </Link>
+        )}
+        <Link
+          href={`/talleres/${cita.tallerId}`}
+          className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+        >
+          Ver detalle <ChevronRight size={16} />
+        </Link>
+      </div>
     </article>
   );
 }

@@ -16,16 +16,18 @@ const COLUMNAS = [
     links: [
       { href: "/#como-funciona", label: "Cómo funciona" },
       { href: "/registro/taller", label: "Únete como taller" },
-      { href: "#", label: "Sobre nosotros" },
-      { href: "#", label: "Contacto" },
+      {
+        href: "mailto:motoresenmarcha2026@gmail.com",
+        label: "Contacto",
+      },
     ],
   },
   {
     titulo: "Legal",
     links: [
-      { href: "#", label: "Términos y condiciones" },
-      { href: "#", label: "Aviso de privacidad" },
-      { href: "#", label: "Cookies" },
+      { href: "/terminos", label: "Términos y condiciones" },
+      { href: "/privacidad", label: "Aviso de privacidad" },
+      { href: "/cookies", label: "Cookies" },
     ],
   },
 ];

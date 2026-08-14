@@ -1,18 +1,18 @@
 import { DashboardShell } from "@/components/layout/DashboardShell";
 import { ListaCitas } from "@/features/citas/components/ListaCitas";
-import { CONDUCTOR_ACTUAL } from "@/features/usuarios/mock";
-import { getCitasPorConductor } from "@/features/citas/mock";
+import { getCitasDelConductor } from "@/features/citas/data";
+import { requirePerfil } from "@/lib/auth/dal";
 
-// TODO: conectar a Supabase — citas del conductor autenticado.
-export default function MisCitasPage() {
-  const citas = getCitasPorConductor(CONDUCTOR_ACTUAL.id);
+export default async function MisCitasPage() {
+  const perfil = await requirePerfil();
+  const citas = await getCitasDelConductor();
 
   return (
     <DashboardShell
       profile={{
-        nombre: CONDUCTOR_ACTUAL.nombre,
-        subtitulo: CONDUCTOR_ACTUAL.ciudad ?? "Conductor",
-        avatarUrl: CONDUCTOR_ACTUAL.avatarUrl,
+        nombre: perfil.nombre ?? "Conductor",
+        subtitulo: perfil.ciudad ?? "Conductor",
+        avatarUrl: perfil.avatar_url ?? undefined,
         badge: "Conductor",
       }}
       navKey="conductor"

@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { FormField, Input, Textarea } from "@/components/ui/FormField";
 import { Button } from "@/components/ui/Button";
@@ -76,7 +77,17 @@ export function FormRegistroTaller() {
 
         <label className="flex items-start gap-sm font-caption text-sm text-foreground-secondary">
           <input type="checkbox" required className="mt-0.5 h-4 w-4 accent-action-primary" />
-          Acepto los términos y condiciones y el aviso de privacidad.
+          <span>
+            Acepto los{" "}
+            <Link href="/terminos" target="_blank" className="text-action-primary underline">
+              términos y condiciones
+            </Link>{" "}
+            y el{" "}
+            <Link href="/privacidad" target="_blank" className="text-action-primary underline">
+              aviso de privacidad
+            </Link>
+            .
+          </span>
         </label>
 
         {state?.error && (

@@ -66,6 +66,34 @@ test.describe.serial("Flujo conductor", () => {
     await expect(page).toHaveURL(/\/confirmacion\?tipo=solicitud/);
   });
 
+  test("mis citas muestra la cita real agendada", async ({ page }) => {
+    await page.goto("/login");
+    await page.getByLabel("Correo electrónico").fill(EMAIL);
+    await page.getByLabel("Contraseña").fill(PASSWORD);
+    await page.getByRole("button", { name: "Entrar" }).click();
+    await expect(page).toHaveURL("/");
+
+    await page.goto("/citas/mis-citas");
+    // Sidebar con el perfil real, no el mock
+    await expect(page.getByText(NOMBRE)).toBeVisible();
+    // La cita agendada en el test anterior aparece en "Próximas"
+    await expect(page.getByText("Taller El Rápido").first()).toBeVisible();
+    await expect(page.getByText(/Próximas \(\d+\)/)).toHaveText(/\([1-9]\d*\)/);
+  });
+
+  test("mi cuenta muestra los datos reales del perfil", async ({ page }) => {
+    await page.goto("/login");
+    await page.getByLabel("Correo electrónico").fill(EMAIL);
+    await page.getByLabel("Contraseña").fill(PASSWORD);
+    await page.getByRole("button", { name: "Entrar" }).click();
+    await expect(page).toHaveURL("/");
+
+    await page.goto("/cuenta");
+    // Sidebar con el nombre real; el email vive en un input
+    await expect(page.getByText(NOMBRE).first()).toBeVisible();
+    await expect(page.locator('input[type="email"]')).toHaveValue(EMAIL);
+  });
+
   test("solicitar muestra el nombre real del conductor", async ({ page }) => {
     await page.goto("/login");
     await page.getByLabel("Correo electrónico").fill(EMAIL);

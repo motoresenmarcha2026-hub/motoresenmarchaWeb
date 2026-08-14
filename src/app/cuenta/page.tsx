@@ -1,17 +1,17 @@
 import { DashboardShell } from "@/components/layout/DashboardShell";
 import { FormularioCuenta } from "@/features/usuarios/components/FormularioCuenta";
-import { CONDUCTOR_ACTUAL } from "@/features/usuarios/mock";
+import { requirePerfil, getUser } from "@/lib/auth/dal";
 
-// TODO: conectar a Supabase — datos del conductor autenticado y actualización.
-export default function CuentaConductorPage() {
-  const v = CONDUCTOR_ACTUAL.vehiculo;
+export default async function CuentaConductorPage() {
+  const perfil = await requirePerfil();
+  const user = await getUser();
 
   return (
     <DashboardShell
       profile={{
-        nombre: CONDUCTOR_ACTUAL.nombre,
-        subtitulo: CONDUCTOR_ACTUAL.ciudad ?? "Conductor",
-        avatarUrl: CONDUCTOR_ACTUAL.avatarUrl,
+        nombre: perfil.nombre ?? "Conductor",
+        subtitulo: perfil.ciudad ?? "Conductor",
+        avatarUrl: perfil.avatar_url ?? undefined,
         badge: "Conductor",
       }}
       navKey="conductor"
@@ -20,15 +20,14 @@ export default function CuentaConductorPage() {
         titulo="Información de la cuenta"
         descripcion="Administra tus datos personales y de contacto."
         campos={[
-          { label: "Nombre completo", valor: CONDUCTOR_ACTUAL.nombre },
-          { label: "Correo electrónico", valor: CONDUCTOR_ACTUAL.email, type: "email" },
-          { label: "Teléfono / WhatsApp", valor: CONDUCTOR_ACTUAL.telefono },
-          { label: "Ciudad", valor: CONDUCTOR_ACTUAL.ciudad ?? "" },
+          { label: "Nombre completo", valor: perfil.nombre ?? "" },
           {
-            label: "Vehículo",
-            valor: v ? `${v.marca} ${v.modelo} ${v.anio}` : "",
+            label: "Correo electrónico",
+            valor: user?.email ?? "",
+            type: "email",
           },
-          { label: "Placa", valor: v?.placa ?? "" },
+          { label: "Teléfono / WhatsApp", valor: perfil.telefono ?? "" },
+          { label: "Ciudad", valor: perfil.ciudad ?? "" },
         ]}
       />
     </DashboardShell>

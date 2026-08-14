@@ -87,6 +87,33 @@ test.describe("Solicitar servicio", () => {
   });
 });
 
+test.describe("Páginas legales", () => {
+  const PAGINAS = [
+    { ruta: "/terminos", titulo: "Términos y condiciones" },
+    { ruta: "/privacidad", titulo: "Aviso de privacidad" },
+    { ruta: "/cookies", titulo: "Política de cookies" },
+  ];
+  for (const { ruta, titulo } of PAGINAS) {
+    test(`${ruta} carga con su contenido`, async ({ page }) => {
+      await page.goto(ruta);
+      await expect(
+        page.getByRole("heading", { level: 1, name: titulo })
+      ).toBeVisible();
+      await expect(page.getByText(/Última actualización/)).toBeVisible();
+    });
+  }
+
+  test("el footer enlaza a las tres páginas", async ({ page }) => {
+    await page.goto("/");
+    for (const { titulo } of PAGINAS.slice(0, 2)) {
+      await expect(
+        page.getByRole("link", { name: new RegExp(titulo, "i") })
+      ).toBeVisible();
+    }
+    await expect(page.getByRole("link", { name: "Cookies" })).toBeVisible();
+  });
+});
+
 test.describe("Protección de rutas (proxy)", () => {
   for (const ruta of ["/citas/agendar/t1", "/panel/solicitudes", "/cuenta"]) {
     test(`${ruta} sin sesión redirige a /login con next`, async ({ page }) => {
