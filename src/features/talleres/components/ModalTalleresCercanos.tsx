@@ -1,48 +1,119 @@
 "use client";
 
 import { useState } from "react";
-import { MapPin, LocateFixed } from "lucide-react";
-import { cn } from "@/lib/utils";
+import dynamic from "next/dynamic";
+import { LocateFixed, SlidersHorizontal } from "lucide-react";
 import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
 import { inputBaseClass } from "@/components/ui/FormField";
-import { TarjetaMecanico } from "./TarjetaMecanico";
-import type { Taller } from "../types";
+import type { PuntoUbicacion } from "./MapaUbicacion";
+
+// Leaflet toca `window` — solo cliente.
+const MapaUbicacion = dynamic(
+  () => import("./MapaUbicacion").then((m) => m.MapaUbicacion),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex h-[300px] items-center justify-center rounded-xl border border-border-subtle bg-surface-page font-caption text-sm text-foreground-secondary">
+        Cargando mapa…
+      </div>
+    ),
+  }
+);
 
 const RADIOS = [2, 5, 10, 20];
+/** Centro por defecto: CDMX (donde vive el seed). */
+const CENTRO_DEFAULT: PuntoUbicacion = { lat: 19.4326, lng: -99.1332 };
 
-/** Modal de talleres cercanos: ajusta el radio y muestra los más próximos. */
-export function ModalTalleresCercanos({ talleres }: { talleres: Taller[] }) {
+export interface UbicacionElegida extends PuntoUbicacion {
+  radioKm: number;
+}
+
+/**
+ * Modal "Cambiar ubicación" (diseño i46XY): geolocalización, radio a la
+ * redonda y mapa interactivo con pin arrastrable. Al aplicar entrega la
+ * ubicación elegida para ordenar/filtrar talleres por cercanía real.
+ */
+export function ModalTalleresCercanos({
+  ubicacionActual,
+  onAplicar,
+}: {
+  ubicacionActual: UbicacionElegida | null;
+  onAplicar: (u: UbicacionElegida) => void;
+}) {
   const [abierto, setAbierto] = useState(false);
-  const [radio, setRadio] = useState(10);
+  const [punto, setPunto] = useState<PuntoUbicacion>(
+    ubicacionActual ?? CENTRO_DEFAULT
+  );
+  const [radio, setRadio] = useState(ubicacionActual?.radioKm ?? 10);
+  const [ubicando, setUbicando] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const cercanos = talleres
-    .filter((t) => t.distanciaKm <= radio)
-    .sort((a, b) => a.distanciaKm - b.distanciaKm)
-    .slice(0, 5);
+  function usarMiUbicacion() {
+    if (!navigator.geolocation) {
+      setError("Tu navegador no soporta geolocalización.");
+      return;
+    }
+    setUbicando(true);
+    setError(null);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setPunto({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        setUbicando(false);
+      },
+      () => {
+        setError(
+          "No pudimos obtener tu ubicación. Revisa los permisos del navegador o mueve el pin manualmente."
+        );
+        setUbicando(false);
+      },
+      { enableHighAccuracy: true, timeout: 10_000 }
+    );
+  }
+
+  function aplicar() {
+    onAplicar({ ...punto, radioKm: radio });
+    setAbierto(false);
+  }
 
   return (
     <>
       <Button variant="outline" size="sm" onClick={() => setAbierto(true)}>
-        <MapPin size={16} /> Talleres cercanos
+        <SlidersHorizontal size={16} /> Elegir ubicación
       </Button>
 
       <Modal
         abierto={abierto}
         onCerrar={() => setAbierto(false)}
-        titulo="Talleres cercanos"
+        titulo="Cambiar ubicación"
       >
         <div className="flex flex-col gap-md">
-          <Button variant="outline" fullWidth>
-            <LocateFixed size={18} /> Usar mi ubicación
+          <Button
+            variant="outline"
+            fullWidth
+            onClick={usarMiUbicacion}
+            disabled={ubicando}
+          >
+            <LocateFixed size={18} />
+            {ubicando ? "Ubicando…" : "Usar mi ubicación"}
           </Button>
+
+          {error && (
+            <p className="rounded-lg bg-emergency/10 px-md py-2.5 font-caption text-sm text-emergency">
+              {error}
+            </p>
+          )}
 
           {/* Radio */}
           <div>
-            <label className="mb-xs block font-caption text-sm font-semibold text-foreground-primary">
+            <label
+              htmlFor="radio-km"
+              className="mb-xs block font-caption text-sm text-foreground-secondary"
+            >
               A la redonda
             </label>
             <select
+              id="radio-km"
               value={radio}
               onChange={(e) => setRadio(Number(e.target.value))}
               className={inputBaseClass}
@@ -55,29 +126,19 @@ export function ModalTalleresCercanos({ talleres }: { talleres: Taller[] }) {
             </select>
           </div>
 
-          {/* Mapa (placeholder) */}
-          <div className="flex h-40 items-center justify-center rounded-xl border border-border-subtle bg-surface-page text-foreground-secondary">
-            <MapPin size={24} />
-            <span className="ml-sm font-caption text-sm">
-              Mapa · radio de {radio} km
-            </span>
-          </div>
+          {/* Mapa interactivo */}
+          <MapaUbicacion punto={punto} radioKm={radio} onMover={setPunto} />
 
-          {/* Lista rápida */}
-          <div className="flex flex-col gap-sm">
-            <p className="font-caption text-sm font-semibold text-foreground-primary">
-              {cercanos.length} talleres en {radio} km
-            </p>
-            {cercanos.map((t) => (
-              <TarjetaMecanico key={t.id} taller={t} />
-            ))}
-          </div>
+          <p className="font-caption text-xs text-foreground-secondary">
+            Arrastra el pin o toca el mapa para moverte. Usa + / − para ampliar
+            o reducir el radio a la redonda.
+          </p>
 
-          <div className={cn("flex justify-end gap-sm pt-sm")}>
+          <div className="flex justify-end gap-sm border-t border-border-subtle pt-md">
             <Button variant="ghost" onClick={() => setAbierto(false)}>
               Cancelar
             </Button>
-            <Button variant="primary" onClick={() => setAbierto(false)}>
+            <Button variant="primary" onClick={aplicar}>
               Aplicar
             </Button>
           </div>

@@ -42,6 +42,34 @@ test.describe("Marketplace /talleres", () => {
   });
 });
 
+test.describe("Ubicación (modal Cambiar ubicación)", () => {
+  test("aplica radio, filtra por cercanía real y se puede quitar", async ({
+    page,
+  }) => {
+    await page.goto("/talleres");
+    const contador = page.getByText(/\d+ taller(es)? encontrados?/);
+    const totalInicial = (await contador.textContent()) ?? "";
+
+    await page.getByRole("button", { name: "Elegir ubicación" }).click();
+    await expect(page.getByText("Cambiar ubicación")).toBeVisible();
+    // Mapa Leaflet montado
+    await expect(page.getByTestId("mapa-ubicacion")).toBeVisible();
+    await expect(page.getByText("Usar mi ubicación")).toBeVisible();
+
+    // Radio de 2 km desde el centro (CDMX) reduce la lista
+    await page.getByLabel("A la redonda").selectOption("2");
+    await page.getByRole("button", { name: "Aplicar" }).click();
+
+    await expect(page.getByText("Cerca de ti · radio de 2 km")).toBeVisible();
+    await expect(contador).not.toHaveText(totalInicial);
+
+    // Quitar el filtro regresa al estado inicial
+    await page.getByRole("button", { name: /Cerca de ti/ }).click();
+    await expect(page.getByText("Ordena por cercanía")).toBeVisible();
+    await expect(contador).toHaveText(totalInicial);
+  });
+});
+
 test.describe("Perfil de taller", () => {
   test("muestra datos completos de la DB", async ({ page }) => {
     await page.goto("/talleres/t1");

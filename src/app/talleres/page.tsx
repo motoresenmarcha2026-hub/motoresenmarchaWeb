@@ -2,7 +2,6 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { SOSFloatingButton } from "@/components/layout/SOSFloatingButton";
 import { TalleresCliente } from "@/features/talleres/components/TalleresCliente";
-import { ModalTalleresCercanos } from "@/features/talleres/components/ModalTalleresCercanos";
 import { getTalleres } from "@/features/talleres/data";
 
 // Datos reales desde Supabase (con fallback a mock).
@@ -26,7 +25,6 @@ export default async function TalleresPage() {
                 contáctalo por WhatsApp al instante.
               </p>
             </div>
-            <ModalTalleresCercanos talleres={talleres} />
           </div>
         </section>
 
