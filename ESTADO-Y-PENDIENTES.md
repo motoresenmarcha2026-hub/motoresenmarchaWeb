@@ -65,21 +65,25 @@
   login con redirect por rol (taller→`/panel/solicitudes`), logout, proxy protegiendo rutas.
 - **Config de dashboards hecha:** SQL corrido · "Confirm email" OFF (MVP) · Redirect URLs
   (`localhost:3000/**` + `motoresenmarcha-web.vercel.app/**`).
-- ⚠️ **Falta para que Google funcione:** crear el OAuth Client en Google Cloud y pegar
-  Client ID + Secret en Supabase → Auth → Providers → Google (pasos al final de esta sección).
-- 🧹 **Datos de prueba** creados en local (borrar cuando quieras): usuarios
+- ✅ **Google OAuth HECHO y verificado en producción** (sesión 2026-08-13): OAuth Client creado
+  en Google Cloud (proyecto `talleres-505501`), Client ID + Secret en Supabase, provider habilitado.
+  Login con Google probado end-to-end en `localhost` y en `https://www.motoresenmarcha.com`.
+- ✅ **Desplegado a producción** (commit `0dfacf8`) y **dominio en vivo**: `motoresenmarcha.com`
+  (redirige a `www`), DNS en IONOS (A `@`→`216.198.79.1`, CNAME `www`→Vercel), SSL automático.
+- ✅ **Supabase Redirect URLs** incluyen `motoresenmarcha.com/**` y `www.motoresenmarcha.com/**`.
+- ⚠️ **Pendiente Google:** la app OAuth está en **modo prueba** — solo entran cuentas *test users*
+  o la dueña. Para abrir a cualquiera: Google Cloud → Auth Platform → Público → **Publicar app**.
+- 🧹 **Datos de prueba** creados (borrar cuando quieras): usuarios
   `ana.conductora@mecaweb.mx`, `taller.rapido@mecaweb.mx` + su taller "Taller El Rápido Prueba".
 - Nota menor: el `slugify` SQL no quita acentos (`Rápido`→`r-pido`); cosmético, el slug es único.
 
-### 🔧 Pasos para activar Google OAuth (pendiente — requiere tu cuenta de Google Cloud)
-1. **Google Cloud Console** → APIs & Services → Credentials → *Create OAuth client ID* → **Web**.
-   - Authorized redirect URI: `https://ygxxsgypnoflqbwrrlxq.supabase.co/auth/v1/callback`
-   - (Si pide configurar la *OAuth consent screen* primero: tipo **External**, nombre de la app,
-     tu correo de soporte, y añádete como *test user*.)
-2. Copia **Client ID** y **Client Secret**.
-3. **Supabase** → Auth → Providers → **Google**: activar, pegar Client ID + Secret, **Save**.
-4. Probar en `http://localhost:3000/login` → "Continuar con Google" → debe caer en `/onboarding`
-   (elegir conductor/taller) la primera vez. Redirect URLs ya están configuradas.
+### 🔧 Google OAuth — HECHO ✅ (referencia)
+- OAuth Client (Web) en Google Cloud proyecto `talleres-505501`; redirect URI del cliente:
+  `https://ygxxsgypnoflqbwrrlxq.supabase.co/auth/v1/callback`. Consent screen: **External**,
+  app "Motores en Marcha", soporte `motoresenmarcha2026@gmail.com`.
+- Client ID `305350890435-...apps.googleusercontent.com` + Secret pegados en Supabase → Google.
+- **Único pendiente:** publicar la app OAuth (sale de modo prueba) → Google Cloud → Auth Platform →
+  Público → **Publicar app**. Mientras siga en prueba, solo entran cuentas agregadas como *test user*.
 
 ## 🔜 Pendientes (EN ORDEN — empezar por el 1)
 
