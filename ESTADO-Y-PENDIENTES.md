@@ -168,13 +168,61 @@
 
 ---
 
-## 🔜 Posibles encargos futuros (mencionados al entregar)
-- **CI**: correr los tests E2E en GitHub Actions en cada push.
-- **Pagos** (Stripe/Conekta) si el cliente monetiza la plataforma — feature nuevo.
-- **"Sobre nosotros"** cuando el cliente entregue el contenido.
-- **Horarios de cita reales**: las franjas son fijas (09:00–17:30), no se calculan del horario
-  del taller ni evitan doble reserva. Aceptable para MVP; mejora futura.
-- **Confirmación de email**: apagada (decisión MVP); se activa en Supabase cuando quieran.
+## ✅ Fase 8 — Post-entrega (sesión 2026-08-14 tarde/noche)
+
+### Ubicación real (diseño i46XY + Location Bar de LBTH5)
+- **Modal "Cambiar ubicación"**: mapa Leaflet/OpenStreetMap real con pin arrastrable,
+  círculo de radio, botones **+/− que amplían/reducen el radio** (2→5→10→20→30→40→50→Todos)
+  sincronizados con el select, y el mapa se reencuadra solo. Deps: `leaflet` + `react-leaflet`.
+- **Geolocalización al entrar a `/talleres`**: pide permiso; si lo dan, ordena por cercanía
+  automática (chip "Cerca de ti"); si no, campo "O escribe tu dirección" con geocodificación
+  **Nominatim/OSM** (gratuita, sesgada a MX) en el modal.
+- **Location Bar** en el marketplace: "Elegir ubicación" + orden (Cercanía/Calificación/Reseñas);
+  distancias y ETA **reales** (haversine en `features/talleres/geo.ts`).
+- **Buscador del hero** funcional (`/talleres?q=`); campo "Ubicación" del hero eliminado.
+- **Ubicación del taller en `/panel/cuenta`**: sección "Ubicación en el mapa" con pin,
+  "Usar mi ubicación" y guardar lat/lng (`actualizarTaller`). Aviso si el taller no tiene
+  coordenadas (no aparece en búsquedas por cercanía hasta colocar el pin).
+
+### Rol admin completo
+- Migración `0004_admin.sql` (rol, `is_admin()`, policies de lectura total) — **ejecutada**.
+- `motoresenmarcha2026@gmail.com` es admin (avatar = logo). Panel `/admin` con resumen
+  de toda la plataforma; `/admin/cuenta` real; guard `requireAdmin`.
+- **Botón "Eliminar datos de demostración"** (migración `0005_limpiar_demo.sql` — ejecutada):
+  confirma en 2 pasos y borra los talleres del seed + sus reseñas/citas/solicitudes.
+  Los datos reales no se tocan. **Usarlo cuando arranquen en serio.**
+
+### Calidad / pulido
+- **Imágenes del seed** reemplazadas por fotos automotrices de Unsplash acordes a cada
+  especialidad (adiós perro 🐕) + avatares de iniciales (script `scripts/update-seed-images.mjs`).
+- **Revisión responsive** (iPad 768 y celular 390) con la skill impecable: 12 defectos
+  corregidos (nav del dashboard scrolleable con ítem activo visible, header con hamburguesa
+  hasta `lg`, tabla de horarios, controles duplicados, textos cortados, hit-areas táctiles).
+- **Editar Mi Cuenta guarda de verdad** (`actualizarPerfil` → `profiles`); email/rol solo lectura.
+- Botón muerto "Comparar" del perfil → reemplazado por **"Agendar cita"** (ruta antes inalcanzable).
+- **36+ tests E2E** (público, conductor, taller, admin, ubicación, responsive del panel).
+
+### Infra nueva
+- **CI GitHub Actions** (`.github/workflows/ci.yml`): lint + typecheck + build en cada
+  push/PR. Los E2E NO corren en CI (escriben en la DB real) — correr local antes de push.
+- **SEO**: `robots.ts` (bloquea admin/panel/cuenta/citas), `sitemap.xml` (estáticas + un
+  URL por taller), `metadataBase`, y `generateMetadata` por taller (título/desc/OG image).
+- **Vercel Analytics**: `<Analytics/>` instalado en el layout.
+
+---
+
+## 🔜 Pendientes que requieren acción humana
+
+| Quién | Pendiente |
+|---|---|
+| **Edgar (1 clic)** | **Activar Web Analytics** en Vercel: dashboard → proyecto → Analytics → Enable (sin esto el script instalado no recolecta) |
+| Edgar | Commit + push de la Fase 8 (CI/SEO/analytics/ubicación taller) |
+| Admin | Usar el botón **"Eliminar datos de demostración"** en `/admin` cuando arranquen en serio |
+| Cliente | Contenido de **"Sobre nosotros"** (la página se agrega en minutos cuando exista el texto) |
+| Cliente | **Revisión de los textos legales por un abogado** antes de operar formalmente |
+| Decisión | **Confirmación de email** al registrarse (hoy OFF): Supabase → Auth → "Confirm email" |
+| Futuro | **Pagos** (Stripe/Conekta) si monetizan — feature nueva completa |
+| Futuro | **Horarios de cita reales por taller** (hoy franjas fijas 09:00–17:30, sin anti-doble-reserva) |
 
 ---
 

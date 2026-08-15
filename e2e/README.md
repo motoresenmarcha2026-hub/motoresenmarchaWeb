@@ -1,5 +1,9 @@
 # Tests E2E (Playwright)
 
+> ⚠️ Estos tests **no corren en CI** (el workflow de GitHub Actions solo hace
+> lint + typecheck + build): escriben en la base de datos real. Córrelos
+> localmente antes de hacer push.
+
 ```bash
 npm run test:e2e              # corre todo (levanta next dev solo)
 npx playwright test --ui      # modo interactivo

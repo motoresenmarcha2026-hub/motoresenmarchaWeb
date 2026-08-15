@@ -33,15 +33,18 @@ export function MapaUbicacion({
   punto: PuntoUbicacion;
   radioKm: number;
   onMover: (p: PuntoUbicacion) => void;
-  onAmpliarRadio: () => void;
-  onReducirRadio: () => void;
+  /** Sin estos callbacks el mapa es solo selector de punto (sin botones +/−). */
+  onAmpliarRadio?: () => void;
+  onReducirRadio?: () => void;
 }) {
   const contenedorRef = useRef<HTMLDivElement>(null);
   const mapaRef = useRef<L.Map | null>(null);
   const marcadorRef = useRef<L.Marker | null>(null);
   const circuloRef = useRef<L.Circle | null>(null);
   const onMoverRef = useRef(onMover);
-  onMoverRef.current = onMover;
+  useEffect(() => {
+    onMoverRef.current = onMover;
+  }, [onMover]);
 
   // Montaje único del mapa
   useEffect(() => {
@@ -108,9 +111,9 @@ export function MapaUbicacion({
       // Encuadrar el círculo completo
       mapa.fitBounds(circulo.getBounds(), { padding: [24, 24] });
     } else {
-      // "Todos": sin círculo, vista amplia centrada en el pin
+      // Sin radio (selector de punto / "Todos"): solo seguir el pin
       circulo.setStyle({ opacity: 0, fillOpacity: 0 });
-      mapa.setView([punto.lat, punto.lng], 9);
+      mapa.panTo([punto.lat, punto.lng]);
     }
   }, [punto.lat, punto.lng, radioKm]);
 
@@ -122,6 +125,7 @@ export function MapaUbicacion({
         className="h-[300px] w-full rounded-xl border border-border-subtle"
       />
       {/* Controles de radio (diseño: +/− amplían/reducen el radio) */}
+      {onAmpliarRadio && onReducirRadio && (
       <div className="absolute left-4 top-4 z-[1000] flex flex-col overflow-hidden rounded-lg border border-border-subtle bg-surface-card shadow-md">
         <button
           type="button"
@@ -142,6 +146,7 @@ export function MapaUbicacion({
           −
         </button>
       </div>
+      )}
     </div>
   );
 }

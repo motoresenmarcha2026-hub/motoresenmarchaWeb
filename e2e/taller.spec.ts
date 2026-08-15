@@ -50,6 +50,18 @@ test.describe.serial("Flujo taller", () => {
     await expect(page.locator('input[name="nombre"]')).toHaveValue(
       NOMBRE_TALLER
     );
+
+    // Sección de ubicación con mapa (taller nuevo: aviso de sin ubicación)
+    await expect(
+      page.getByRole("heading", { name: "Ubicación en el mapa" })
+    ).toBeVisible();
+    await expect(page.getByTestId("mapa-ubicacion")).toBeVisible();
+    await expect(
+      page.getByText(/no aparece en las búsquedas por cercanía/)
+    ).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Guardar ubicación" })
+    ).toBeVisible();
   });
 
   test("banner de foto casi-obligatoria y páginas del panel", async ({

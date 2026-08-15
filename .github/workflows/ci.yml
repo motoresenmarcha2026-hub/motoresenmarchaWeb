@@ -1,0 +1,38 @@
+# CI: lint + typecheck + build en cada push/PR a main.
+# Los tests E2E NO corren aquí: escriben en la base de datos real
+# (crean usuarios e2e.*). Correr localmente: npm run test:e2e (ver e2e/README.md).
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  # Claves públicas (publishable) — viajan en el bundle del cliente de todos modos.
+  NEXT_PUBLIC_SUPABASE_URL: https://ygxxsgypnoflqbwrrlxq.supabase.co
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: sb_publishable_a0eswD-ctLzbDGPOD5K-6g_OC3TyqbH
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Lint
+        run: npx eslint .
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Build
+        run: npm run build

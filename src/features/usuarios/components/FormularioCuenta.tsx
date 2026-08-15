@@ -1,14 +1,11 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import { Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { FormField, Input } from "@/components/ui/FormField";
-import {
-  actualizarPerfil,
-  type PerfilFormState,
-} from "@/features/usuarios/actions";
+import { actualizarPerfil } from "@/features/usuarios/actions";
 
 export interface CampoCuenta {
   label: string;
@@ -34,21 +31,28 @@ export function FormularioCuenta({
   children?: React.ReactNode;
 }) {
   const [editando, setEditando] = useState(false);
-  const [state, formAction, pendiente] = useActionState<
-    PerfilFormState,
-    FormData
-  >(actualizarPerfil, undefined);
+  const [pendiente, setPendiente] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [guardado, setGuardado] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
-  // Al guardar con éxito: salir del modo edición y avisar.
-  useEffect(() => {
-    if (state?.ok) {
-      setEditando(false);
-      setGuardado(true);
-      const t = setTimeout(() => setGuardado(false), 4000);
-      return () => clearTimeout(t);
+  async function guardar() {
+    if (!formRef.current || pendiente) return;
+    setPendiente(true);
+    setError(null);
+    setGuardado(false);
+    const res = await actualizarPerfil(
+      undefined,
+      new FormData(formRef.current)
+    );
+    setPendiente(false);
+    if (res?.error) {
+      setError(res.error);
+      return;
     }
-  }, [state]);
+    setGuardado(true);
+    setEditando(false);
+  }
 
   return (
     <div className="flex flex-col gap-md">
@@ -60,7 +64,11 @@ export function FormularioCuenta({
       </div>
 
       <form
-        action={formAction}
+        ref={formRef}
+        onSubmit={(e) => {
+          e.preventDefault();
+          guardar();
+        }}
         className="rounded-2xl border border-border-subtle bg-surface-card p-lg"
       >
         <div className="mb-md flex items-center justify-between">
@@ -72,7 +80,10 @@ export function FormularioCuenta({
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => setEditando(true)}
+              onClick={() => {
+                setEditando(true);
+                setGuardado(false);
+              }}
             >
               <Pencil size={14} /> Editar
             </Button>
@@ -109,9 +120,9 @@ export function FormularioCuenta({
 
         {children}
 
-        {state?.error && editando && (
+        {error && editando && (
           <p className="mt-md rounded-lg bg-emergency/10 px-md py-2.5 font-caption text-sm text-emergency">
-            {state.error}
+            {error}
           </p>
         )}
         {guardado && (

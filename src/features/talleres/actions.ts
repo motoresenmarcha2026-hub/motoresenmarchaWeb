@@ -11,6 +11,9 @@ export interface TallerInput {
   ciudad?: string;
   descripcion?: string;
   especialidades?: string[];
+  /** Coordenadas del taller (para búsquedas por cercanía). */
+  lat?: number;
+  lng?: number;
 }
 
 /** Construye un patch solo con las claves definidas (Supabase ignora undefined,

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Funnel_Sans, Inter, Geist, Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 // Headings
@@ -27,6 +28,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.motoresenmarcha.com"),
   title: "Motores en Marcha — Ayuda mecánica confiable",
   description:
     "Marketplace que conecta conductores con mecánicos y talleres. Ayuda mecánica rápida y de emergencia, a un mensaje de WhatsApp de distancia.",
@@ -47,6 +49,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-surface-page text-foreground-primary font-body">
         {children}
+        <Analytics />
       </body>
     </html>
   );
