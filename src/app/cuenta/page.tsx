@@ -13,14 +13,18 @@ export default async function CuentaConductorPage() {
         titulo="Información de la cuenta"
         descripcion="Administra tus datos personales y de contacto."
         campos={[
-          { label: "Nombre completo", valor: perfil.nombre ?? "" },
+          { label: "Nombre completo", valor: perfil.nombre ?? "", name: "nombre" },
           {
             label: "Correo electrónico",
             valor: user?.email ?? "",
             type: "email",
           },
-          { label: "Teléfono / WhatsApp", valor: perfil.telefono ?? "" },
-          { label: "Ciudad", valor: perfil.ciudad ?? "" },
+          {
+            label: "Teléfono / WhatsApp",
+            valor: perfil.telefono ?? "",
+            name: "telefono",
+          },
+          { label: "Ciudad", valor: perfil.ciudad ?? "", name: "ciudad" },
         ]}
       />
     </DashboardShell>

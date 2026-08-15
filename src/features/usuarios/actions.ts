@@ -2,6 +2,7 @@
 
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 
 export type AuthState = { error?: string } | undefined;
@@ -211,4 +212,38 @@ export async function completarPerfil(
   }
 
   redirect("/");
+}
+
+// ============================================================
+// CUENTA: actualizar datos del perfil (conductor / admin)
+// ============================================================
+export type PerfilFormState = { error?: string; ok?: string } | undefined;
+
+export async function actualizarPerfil(
+  _prev: PerfilFormState,
+  formData: FormData
+): Promise<PerfilFormState> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "Tu sesión expiró. Vuelve a iniciar sesión." };
+
+  const nombre = str(formData, "nombre");
+  if (!nombre) return { error: "El nombre no puede quedar vacío." };
+
+  const cambios: Record<string, string | null> = { nombre };
+  // Solo actualizar los campos presentes en el formulario
+  if (formData.has("telefono")) cambios.telefono = str(formData, "telefono") || null;
+  if (formData.has("ciudad")) cambios.ciudad = str(formData, "ciudad") || null;
+
+  const { error } = await supabase
+    .from("profiles")
+    .update(cambios)
+    .eq("id", user.id);
+  if (error) return { error: "No se pudieron guardar los cambios. Inténtalo de nuevo." };
+
+  revalidatePath("/cuenta");
+  revalidatePath("/admin/cuenta");
+  return { ok: "Datos guardados." };
 }

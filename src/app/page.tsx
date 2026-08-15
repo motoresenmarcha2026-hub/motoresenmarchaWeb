@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Search, MapPin, MessageCircle, Siren, ArrowRight } from "lucide-react";
+import { Search, MessageCircle, Siren, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -70,17 +70,6 @@ export default async function HomePage() {
                     className="w-full rounded-lg bg-surface-page py-2.5 pl-10 pr-md font-body text-sm text-foreground-primary placeholder:text-foreground-secondary focus:outline-none"
                   />
                 </div>
-                <div className="relative flex-1">
-                  <MapPin
-                    size={18}
-                    className="absolute left-md top-1/2 -translate-y-1/2 text-foreground-secondary"
-                  />
-                  <input
-                    name="ubicacion"
-                    placeholder="Ubicación"
-                    className="w-full rounded-lg bg-surface-page py-2.5 pl-10 pr-md font-body text-sm text-foreground-primary placeholder:text-foreground-secondary focus:outline-none"
-                  />
-                </div>
                 <button
                   type="submit"
                   className={cn(buttonVariants({ variant: "primary" }))}
@@ -89,9 +78,9 @@ export default async function HomePage() {
                 </button>
               </form>
 
-              <div className="flex flex-wrap items-center gap-md text-sm text-foreground-inverse-secondary">
+              <div className="flex flex-wrap items-center gap-x-md gap-y-xs text-sm text-foreground-inverse-secondary">
                 <span>+500 mecánicos verificados</span>
-                <span className="h-1 w-1 rounded-full bg-foreground-inverse-secondary" />
+                <span className="hidden h-1 w-1 rounded-full bg-foreground-inverse-secondary sm:block" />
                 <span>Respuesta en minutos</span>
               </div>
             </div>

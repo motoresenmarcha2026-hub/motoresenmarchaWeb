@@ -37,7 +37,7 @@ export default async function SolicitarPage({
             </div>
             <Link
               href="/talleres"
-              className="font-caption text-sm font-semibold text-action-primary hover:underline"
+              className="shrink-0 whitespace-nowrap font-caption text-sm font-semibold text-action-primary hover:underline"
             >
               Cambiar taller
             </Link>

@@ -20,15 +20,21 @@ const PIN_ICON = L.divIcon({
 /**
  * Mapa Leaflet/OpenStreetMap con pin arrastrable y círculo de radio,
  * según el diseño del modal "Cambiar ubicación" (nodo i46XY).
+ * Los botones +/− amplían o reducen el RADIO (no el zoom); el mapa se
+ * reencuadra solo para mantener el círculo visible. radioKm = 0 → todos.
  */
 export function MapaUbicacion({
   punto,
   radioKm,
   onMover,
+  onAmpliarRadio,
+  onReducirRadio,
 }: {
   punto: PuntoUbicacion;
   radioKm: number;
   onMover: (p: PuntoUbicacion) => void;
+  onAmpliarRadio: () => void;
+  onReducirRadio: () => void;
 }) {
   const contenedorRef = useRef<HTMLDivElement>(null);
   const mapaRef = useRef<L.Map | null>(null);
@@ -44,6 +50,7 @@ export function MapaUbicacion({
     const mapa = L.map(contenedorRef.current, {
       center: [punto.lat, punto.lng],
       zoom: 12,
+      zoomControl: false, // los +/− del diseño controlan el radio
       attributionControl: true,
     });
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -57,11 +64,12 @@ export function MapaUbicacion({
     }).addTo(mapa);
 
     const circulo = L.circle([punto.lat, punto.lng], {
-      radius: radioKm * 1000,
+      radius: radioKm > 0 ? radioKm * 1000 : 0,
       color: "#1E56A8",
       weight: 2,
       fillColor: "#1E56A8",
       fillOpacity: 0.2,
+      opacity: radioKm > 0 ? 1 : 0,
     }).addTo(mapa);
 
     marcador.on("dragend", () => {
@@ -85,21 +93,55 @@ export function MapaUbicacion({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Sincronizar pin/círculo/vista cuando cambian punto o radio
+  // Sincronizar pin/círculo/encuadre cuando cambian punto o radio
   useEffect(() => {
     const mapa = mapaRef.current;
-    if (!mapa) return;
+    const circulo = circuloRef.current;
+    if (!mapa || !circulo) return;
+
     marcadorRef.current?.setLatLng([punto.lat, punto.lng]);
-    circuloRef.current?.setLatLng([punto.lat, punto.lng]);
-    circuloRef.current?.setRadius(radioKm * 1000);
-    mapa.panTo([punto.lat, punto.lng]);
+    circulo.setLatLng([punto.lat, punto.lng]);
+
+    if (radioKm > 0) {
+      circulo.setRadius(radioKm * 1000);
+      circulo.setStyle({ opacity: 1, fillOpacity: 0.2 });
+      // Encuadrar el círculo completo
+      mapa.fitBounds(circulo.getBounds(), { padding: [24, 24] });
+    } else {
+      // "Todos": sin círculo, vista amplia centrada en el pin
+      circulo.setStyle({ opacity: 0, fillOpacity: 0 });
+      mapa.setView([punto.lat, punto.lng], 9);
+    }
   }, [punto.lat, punto.lng, radioKm]);
 
   return (
-    <div
-      ref={contenedorRef}
-      data-testid="mapa-ubicacion"
-      className="h-[300px] w-full rounded-xl border border-border-subtle"
-    />
+    <div className="relative">
+      <div
+        ref={contenedorRef}
+        data-testid="mapa-ubicacion"
+        className="h-[300px] w-full rounded-xl border border-border-subtle"
+      />
+      {/* Controles de radio (diseño: +/− amplían/reducen el radio) */}
+      <div className="absolute left-4 top-4 z-[1000] flex flex-col overflow-hidden rounded-lg border border-border-subtle bg-surface-card shadow-md">
+        <button
+          type="button"
+          aria-label="Ampliar radio"
+          data-testid="radio-mas"
+          onClick={onAmpliarRadio}
+          className="flex h-9 w-9 items-center justify-center border-b border-border-subtle font-heading text-lg font-bold text-foreground-primary hover:bg-surface-page"
+        >
+          +
+        </button>
+        <button
+          type="button"
+          aria-label="Reducir radio"
+          data-testid="radio-menos"
+          onClick={onReducirRadio}
+          className="flex h-9 w-9 items-center justify-center font-heading text-lg font-bold text-foreground-primary hover:bg-surface-page"
+        >
+          −
+        </button>
+      </div>
+    </div>
   );
 }

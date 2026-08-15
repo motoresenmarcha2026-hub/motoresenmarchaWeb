@@ -68,8 +68,11 @@ export function TarjetaTaller({
 
         {/* Ubicación */}
         <p className="flex items-center gap-xs font-caption text-sm text-foreground-secondary">
-          <MapPin size={14} />
-          {taller.ubicacion.direccion} · {formatearDistancia(taller.distanciaKm)}
+          <MapPin size={14} className="shrink-0" />
+          <span className="min-w-0 truncate">{taller.ubicacion.direccion}</span>
+          <span className="shrink-0 whitespace-nowrap">
+            · {formatearDistancia(taller.distanciaKm)}
+          </span>
         </p>
 
         {/* Acciones */}

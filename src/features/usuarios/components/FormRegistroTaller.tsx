@@ -75,8 +75,8 @@ export function FormRegistroTaller() {
           <input key={e} type="hidden" name="especialidades" value={e} />
         ))}
 
-        <label className="flex items-start gap-sm font-caption text-sm text-foreground-secondary">
-          <input type="checkbox" required className="mt-0.5 h-4 w-4 accent-action-primary" />
+        <label className="flex cursor-pointer items-start gap-sm py-xs font-caption text-sm text-foreground-secondary">
+          <input type="checkbox" required className="mt-0.5 h-5 w-5 shrink-0 accent-action-primary" />
           <span>
             Acepto los{" "}
             <Link href="/terminos" target="_blank" className="text-action-primary underline">

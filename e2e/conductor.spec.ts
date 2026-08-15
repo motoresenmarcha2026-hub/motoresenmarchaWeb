@@ -92,6 +92,21 @@ test.describe.serial("Flujo conductor", () => {
     // Sidebar con el nombre real; el email vive en un input
     await expect(page.getByText(NOMBRE).first()).toBeVisible();
     await expect(page.locator('input[type="email"]')).toHaveValue(EMAIL);
+
+    // Editar y guardar persiste en la DB
+    await page.getByRole("button", { name: "Editar" }).click();
+    await page.getByLabel("Ciudad").fill("Guadalajara");
+    await page.getByRole("button", { name: "Guardar cambios" }).click();
+    await expect(page.getByText("Datos guardados.")).toBeVisible();
+
+    // El email no es editable
+    await page.getByRole("button", { name: "Editar" }).click();
+    await expect(page.locator('input[type="email"]')).toBeDisabled();
+    await page.getByRole("button", { name: "Cancelar" }).click();
+
+    // Tras recargar, el cambio sigue ahí
+    await page.reload();
+    await expect(page.getByLabel("Ciudad")).toHaveValue("Guadalajara");
   });
 
   test("solicitar muestra el nombre real del conductor", async ({ page }) => {

@@ -45,13 +45,13 @@ export function Header() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-md px-md md:px-lg">
         <Logo />
 
-        {/* Nav desktop */}
-        <nav className="hidden items-center gap-lg md:flex">
+        {/* Nav desktop (lg+: en iPad vertical el nav no cabe sin romperse) */}
+        <nav className="hidden items-center gap-lg lg:flex">
           {NAV.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="font-body text-sm font-medium text-foreground-inverse-secondary transition-colors hover:text-foreground-inverse"
+              className="whitespace-nowrap font-body text-sm font-medium text-foreground-inverse-secondary transition-colors hover:text-foreground-inverse"
             >
               {item.label}
             </Link>
@@ -59,14 +59,14 @@ export function Header() {
         </nav>
 
         {/* Acciones desktop */}
-        <div className="hidden md:flex">
+        <div className="hidden lg:flex">
           <AuthNav variant="desktop" />
         </div>
 
-        {/* Toggle móvil */}
+        {/* Toggle móvil/tablet */}
         <button
           type="button"
-          className="text-foreground-inverse md:hidden"
+          className="text-foreground-inverse lg:hidden"
           onClick={() => setAbierto((v) => !v)}
           aria-label={abierto ? "Cerrar menú" : "Abrir menú"}
           aria-expanded={abierto}
@@ -77,7 +77,7 @@ export function Header() {
 
       {/* Menú móvil */}
       {abierto && (
-        <div className="border-t border-white/10 bg-surface-inverse px-md pb-md md:hidden">
+        <div className="border-t border-white/10 bg-surface-inverse px-md pb-md lg:hidden">
           <nav className="flex flex-col gap-xs py-sm">
             {NAV.map((item) => (
               <Link

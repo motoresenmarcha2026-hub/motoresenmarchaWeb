@@ -20,13 +20,13 @@ export default async function AdminCuentaPage() {
         titulo="Administrar cuenta"
         descripcion="Datos de la cuenta de administración de la plataforma."
         campos={[
-          { label: "Nombre", valor: perfil.nombre ?? "" },
+          { label: "Nombre", valor: perfil.nombre ?? "", name: "nombre" },
           {
             label: "Correo electrónico",
             valor: user?.email ?? "",
             type: "email",
           },
-          { label: "Teléfono", valor: perfil.telefono ?? "" },
+          { label: "Teléfono", valor: perfil.telefono ?? "", name: "telefono" },
           { label: "Rol", valor: "Administrador" },
         ]}
       />

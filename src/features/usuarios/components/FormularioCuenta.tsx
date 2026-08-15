@@ -1,19 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { FormField, Input } from "@/components/ui/FormField";
+import {
+  actualizarPerfil,
+  type PerfilFormState,
+} from "@/features/usuarios/actions";
 
 export interface CampoCuenta {
   label: string;
   valor: string;
   type?: string;
   anchoCompleto?: boolean;
+  /** name del campo en el formulario; sin name el campo es solo lectura. */
+  name?: string;
 }
 
-/** Formulario de "Información de la cuenta" reutilizable (taller/conductor/admin). */
+/** Formulario de "Información de la cuenta" (guarda en `profiles`). */
 export function FormularioCuenta({
   titulo,
   descripcion,
@@ -28,6 +34,21 @@ export function FormularioCuenta({
   children?: React.ReactNode;
 }) {
   const [editando, setEditando] = useState(false);
+  const [state, formAction, pendiente] = useActionState<
+    PerfilFormState,
+    FormData
+  >(actualizarPerfil, undefined);
+  const [guardado, setGuardado] = useState(false);
+
+  // Al guardar con éxito: salir del modo edición y avisar.
+  useEffect(() => {
+    if (state?.ok) {
+      setEditando(false);
+      setGuardado(true);
+      const t = setTimeout(() => setGuardado(false), 4000);
+      return () => clearTimeout(t);
+    }
+  }, [state]);
 
   return (
     <div className="flex flex-col gap-md">
@@ -38,51 +59,83 @@ export function FormularioCuenta({
         <p className="font-body text-foreground-secondary">{descripcion}</p>
       </div>
 
-      <div className="rounded-2xl border border-border-subtle bg-surface-card p-lg">
+      <form
+        action={formAction}
+        className="rounded-2xl border border-border-subtle bg-surface-card p-lg"
+      >
         <div className="mb-md flex items-center justify-between">
           <h2 className="font-heading text-lg font-bold text-foreground-primary">
             {seccionLabel}
           </h2>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setEditando((v) => !v)}
-          >
-            <Pencil size={14} /> {editando ? "Cancelar" : "Editar"}
-          </Button>
+          {!editando && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setEditando(true)}
+            >
+              <Pencil size={14} /> Editar
+            </Button>
+          )}
         </div>
 
-        <div className="grid gap-md sm:grid-cols-2">
-          {campos.map((c) => (
-            <FormField
-              key={c.label}
-              label={c.label}
-              className={cn(c.anchoCompleto && "sm:col-span-2")}
-            >
-              <Input
-                type={c.type ?? "text"}
-                defaultValue={c.valor}
-                disabled={!editando}
-                className={cn(!editando && "bg-surface-page")}
-              />
-            </FormField>
-          ))}
+        {/* key reinicia los defaultValue al cancelar la edición */}
+        <div key={String(editando)} className="grid gap-md sm:grid-cols-2">
+          {campos.map((c) => {
+            const editable = Boolean(c.name);
+            return (
+              <FormField
+                key={c.label}
+                label={c.label}
+                htmlFor={c.name}
+                className={cn(c.anchoCompleto && "sm:col-span-2")}
+              >
+                <Input
+                  id={c.name}
+                  name={c.name}
+                  type={c.type ?? "text"}
+                  defaultValue={c.valor}
+                  disabled={!editando || !editable}
+                  title={c.valor}
+                  className={cn(
+                    "overflow-hidden text-ellipsis",
+                    (!editando || !editable) && "bg-surface-page"
+                  )}
+                />
+              </FormField>
+            );
+          })}
         </div>
 
         {children}
 
+        {state?.error && editando && (
+          <p className="mt-md rounded-lg bg-emergency/10 px-md py-2.5 font-caption text-sm text-emergency">
+            {state.error}
+          </p>
+        )}
+        {guardado && (
+          <p className="mt-md rounded-lg bg-status-available/10 px-md py-2.5 font-caption text-sm text-status-available">
+            Datos guardados.
+          </p>
+        )}
+
         {editando && (
           <div className="mt-lg flex justify-end gap-sm">
-            <Button variant="ghost" onClick={() => setEditando(false)}>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => setEditando(false)}
+              disabled={pendiente}
+            >
               Cancelar
             </Button>
-            <Button variant="primary" onClick={() => setEditando(false)}>
-              {/* TODO: conectar a Supabase — persistir cambios de la cuenta */}
-              Guardar cambios
+            <Button type="submit" variant="primary" disabled={pendiente}>
+              {pendiente ? "Guardando…" : "Guardar cambios"}
             </Button>
           </div>
         )}
-      </div>
+      </form>
     </div>
   );
 }

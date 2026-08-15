@@ -42,6 +42,37 @@ test.describe("Marketplace /talleres", () => {
   });
 });
 
+test.describe("Buscador del hero", () => {
+  test("busca desde el home y llega filtrado a talleres", async ({ page }) => {
+    await page.goto("/");
+    await page.getByPlaceholder("¿Qué servicio necesitas?").fill("frenos");
+    await page.getByRole("button", { name: "Buscar" }).click();
+
+    await expect(page).toHaveURL(/\/talleres\?q=frenos/);
+    // El input del marketplace viene pre-llenado y la lista filtrada
+    await expect(page.getByPlaceholder(/Buscar por nombre/)).toHaveValue(
+      "frenos"
+    );
+    await expect(page.getByText("Frenos y Suspensión Torres")).toBeVisible();
+  });
+});
+
+test.describe("Geolocalización automática al entrar", () => {
+  test.use({
+    permissions: ["geolocation"],
+    geolocation: { latitude: 19.4326, longitude: -99.1332 },
+  });
+
+  test("con permiso concedido ordena por cercanía", async ({ page }) => {
+    await page.goto("/talleres");
+    await expect(
+      page.getByText("Cerca de ti · todos los talleres")
+    ).toBeVisible();
+    // El taller en el punto exacto (t1) queda con distancia 0
+    await expect(page.getByText("Taller El Rápido").first()).toBeVisible();
+  });
+});
+
 test.describe("Ubicación (modal Cambiar ubicación)", () => {
   test("aplica radio, filtra por cercanía real y se puede quitar", async ({
     page,
@@ -56,8 +87,24 @@ test.describe("Ubicación (modal Cambiar ubicación)", () => {
     await expect(page.getByTestId("mapa-ubicacion")).toBeVisible();
     await expect(page.getByText("Usar mi ubicación")).toBeVisible();
 
+    // Los botones +/− del mapa recorren la escalera de radios
+    const radioSelect = page.getByLabel("A la redonda");
+    await radioSelect.selectOption("10");
+    await page.getByTestId("radio-mas").click(); // 10 → 20
+    await expect(radioSelect).toHaveValue("20");
+    await page.getByTestId("radio-mas").click(); // 20 → 30
+    await expect(radioSelect).toHaveValue("30");
+    // Hasta el final: 40 → 50 → Todos (0)
+    await page.getByTestId("radio-mas").click();
+    await page.getByTestId("radio-mas").click();
+    await page.getByTestId("radio-mas").click();
+    await expect(radioSelect).toHaveValue("0");
+    // Y de regreso
+    await page.getByTestId("radio-menos").click(); // Todos → 50
+    await expect(radioSelect).toHaveValue("50");
+
     // Radio de 2 km desde el centro (CDMX) reduce la lista
-    await page.getByLabel("A la redonda").selectOption("2");
+    await radioSelect.selectOption("2");
     await page.getByRole("button", { name: "Aplicar" }).click();
 
     await expect(page.getByText("Cerca de ti · radio de 2 km")).toBeVisible();
@@ -65,7 +112,9 @@ test.describe("Ubicación (modal Cambiar ubicación)", () => {
 
     // Quitar el filtro regresa al estado inicial
     await page.getByRole("button", { name: /Cerca de ti/ }).click();
-    await expect(page.getByText("Ordena por cercanía")).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Elegir ubicación" })
+    ).toBeVisible();
     await expect(contador).toHaveText(totalInicial);
   });
 });

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -32,6 +33,15 @@ export function DashboardShell({
 }) {
   const pathname = usePathname();
   const navItems = NAVS[navKey];
+  const navRef = useRef<HTMLElement>(null);
+
+  // En móvil la nav es una fila con scroll: asegurar que el ítem activo
+  // quede visible al entrar (si no, el usuario no sabe dónde está).
+  useEffect(() => {
+    navRef.current
+      ?.querySelector('[data-activo="true"]')
+      ?.scrollIntoView({ inline: "center", block: "nearest" });
+  }, [pathname]);
 
   return (
     <>
@@ -69,8 +79,12 @@ export function DashboardShell({
                 )}
               </div>
 
-              {/* Navegación */}
-              <nav className="flex gap-xs overflow-x-auto pt-md md:flex-col md:overflow-visible">
+              {/* Navegación: fila con scroll en móvil (con máscara como
+                  affordance), columna en md+ */}
+              <nav
+                ref={navRef}
+                className="flex gap-xs overflow-x-auto pt-md [-webkit-overflow-scrolling:touch] [mask-image:linear-gradient(to_right,black_85%,transparent)] md:flex-col md:overflow-visible md:[mask-image:none]"
+              >
                 {navItems.map((item) => {
                   const activo = pathname === item.href;
                   const Icon = item.icon;
@@ -78,6 +92,7 @@ export function DashboardShell({
                     <Link
                       key={item.href}
                       href={item.href}
+                      data-activo={activo || undefined}
                       className={cn(
                         "flex shrink-0 items-center gap-sm rounded-lg px-sm py-2.5 font-caption text-sm font-medium transition-colors",
                         activo

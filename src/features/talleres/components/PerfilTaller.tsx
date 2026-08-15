@@ -115,8 +115,9 @@ export function PerfilTaller({ taller }: { taller: Taller }) {
 
       {/* Sobre + disponibilidad */}
       <section className="mx-auto max-w-7xl px-md py-2xl md:px-lg">
-        <div className="grid gap-xl md:grid-cols-3">
-          <div className="md:col-span-2">
+        {/* 2 cols en tablet (la card de horarios necesita ~300px), 3 en desktop */}
+        <div className="grid gap-xl md:grid-cols-2 lg:grid-cols-3">
+          <div className="lg:col-span-2">
             <h2 className="mb-md font-heading text-2xl font-bold text-foreground-primary">
               Sobre {taller.mecanicoPrincipal}
             </h2>
@@ -134,12 +135,12 @@ export function PerfilTaller({ taller }: { taller: Taller }) {
               {taller.horarios.map((h) => (
                 <li
                   key={h.dia}
-                  className="flex items-center justify-between font-caption text-sm"
+                  className="flex items-center justify-between gap-md font-caption text-sm"
                 >
-                  <span className="text-foreground-secondary">
+                  <span className="min-w-0 truncate text-foreground-secondary">
                     {DIAS[h.dia]}
                   </span>
-                  <span className="font-data text-foreground-primary">
+                  <span className="shrink-0 whitespace-nowrap font-data tabular-nums text-foreground-primary">
                     {h.cerrado ? "Cerrado" : `${h.abre} – ${h.cierra}`}
                   </span>
                 </li>

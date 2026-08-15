@@ -5,7 +5,12 @@ import { TalleresCliente } from "@/features/talleres/components/TalleresCliente"
 import { getTalleres } from "@/features/talleres/data";
 
 // Datos reales desde Supabase (con fallback a mock).
-export default async function TalleresPage() {
+export default async function TalleresPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string>>;
+}) {
+  const { q } = await searchParams;
   const talleres = await getTalleres();
 
   return (
@@ -29,7 +34,7 @@ export default async function TalleresPage() {
         </section>
 
         <div className="mx-auto max-w-7xl px-md py-lg md:px-lg">
-          <TalleresCliente talleres={talleres} />
+          <TalleresCliente talleres={talleres} textoInicial={q ?? ""} />
         </div>
       </main>
 

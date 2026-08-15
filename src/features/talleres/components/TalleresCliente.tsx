@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MapPin, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { inputBaseClass } from "@/components/ui/FormField";
@@ -27,15 +27,51 @@ const ORDENES: { key: Orden; label: string }[] = [
 ];
 
 /** Listado de talleres con filtros, ubicación real y orden (en cliente). */
-export function TalleresCliente({ talleres }: { talleres: Taller[] }) {
-  const [filtros, setFiltros] = useState<EstadoFiltros>(FILTROS_INICIALES);
+export function TalleresCliente({
+  talleres,
+  textoInicial = "",
+}: {
+  talleres: Taller[];
+  /** Búsqueda inicial (?q= del buscador del hero). */
+  textoInicial?: string;
+}) {
+  const [filtros, setFiltros] = useState<EstadoFiltros>({
+    ...FILTROS_INICIALES,
+    texto: textoInicial,
+  });
   const [ubicacion, setUbicacion] = useState<UbicacionElegida | null>(null);
   const [orden, setOrden] = useState<Orden>("cercania");
+
+  // Al entrar: pedir la ubicación del navegador. Si la dan, ordenamos por
+  // cercanía real ("Todos": sin filtrar por radio). Si no, todo sigue igual
+  // y queda el pin manual del modal.
+  useEffect(() => {
+    if (!("geolocation" in navigator)) return;
+    let cancelado = false;
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        if (cancelado) return;
+        setUbicacion({
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+          radioKm: 0,
+        });
+      },
+      () => {
+        /* permiso denegado: sin ubicación automática */
+      },
+      { timeout: 8_000 }
+    );
+    return () => {
+      cancelado = true;
+    };
+  }, []);
 
   const resultados = useMemo(() => {
     const texto = filtros.texto.trim().toLowerCase();
 
-    // Con ubicación elegida: recalcular distancia/ETA reales y filtrar por radio.
+    // Con ubicación elegida: recalcular distancia/ETA reales y filtrar por
+    // radio (radioKm = 0 significa "Todos": solo ordena, no filtra).
     let base = talleres;
     if (ubicacion) {
       base = talleres
@@ -48,7 +84,9 @@ export function TalleresCliente({ talleres }: { talleres: Taller[] }) {
             etaMin: etaMinutos(km),
           };
         })
-        .filter((t) => t.distanciaKm <= ubicacion.radioKm);
+        .filter(
+          (t) => ubicacion.radioKm === 0 || t.distanciaKm <= ubicacion.radioKm
+        );
     }
 
     const filtrados = base.filter((t) => {
@@ -100,15 +138,12 @@ export function TalleresCliente({ talleres }: { talleres: Taller[] }) {
               className="flex items-center gap-xs rounded-xl border border-action-primary/40 bg-action-primary/10 px-md py-2.5 font-body text-sm font-medium text-foreground-primary"
             >
               <MapPin size={16} className="text-action-primary" />
-              Cerca de ti · radio de {ubicacion.radioKm} km
+              {ubicacion.radioKm === 0
+                ? "Cerca de ti · todos los talleres"
+                : `Cerca de ti · radio de ${ubicacion.radioKm} km`}
               <X size={14} className="text-foreground-secondary" />
             </button>
-          ) : (
-            <span className="flex items-center gap-xs rounded-xl border border-border-subtle bg-surface-card px-md py-2.5 font-body text-sm font-medium text-foreground-primary">
-              <MapPin size={16} className="text-action-primary" />
-              Ordena por cercanía
-            </span>
-          )}
+          ) : null}
           <ModalTalleresCercanos
             ubicacionActual={ubicacion}
             onAplicar={(u) => {

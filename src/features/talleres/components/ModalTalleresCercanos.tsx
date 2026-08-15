@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import dynamic from "next/dynamic";
-import { LocateFixed, SlidersHorizontal } from "lucide-react";
+import { LocateFixed, Search, SlidersHorizontal } from "lucide-react";
 import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
 import { inputBaseClass } from "@/components/ui/FormField";
@@ -21,7 +21,13 @@ const MapaUbicacion = dynamic(
   }
 );
 
-const RADIOS = [2, 5, 10, 20];
+/** Escalera de radios; 0 = "Todos" (sin límite). De 10 en 10 hasta todos. */
+const RADIOS = [2, 5, 10, 20, 30, 40, 50, 0];
+
+export function etiquetaRadio(r: number): string {
+  return r === 0 ? "Todos los talleres" : `${r} kilómetros`;
+}
+
 /** Centro por defecto: CDMX (donde vive el seed). */
 const CENTRO_DEFAULT: PuntoUbicacion = { lat: 19.4326, lng: -99.1332 };
 
@@ -48,6 +54,34 @@ export function ModalTalleresCercanos({
   const [radio, setRadio] = useState(ubicacionActual?.radioKm ?? 10);
   const [ubicando, setUbicando] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [direccion, setDireccion] = useState("");
+  const [buscando, setBuscando] = useState(false);
+
+  /** Geocodifica la dirección escrita (Nominatim/OSM) y mueve el pin. */
+  async function buscarDireccion() {
+    const q = direccion.trim();
+    if (!q || buscando) return;
+    setBuscando(true);
+    setError(null);
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=mx&q=${encodeURIComponent(q)}`,
+        { headers: { Accept: "application/json" } }
+      );
+      const data: { lat: string; lon: string }[] = await res.json();
+      if (data[0]) {
+        setPunto({ lat: Number(data[0].lat), lng: Number(data[0].lon) });
+      } else {
+        setError(
+          "No encontramos esa dirección. Agrega más detalle (colonia, ciudad) o mueve el pin en el mapa."
+        );
+      }
+    } catch {
+      setError("No se pudo buscar la dirección. Intenta de nuevo.");
+    } finally {
+      setBuscando(false);
+    }
+  }
 
   function usarMiUbicacion() {
     if (!navigator.geolocation) {
@@ -76,6 +110,13 @@ export function ModalTalleresCercanos({
     setAbierto(false);
   }
 
+  /** +/− del mapa recorren la escalera de radios (0 = Todos al final). */
+  function moverRadio(paso: 1 | -1) {
+    const i = RADIOS.indexOf(radio);
+    const siguiente = RADIOS[Math.min(RADIOS.length - 1, Math.max(0, i + paso))];
+    setRadio(siguiente);
+  }
+
   return (
     <>
       <Button variant="outline" size="sm" onClick={() => setAbierto(true)}>
@@ -97,6 +138,31 @@ export function ModalTalleresCercanos({
             <LocateFixed size={18} />
             {ubicando ? "Ubicando…" : "Usar mi ubicación"}
           </Button>
+
+          {/* Alternativa sin permisos: escribir la dirección */}
+          <div className="flex gap-sm">
+            <input
+              value={direccion}
+              onChange={(e) => setDireccion(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  buscarDireccion();
+                }
+              }}
+              placeholder="O escribe tu dirección o colonia…"
+              className={inputBaseClass}
+            />
+            <Button
+              variant="outline"
+              onClick={buscarDireccion}
+              disabled={buscando}
+              aria-label="Buscar dirección"
+            >
+              <Search size={16} />
+              {buscando ? "Buscando…" : "Buscar"}
+            </Button>
+          </div>
 
           {error && (
             <p className="rounded-lg bg-emergency/10 px-md py-2.5 font-caption text-sm text-emergency">
@@ -120,14 +186,20 @@ export function ModalTalleresCercanos({
             >
               {RADIOS.map((r) => (
                 <option key={r} value={r}>
-                  {r} kilómetros
+                  {etiquetaRadio(r)}
                 </option>
               ))}
             </select>
           </div>
 
           {/* Mapa interactivo */}
-          <MapaUbicacion punto={punto} radioKm={radio} onMover={setPunto} />
+          <MapaUbicacion
+            punto={punto}
+            radioKm={radio}
+            onMover={setPunto}
+            onAmpliarRadio={() => moverRadio(1)}
+            onReducirRadio={() => moverRadio(-1)}
+          />
 
           <p className="font-caption text-xs text-foreground-secondary">
             Arrastra el pin o toca el mapa para moverte. Usa + / − para ampliar

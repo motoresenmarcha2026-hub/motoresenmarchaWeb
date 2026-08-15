@@ -45,7 +45,7 @@ export function ResumenSolicitud({
       <h2 className="font-heading text-lg font-bold">Resumen de la solicitud</h2>
 
       <dl className="flex flex-col gap-sm font-caption text-sm">
-        <Fila label="Cliente" valor={cliente} />
+        {cliente && <Fila label="Cliente" valor={cliente} />}
         {taller && <Fila label="Taller" valor={taller.nombre} />}
         <Fila
           label="Tipo"
@@ -146,7 +146,7 @@ function construirMensaje({
       : "Hola, necesito ayuda mecánica";
   return [
     encabezado,
-    `• Cliente: ${cliente}`,
+    cliente ? `• Cliente: ${cliente}` : null,
     tipo ? `• Problema: ${tipoProblemaMeta(tipo).label}` : null,
     descripcion ? `• Detalle: ${descripcion}` : null,
     ubicacion ? `• Ubicación: ${ubicacion}` : null,
