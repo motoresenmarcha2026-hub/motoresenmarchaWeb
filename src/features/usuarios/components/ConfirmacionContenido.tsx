@@ -6,7 +6,7 @@ import { CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/Button";
 
-type Tipo = "conductor" | "taller" | "solicitud";
+type Tipo = "conductor" | "taller" | "vendedor" | "solicitud";
 
 const CONTENIDO: Record<
   Tipo,
@@ -34,6 +34,15 @@ const CONTENIDO: Record<
       { href: "/", label: "Ir al inicio", variant: "outline" },
     ],
   },
+  vendedor: {
+    titulo: "¡Negocio registrado!",
+    mensaje:
+      "Tu refaccionaria ya forma parte del marketplace. Entra a tu panel para publicar tus refacciones.",
+    ctas: [
+      { href: "/vendedor/refacciones", label: "Ir a mi panel", variant: "primary" },
+      { href: "/", label: "Ir al inicio", variant: "outline" },
+    ],
+  },
   solicitud: {
     titulo: "¡Solicitud enviada!",
     mensaje:
@@ -51,11 +60,11 @@ export function ConfirmacionContenido() {
   const c = CONTENIDO[tipo] ?? CONTENIDO.solicitud;
 
   return (
-    <div className="mx-auto flex max-w-[36rem] flex-col items-center gap-md rounded-2xl border border-border-subtle bg-surface-card p-2xl text-center">
-      <span className="flex h-16 w-16 items-center justify-center rounded-full bg-status-available/15 text-status-available">
+    <div className="mx-auto flex max-w-[36rem] flex-col items-center gap-md border-2 border-border-primary bg-surface-card p-2xl text-center">
+      <span className="flex h-16 w-16 items-center justify-center rounded-none border-2 border-border-primary bg-status-available text-foreground-inverse">
         <CheckCircle2 size={40} />
       </span>
-      <h1 className="font-heading text-3xl font-extrabold text-foreground-primary">
+      <h1 className="font-heading text-4xl font-extrabold uppercase leading-none text-foreground-primary md:text-5xl">
         {c.titulo}
       </h1>
       <p className="font-body text-foreground-secondary">{c.mensaje}</p>

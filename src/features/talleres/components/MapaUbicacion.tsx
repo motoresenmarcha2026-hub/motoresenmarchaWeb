@@ -10,9 +10,19 @@ export interface PuntoUbicacion {
 }
 
 /** Pin azul (action-primary) como divIcon — evita los assets rotos de Leaflet. */
+/*
+  Leaflet dibuja fuera de React, así que estos valores no pueden salir de una
+  clase de Tailwind y hay que escribirlos. Son los tokens del mundo, no
+  colores sueltos: rojo de prensa para la marca y negro hollín para el filete.
+  Ver DESIGN.md — el detector marcó aquí el azul del sistema anterior.
+*/
+const TINTA_ROJA = "#c8241c";
+const TINTA_NEGRA = "#171410";
+const PAPEL = "#ecddbc";
+
 const PIN_ICON = L.divIcon({
   className: "",
-  html: `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="#1E56A8" stroke="#ffffff" stroke-width="1.5"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3" fill="#ffffff" stroke="none"/></svg>`,
+  html: `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="${TINTA_ROJA}" stroke="${TINTA_NEGRA}" stroke-width="1.5"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3" fill="${PAPEL}" stroke="none"/></svg>`,
   iconSize: [32, 32],
   iconAnchor: [16, 32],
 });
@@ -68,9 +78,9 @@ export function MapaUbicacion({
 
     const circulo = L.circle([punto.lat, punto.lng], {
       radius: radioKm > 0 ? radioKm * 1000 : 0,
-      color: "#1E56A8",
+      color: TINTA_NEGRA,
       weight: 2,
-      fillColor: "#1E56A8",
+      fillColor: TINTA_ROJA,
       fillOpacity: 0.2,
       opacity: radioKm > 0 ? 1 : 0,
     }).addTo(mapa);
@@ -122,11 +132,11 @@ export function MapaUbicacion({
       <div
         ref={contenedorRef}
         data-testid="mapa-ubicacion"
-        className="h-[300px] w-full rounded-xl border border-border-subtle"
+        className="h-[300px] w-full rounded-none border-2 border-border-primary"
       />
       {/* Controles de radio (diseño: +/− amplían/reducen el radio) */}
       {onAmpliarRadio && onReducirRadio && (
-      <div className="absolute left-4 top-4 z-[1000] flex flex-col overflow-hidden rounded-lg border border-border-subtle bg-surface-card shadow-md">
+      <div className="absolute left-4 top-4 z-[1000] flex flex-col overflow-hidden rounded-none border-2 border-border-primary bg-surface-card">
         <button
           type="button"
           aria-label="Ampliar radio"

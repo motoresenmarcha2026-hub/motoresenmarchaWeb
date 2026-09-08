@@ -32,15 +32,15 @@ export function FormRegistroConductor() {
           </FormField>
         </div>
 
-        <label className="flex cursor-pointer items-start gap-sm py-xs font-caption text-sm text-foreground-secondary">
+        <label className="flex cursor-pointer items-start gap-sm py-xs font-body text-sm text-foreground-secondary">
           <input type="checkbox" required className="mt-0.5 h-5 w-5 shrink-0 accent-action-primary" />
           <span>
             Acepto los{" "}
-            <Link href="/terminos" target="_blank" className="text-action-primary underline">
+            <Link href="/terminos" target="_blank" className="font-semibold text-foreground-primary underline decoration-emergency decoration-2 underline-offset-2 hover:text-emergency-dark">
               términos y condiciones
             </Link>{" "}
             y el{" "}
-            <Link href="/privacidad" target="_blank" className="text-action-primary underline">
+            <Link href="/privacidad" target="_blank" className="font-semibold text-foreground-primary underline decoration-emergency decoration-2 underline-offset-2 hover:text-emergency-dark">
               aviso de privacidad
             </Link>
             .
@@ -48,7 +48,7 @@ export function FormRegistroConductor() {
         </label>
 
         {state?.error && (
-          <p className="rounded-lg bg-emergency/10 px-md py-2.5 font-caption text-sm text-emergency">
+          <p className="border-2 border-emergency-dark bg-surface-card px-md py-2.5 font-body text-sm font-semibold text-emergency-dark">
             {state.error}
           </p>
         )}

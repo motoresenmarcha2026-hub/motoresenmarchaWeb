@@ -5,29 +5,33 @@ const OPCIONES: {
   key: Prioridad;
   label: string;
   descripcion: string;
+  /** Plancha de tinta cuando está elegida. */
   activoClass: string;
 }[] = [
   {
     key: "normal",
     label: "Normal",
     descripcion: "Puedo esperar, sin prisa",
-    activoClass: "border-action-primary ring-action-primary/30",
+    activoClass: "border-action-primary bg-action-primary",
   },
   {
     key: "urgente",
     label: "Urgente",
     descripcion: "Lo necesito hoy mismo",
-    activoClass: "border-action-urgent ring-action-urgent/30",
+    activoClass: "border-action-urgent bg-action-urgent",
   },
   {
     key: "emergencia",
     label: "Emergencia",
     descripcion: "¡Estoy varado, ayuda ya!",
-    activoClass: "border-emergency ring-emergency/30 bg-emergency/5",
+    activoClass: "border-emergency bg-emergency",
   },
 ];
 
-/** Selector de prioridad: Normal / Urgente / Emergencia. */
+/**
+ * Selector de prioridad. La elegida se imprime como plancha de tinta plena;
+ * el anillo difuso anterior era aire, y este mundo marca con tinta.
+ */
 export function SelectorPrioridad({
   valor,
   onChange,
@@ -46,25 +50,21 @@ export function SelectorPrioridad({
             aria-pressed={activo}
             onClick={() => onChange(o.key)}
             className={cn(
-              "flex flex-col items-start gap-xs rounded-xl border bg-surface-card p-md text-left transition-all",
+              "flex min-h-[4.5rem] flex-col items-start justify-center gap-0.5 rounded-none border-2 p-md text-left transition-colors",
               activo
-                ? `ring-2 ${o.activoClass}`
-                : "border-border-subtle hover:border-foreground-secondary"
+                ? `${o.activoClass} text-foreground-inverse`
+                : "border-border-primary bg-surface-card text-foreground-primary hover:bg-surface-page"
             )}
           >
-            <span
-              className={cn(
-                "font-heading text-base font-bold",
-                o.key === "emergencia"
-                  ? "text-emergency"
-                  : o.key === "urgente"
-                  ? "text-action-urgent"
-                  : "text-foreground-primary"
-              )}
-            >
+            <span className="font-heading text-base font-extrabold uppercase leading-none tracking-[0.04em]">
               {o.label}
             </span>
-            <span className="font-caption text-xs text-foreground-secondary">
+            <span
+              className={cn(
+                "font-body text-xs",
+                activo ? "text-foreground-inverse-secondary" : "text-foreground-secondary"
+              )}
+            >
               {o.descripcion}
             </span>
           </button>

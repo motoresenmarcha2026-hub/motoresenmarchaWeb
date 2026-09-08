@@ -31,6 +31,8 @@ export async function GET(request: Request) {
       let destino = next ?? "/";
       if (!perfil) destino = "/onboarding";
       else if (perfil.rol === "taller") destino = "/panel/solicitudes";
+      else if (perfil.rol === "vendedor") destino = "/vendedor/refacciones";
+      else if (perfil.rol === "admin") destino = "/admin";
 
       return NextResponse.redirect(`${origin}${destino}`);
     }

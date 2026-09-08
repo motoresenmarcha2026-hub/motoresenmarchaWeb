@@ -16,8 +16,8 @@ export function EstadoVacio({
   cta?: { href: string; label: string };
 }) {
   return (
-    <div className="flex flex-col items-center rounded-2xl border border-dashed border-border-subtle p-2xl text-center">
-      <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-surface-page text-foreground-secondary">
+    <div className="flex flex-col items-center rounded-none border-2 border-dashed border-border-primary bg-surface-card p-2xl text-center">
+      <span className="flex h-14 w-14 items-center justify-center rounded-none border-2 border-border-primary bg-surface-page text-foreground-primary">
         <Icono size={28} />
       </span>
       <h1 className="mt-md font-heading text-xl font-bold text-foreground-primary">

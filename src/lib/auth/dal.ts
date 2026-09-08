@@ -3,7 +3,7 @@ import { cache } from "react";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
-export type Rol = "conductor" | "taller" | "admin";
+export type Rol = "conductor" | "taller" | "admin" | "vendedor";
 
 export interface Perfil {
   id: string;
@@ -53,5 +53,12 @@ export async function requirePerfil(): Promise<Perfil> {
 export async function requireAdmin(): Promise<Perfil> {
   const perfil = await requirePerfil();
   if (perfil.rol !== "admin") redirect("/");
+  return perfil;
+}
+
+/** Exige rol vendedor. Redirige a `/` si el usuario no lo es. */
+export async function requireVendedor(): Promise<Perfil> {
+  const perfil = await requirePerfil();
+  if (perfil.rol !== "vendedor") redirect("/");
   return perfil;
 }

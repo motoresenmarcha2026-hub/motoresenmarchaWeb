@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { MapPin, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { inputBaseClass } from "@/components/ui/FormField";
-import { TarjetaTaller } from "./TarjetaTaller";
+import { ParadasTalleres } from "./ParadasTalleres";
 import {
   FiltrosBusqueda,
   FILTROS_INICIALES,
@@ -135,13 +135,21 @@ export function TalleresCliente({
             <button
               type="button"
               onClick={() => setUbicacion(null)}
-              className="flex items-center gap-xs rounded-xl border border-action-primary/40 bg-action-primary/10 px-md py-2.5 font-body text-sm font-medium text-foreground-primary"
+              className="inline-flex h-11 items-center gap-sm border-2 border-border-primary bg-surface-inverse px-md font-heading text-xs font-extrabold uppercase tracking-[0.1em] text-foreground-inverse transition-colors hover:bg-action-primary-dark"
             >
-              <MapPin size={16} className="text-action-primary" />
-              {ubicacion.radioKm === 0
-                ? "Cerca de ti · todos los talleres"
-                : `Cerca de ti · radio de ${ubicacion.radioKm} km`}
-              <X size={14} className="text-foreground-secondary" />
+              <MapPin size={15} aria-hidden className="text-emergency-plancha" />
+              <span className="cifras">
+                {ubicacion.radioKm === 0
+                  ? "Cerca de ti · todos los talleres"
+                  : `Cerca de ti · radio de ${ubicacion.radioKm} km`}
+              </span>
+              <X size={14} aria-hidden />
+              {/*
+                Texto oculto que SUMA al nombre accesible en vez de
+                reemplazarlo: un aria-label aquí borraba la ubicación para
+                los lectores de pantalla y dejaba solo "quitar filtro".
+              */}
+              <span className="sr-only">Quitar el filtro de ubicación</span>
             </button>
           ) : null}
           <ModalTalleresCercanos
@@ -153,12 +161,12 @@ export function TalleresCliente({
           />
         </div>
 
-        <label className="flex items-center gap-sm font-body text-sm text-foreground-secondary">
+        <label className="flex items-center gap-sm font-heading text-xs font-extrabold uppercase tracking-[0.1em] text-foreground-secondary">
           Ordenar por
           <select
             value={orden}
             onChange={(e) => setOrden(e.target.value as Orden)}
-            className={cn(inputBaseClass, "w-auto py-2")}
+            className={cn(inputBaseClass, "h-11 w-auto py-0 font-body text-sm normal-case tracking-normal text-foreground-primary")}
           >
             {ORDENES.map((o) => (
               <option key={o.key} value={o.key}>
@@ -170,17 +178,15 @@ export function TalleresCliente({
       </div>
 
       {resultados.length > 0 ? (
-        <div className="mt-lg grid gap-lg sm:grid-cols-2 lg:grid-cols-3">
-          {resultados.map((taller) => (
-            <TarjetaTaller key={taller.id} taller={taller} />
-          ))}
+        <div className="mt-lg">
+          <ParadasTalleres talleres={resultados} />
         </div>
       ) : (
-        <div className="mt-2xl rounded-2xl border border-dashed border-border-subtle p-2xl text-center">
-          <p className="font-heading text-lg font-bold text-foreground-primary">
+        <div className="mt-xl border-2 border-dashed border-border-primary bg-surface-card px-md py-2xl text-center">
+          <p className="font-heading text-xl font-extrabold uppercase leading-none text-foreground-primary">
             No encontramos talleres con esos filtros
           </p>
-          <p className="mt-xs font-body text-sm text-foreground-secondary">
+          <p className="mx-auto mt-sm max-w-[30rem] font-body text-foreground-secondary">
             {ubicacion
               ? "Amplía el radio de búsqueda o quita el filtro de ubicación."
               : "Prueba con otra especialidad o quita el filtro de disponibilidad."}

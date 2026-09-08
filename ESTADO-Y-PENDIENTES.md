@@ -211,6 +211,38 @@
 
 ---
 
+## ✅ Fase 9 — Rol vendedor + marketplace de refacciones (sesión 2026-09-02)
+
+Nuevo **cuarto rol `vendedor`** para vender refacciones (autopartes). Modelo
+**tienda + productos**, contacto por **WhatsApp** (sin pagos/carrito), **sin reseñas**
+por ahora. Todo replica el patrón de `talleres`.
+
+- **Migración `0006_vendedores_refacciones.sql`** (⚠️ **correr en Supabase SQL Editor**):
+  constraint de rol con los 4 roles; tablas `vendedores` (tienda, 1 por owner) y
+  `refacciones` (productos, FK `vendedor_id`, slug único por vendedor); RLS
+  (lectura pública, dueño vía subquery, admin); `handle_new_user()` extendido para
+  crear la tienda al registrarse con `rol='vendedor'`; bucket Storage `refacciones`
+  (carpeta = `auth.uid()`).
+- **Auth/registro:** `requireVendedor()` en el DAL; `registrarVendedor` + rama
+  `vendedor` en `completarPerfil`; `/registro/vendedor` + `FormRegistroVendedor`;
+  tarjeta en `SelectorTipoUsuario` (grid 3) y opción en `OnboardingForm`;
+  redirect por rol (login/callback → `/vendedor/refacciones`); `ConfirmacionContenido`.
+- **Panel del vendedor** (`/vendedor/*`, protegido por proxy): `/vendedor/refacciones`
+  con **CRUD de inventario** (`InventarioRefacciones`: alta/edición/baja + subida de
+  foto al bucket) y `/vendedor/cuenta` (`FormCuentaVendedor`, sin mapa). `NAV_VENDEDOR`
+  + `vendedorShell`.
+- **Marketplace público** `/refacciones` (`RefaccionesCliente`: filtros por categoría,
+  texto y orden por precio — sin geolocalización), `TarjetaRefaccion`, detalle
+  `/refacciones/[id]` (`PerfilRefaccion` + metadata/OG), y sección **Refacciones
+  destacadas** en la Home. Link "Refacciones" en el Header.
+- **Admin:** conteos de vendedores/refacciones + paneles "Vendedores" y "Últimas
+  refacciones" en `/admin`.
+- **SEO:** `/refacciones` en sitemap (+ una URL por producto); `/vendedor` en
+  robots disallow. `next.config` sin cambios (mismo host de Supabase Storage).
+- **Verificado:** `tsc --noEmit`, `eslint` y `next build` en verde.
+- **Pendiente humano:** correr la migración `0006` en Supabase antes de usar el flujo;
+  el bucket `refacciones` se crea con esa migración.
+
 ## 🔜 Pendientes que requieren acción humana
 
 | Quién | Pendiente |

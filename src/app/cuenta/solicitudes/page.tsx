@@ -8,11 +8,12 @@ import { tipoProblemaMeta } from "@/features/solicitudes/mock";
 import { formatearFecha } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 
+/* Planchas de tinta plena: el tinte al 15% era aire. */
 const ESTADO_LABEL: Record<string, { label: string; class: string }> = {
-  pendiente: { label: "Pendiente", class: "bg-action-urgent/15 text-action-urgent" },
-  agendado: { label: "Agendada", class: "bg-status-available/15 text-status-available" },
-  completado: { label: "Completada", class: "bg-action-primary/15 text-action-primary" },
-  rechazado: { label: "Rechazada", class: "bg-status-busy/15 text-status-busy" },
+  pendiente: { label: "Pendiente", class: "bg-action-urgent" },
+  agendado: { label: "Agendada", class: "bg-status-available" },
+  completado: { label: "Completada", class: "bg-action-primary" },
+  rechazado: { label: "Rechazada", class: "bg-status-busy" },
 };
 
 export default async function MisSolicitudesPage() {
@@ -45,20 +46,20 @@ export default async function MisSolicitudesPage() {
               return (
                 <li
                   key={s.id}
-                  className="flex flex-wrap items-center justify-between gap-sm rounded-2xl border border-border-subtle bg-surface-card p-md"
+                  className="flex flex-wrap items-center justify-between gap-sm rounded-none border-2 border-border-primary bg-surface-card p-md"
                 >
                   <div>
-                    <p className="font-heading font-bold text-foreground-primary">
+                    <p className="font-heading text-lg font-extrabold uppercase leading-none text-foreground-primary">
                       {tipoProblemaMeta(s.tipoProblema).label}
                     </p>
-                    <p className="font-caption text-sm text-foreground-secondary">
+                    <p className="font-body text-sm text-foreground-secondary">
                       {s.descripcion || "Sin descripción"} ·{" "}
                       {formatearFecha(s.createdAt)}
                     </p>
                   </div>
                   <span
                     className={cn(
-                      "rounded-full px-sm py-xs font-caption text-xs font-semibold",
+                      "rounded-none px-sm py-1 font-heading text-xs font-extrabold uppercase tracking-[0.1em] text-foreground-inverse",
                       estado.class
                     )}
                   >

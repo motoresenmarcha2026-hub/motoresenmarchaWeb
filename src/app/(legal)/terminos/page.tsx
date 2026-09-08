@@ -88,7 +88,7 @@ export default function TerminosPage() {
         <p>
           Para dudas sobre estos términos escríbenos a{" "}
           <a
-            className="text-action-primary underline"
+            className="font-semibold text-foreground-primary underline decoration-emergency decoration-2 underline-offset-2 hover:text-emergency-dark"
             href="mailto:motoresenmarcha2026@gmail.com"
           >
             motoresenmarcha2026@gmail.com

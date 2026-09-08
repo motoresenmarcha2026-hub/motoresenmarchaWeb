@@ -69,7 +69,7 @@ export function FormularioCuenta({
           e.preventDefault();
           guardar();
         }}
-        className="rounded-2xl border border-border-subtle bg-surface-card p-lg"
+        className="border-2 border-border-primary bg-surface-card p-lg"
       >
         <div className="mb-md flex items-center justify-between">
           <h2 className="font-heading text-lg font-bold text-foreground-primary">
@@ -121,12 +121,12 @@ export function FormularioCuenta({
         {children}
 
         {error && editando && (
-          <p className="mt-md rounded-lg bg-emergency/10 px-md py-2.5 font-caption text-sm text-emergency">
+          <p className="mt-md border-2 border-emergency-dark bg-surface-card px-md py-2.5 font-body text-sm font-semibold text-emergency-dark">
             {error}
           </p>
         )}
         {guardado && (
-          <p className="mt-md rounded-lg bg-status-available/10 px-md py-2.5 font-caption text-sm text-status-available">
+          <p className="mt-md border-2 border-status-available bg-surface-card px-md py-2.5 font-body text-sm font-semibold text-status-available">
             Datos guardados.
           </p>
         )}

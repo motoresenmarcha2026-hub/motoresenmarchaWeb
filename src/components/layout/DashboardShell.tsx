@@ -8,6 +8,7 @@ import { LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Header } from "./Header";
 import { NAVS, type NavKey } from "@/features/usuarios/nav";
+import { cerrarSesion } from "@/features/usuarios/actions";
 
 export interface DashboardProfile {
   nombre: string;
@@ -117,13 +118,15 @@ export function DashboardShell({
                     </Link>
                   );
                 })}
-                <Link
-                  href="/"
-                  className="flex shrink-0 items-center gap-sm rounded-lg px-sm py-2.5 font-caption text-sm font-medium text-emergency transition-colors hover:bg-emergency/10"
-                >
-                  <LogOut size={18} />
-                  <span className="whitespace-nowrap">Cerrar sesión</span>
-                </Link>
+                <form action={cerrarSesion} className="shrink-0">
+                  <button
+                    type="submit"
+                    className="flex w-full shrink-0 items-center gap-sm rounded-lg px-sm py-2.5 font-caption text-sm font-medium text-emergency transition-colors hover:bg-emergency/10"
+                  >
+                    <LogOut size={18} />
+                    <span className="whitespace-nowrap">Cerrar sesión</span>
+                  </button>
+                </form>
               </nav>
             </div>
           </aside>

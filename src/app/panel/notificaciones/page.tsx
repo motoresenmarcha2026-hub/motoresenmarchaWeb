@@ -3,21 +3,14 @@ import { DashboardShell } from "@/components/layout/DashboardShell";
 import { EstadoVacio } from "@/components/ui/EstadoVacio";
 import { requirePerfil } from "@/lib/auth/dal";
 import { getTallerDelUsuario } from "@/features/talleres/data";
+import { tallerShell } from "@/features/usuarios/shell";
 
 export default async function PanelNotificacionesPage() {
   const perfil = await requirePerfil();
   const taller = await getTallerDelUsuario();
 
   return (
-    <DashboardShell
-      profile={{
-        nombre: taller?.nombre ?? perfil.nombre ?? "Mi taller",
-        subtitulo: taller?.ubicacion.ciudad ?? perfil.ciudad ?? "",
-        avatarUrl: taller?.avatarUrl || undefined,
-        badge: taller?.disponibilidad === "available" ? "Disponible" : "Ocupado",
-      }}
-      navKey="taller"
-    >
+    <DashboardShell profile={tallerShell(perfil, taller)} navKey="taller">
       <EstadoVacio
         icono={Bell}
         titulo="No tienes notificaciones"

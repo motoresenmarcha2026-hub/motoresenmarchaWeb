@@ -2,18 +2,26 @@ import Link from "next/link";
 import { Siren } from "lucide-react";
 
 /**
- * Botón flotante de emergencia (SOS). Siempre visible en las vistas del
- * conductor. Lleva al flujo de solicitud con prioridad de emergencia.
+ * Sello rojo sobreimpreso: la acción de emergencia, **siempre visible**.
+ *
+ * No se oculta nunca, ni siquiera cuando hay otro CTA de emergencia en
+ * pantalla: un camino de emergencia que desaparece solo deja de ser un camino
+ * de emergencia, y la escena confirmada del producto es un conductor varado
+ * con el celular en una mano. Los controles que caerían debajo esquivan
+ * `--zona-sos` en vez de que el sello se aparte.
+ *
+ * Se separa del contenido con filete de tinta, no con sombra: la sombra dura
+ * sin desenfoque es un device neobrutalista que este mundo no usa. El
+ * movimiento vive en el empuje al presionar.
  */
 export function SOSFloatingButton() {
   return (
     <Link
       href="/solicitar?prioridad=emergencia"
       aria-label="Solicitar ayuda de emergencia"
-      className="group fixed bottom-6 right-6 z-40 flex items-center gap-sm rounded-full bg-emergency px-lg py-3 font-heading font-bold text-foreground-inverse shadow-lg shadow-emergency/30 transition-all hover:bg-emergency-dark hover:shadow-xl"
+      className="banderin group fixed bottom-5 right-5 z-40 inline-flex h-14 items-center gap-sm rounded-none border-2 border-border-primary bg-emergency px-lg pr-xl font-heading text-base font-extrabold uppercase tracking-[0.08em] text-foreground-inverse transition-[transform,background-color] duration-150 ease-press hover:bg-emergency-dark active:translate-x-[2px]"
     >
-      <span className="absolute inset-0 -z-10 animate-ping rounded-full bg-emergency opacity-40 group-hover:opacity-0" />
-      <Siren size={22} />
+      <Siren size={24} aria-hidden />
       <span className="hidden sm:inline">SOS Emergencia</span>
     </Link>
   );

@@ -28,7 +28,7 @@ export default async function SolicitarPage({
         <div className="mx-auto max-w-7xl px-md py-xl md:px-lg">
           <div className="mb-lg flex items-center justify-between gap-md">
             <div>
-              <h1 className="font-heading text-3xl font-extrabold text-foreground-primary">
+              <h1 className="font-heading text-4xl font-extrabold uppercase leading-none text-foreground-primary md:text-5xl">
                 Solicitar servicio
               </h1>
               <p className="font-body text-foreground-secondary">
@@ -37,7 +37,7 @@ export default async function SolicitarPage({
             </div>
             <Link
               href="/talleres"
-              className="shrink-0 whitespace-nowrap font-caption text-sm font-semibold text-action-primary hover:underline"
+              className="inline-flex min-h-11 shrink-0 items-center whitespace-nowrap font-heading text-xs font-extrabold uppercase tracking-[0.1em] text-foreground-primary underline-offset-4 hover:text-emergency-dark hover:underline hover:decoration-2"
             >
               Cambiar taller
             </Link>

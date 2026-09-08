@@ -23,7 +23,7 @@ export default async function CalificarPage({
           {/* Resumen del servicio */}
           <div className="flex flex-col gap-lg">
             <div>
-              <span className="inline-flex items-center gap-xs rounded-full bg-status-available/15 px-md py-xs font-caption text-sm font-semibold text-status-available">
+              <span className="inline-flex items-center gap-xs rounded-none bg-status-available px-md py-1 font-heading text-xs font-extrabold uppercase tracking-[0.1em] text-foreground-inverse">
                 Servicio completado
               </span>
               <h1 className="mt-md font-heading text-3xl font-extrabold text-foreground-primary md:text-4xl">
@@ -34,9 +34,9 @@ export default async function CalificarPage({
               </p>
             </div>
 
-            <div className="rounded-2xl border border-border-subtle bg-surface-card p-lg">
+            <div className="rounded-none border-2 border-border-primary bg-surface-card p-lg">
               <div className="flex items-center gap-md">
-                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-surface-page text-accent-primary">
+                <span className="flex h-12 w-12 items-center justify-center rounded-none border-2 border-border-primary bg-surface-page text-foreground-primary">
                   <Wrench size={24} />
                 </span>
                 <div>

@@ -8,11 +8,11 @@ export default function RegistroTallerPage() {
       <div>
         <Link
           href="/registro"
-          className="inline-flex items-center gap-xs font-caption text-sm text-foreground-secondary hover:text-foreground-primary"
+          className="inline-flex min-h-11 items-center gap-xs font-heading text-xs font-extrabold uppercase tracking-[0.1em] text-foreground-secondary hover:text-foreground-primary"
         >
           <ArrowLeft size={16} /> Volver
         </Link>
-        <h1 className="mt-sm font-heading text-3xl font-extrabold text-foreground-primary">
+        <h1 className="mt-sm font-heading text-4xl font-extrabold uppercase leading-none text-foreground-primary md:text-5xl">
           Regístrate como taller
         </h1>
         <p className="font-body text-foreground-secondary">
@@ -20,7 +20,7 @@ export default function RegistroTallerPage() {
         </p>
       </div>
 
-      <div className="rounded-2xl border border-border-subtle bg-surface-card p-lg">
+      <div className="border-2 border-border-primary bg-surface-card p-lg">
         <FormRegistroTaller />
       </div>
     </div>

@@ -108,6 +108,45 @@ export async function registrarTaller(
   redirect("/confirmacion?tipo=taller");
 }
 
+export async function registrarVendedor(
+  _prev: AuthState,
+  formData: FormData
+): Promise<AuthState> {
+  const email = str(formData, "email");
+  const password = str(formData, "password");
+  const nombre = str(formData, "nombre"); // nombre del contacto
+  const negocioNombre = str(formData, "negocio_nombre");
+  const telefono = str(formData, "telefono");
+  const ciudad = str(formData, "ciudad");
+  const direccion = str(formData, "direccion");
+  const categorias = formData.getAll("categorias").map(String);
+
+  if (!negocioNombre || !nombre || !email || !password)
+    return { error: "Completa el nombre del negocio, contacto, correo y contraseña." };
+  if (password.length < 8)
+    return { error: "La contraseña debe tener al menos 8 caracteres." };
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        rol: "vendedor",
+        nombre,
+        negocio_nombre: negocioNombre,
+        telefono,
+        ciudad,
+        direccion,
+        categorias,
+      },
+    },
+  });
+  if (error) return { error: traducir(error.message) };
+
+  redirect("/confirmacion?tipo=vendedor");
+}
+
 // ============================================================
 // LOGIN / LOGOUT
 // ============================================================
@@ -134,6 +173,7 @@ export async function iniciarSesion(
 
   if (!perfil) redirect("/onboarding");
   if (perfil.rol === "admin") redirect("/admin");
+  if (perfil.rol === "vendedor") redirect("/vendedor/refacciones");
   redirect(perfil.rol === "taller" ? "/panel/solicitudes" : "/");
 }
 
@@ -164,8 +204,8 @@ export async function completarPerfil(
   formData: FormData
 ): Promise<AuthState> {
   const rol = str(formData, "rol");
-  if (rol !== "conductor" && rol !== "taller")
-    return { error: "Elige si eres conductor o taller." };
+  if (rol !== "conductor" && rol !== "taller" && rol !== "vendedor")
+    return { error: "Elige tu tipo de cuenta." };
 
   const supabase = await createClient();
   const {
@@ -209,6 +249,29 @@ export async function completarPerfil(
     if (e2) return { error: "No se pudo crear tu taller. Inténtalo de nuevo." };
 
     redirect("/panel/solicitudes");
+  }
+
+  if (rol === "vendedor") {
+    const negocioNombre = str(formData, "negocio_nombre");
+    const direccion = str(formData, "direccion");
+    const categorias = formData.getAll("categorias").map(String);
+    if (!negocioNombre)
+      return { error: "Ingresa el nombre de tu negocio." };
+
+    const id = crypto.randomUUID();
+    const { error: e2 } = await supabase.from("vendedores").insert({
+      id,
+      nombre_negocio: negocioNombre,
+      slug: `${slugify(negocioNombre) || "refaccionaria"}-${id.slice(0, 6)}`,
+      ciudad,
+      direccion,
+      whatsapp: telefono,
+      categorias,
+      owner_id: user.id,
+    });
+    if (e2) return { error: "No se pudo crear tu negocio. Inténtalo de nuevo." };
+
+    redirect("/vendedor/refacciones");
   }
 
   redirect("/");

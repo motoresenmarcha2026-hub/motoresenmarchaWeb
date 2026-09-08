@@ -33,7 +33,7 @@ export function FormularioSolicitud({
       <form className="flex flex-col gap-xl" onSubmit={(e) => e.preventDefault()}>
         {/* Tipo de problema */}
         <fieldset className="flex flex-col gap-md">
-          <legend className="font-heading text-lg font-bold text-foreground-primary">
+          <legend className="font-heading text-xl font-extrabold uppercase leading-none tracking-[0.02em] text-foreground-primary">
             ¿Qué tipo de problema tienes?
           </legend>
           <SelectorTipoProblema valor={tipo} onChange={setTipo} />
@@ -56,7 +56,7 @@ export function FormularioSolicitud({
         {/* Ubicación */}
         <FormField label="Tu ubicación" htmlFor="ubicacion" required>
           <div className="flex flex-col gap-sm">
-            <div className="flex items-center justify-center rounded-xl border border-border-subtle bg-surface-page py-xl text-foreground-secondary">
+            <div className="flex items-center justify-center rounded-none border-2 border-dashed border-border-primary bg-surface-page py-xl font-body text-foreground-secondary">
               <MapPin size={28} />
               <span className="ml-sm font-caption text-sm">
                 Mapa (marca tu ubicación)
@@ -80,7 +80,7 @@ export function FormularioSolicitud({
 
         {/* Prioridad */}
         <fieldset className="flex flex-col gap-md">
-          <legend className="font-heading text-lg font-bold text-foreground-primary">
+          <legend className="font-heading text-xl font-extrabold uppercase leading-none tracking-[0.02em] text-foreground-primary">
             Prioridad
           </legend>
           <SelectorPrioridad valor={prioridad} onChange={setPrioridad} />

@@ -46,7 +46,7 @@ export default function CookiesPage() {
         <p>
           ¿Dudas sobre esta política? Escríbenos a{" "}
           <a
-            className="text-action-primary underline"
+            className="font-semibold text-foreground-primary underline decoration-emergency decoration-2 underline-offset-2 hover:text-emergency-dark"
             href="mailto:motoresenmarcha2026@gmail.com"
           >
             motoresenmarcha2026@gmail.com

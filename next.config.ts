@@ -9,8 +9,9 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "ygxxsgypnoflqbwrrlxq.supabase.co" },
       // Avatares de cuentas de Google (login con Google).
       { protocol: "https", hostname: "lh3.googleusercontent.com" },
-      // Placeholders del seed / mock.
-      { protocol: "https", hostname: "images.unsplash.com" },
+      // Placeholders del mock. `images.unsplash.com` se retiró: ya no hay
+      // ninguna referencia en el código y la tesis del mundo rechaza la
+      // fotografía de stock. `picsum` sigue solo para avatares de mock.
       { protocol: "https", hostname: "picsum.photos" },
       { protocol: "https", hostname: "i.pravatar.cc" },
     ],

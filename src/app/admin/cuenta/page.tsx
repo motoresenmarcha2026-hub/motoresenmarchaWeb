@@ -1,21 +1,14 @@
 import { DashboardShell } from "@/components/layout/DashboardShell";
 import { FormularioCuenta } from "@/features/usuarios/components/FormularioCuenta";
 import { requireAdmin, getUser } from "@/lib/auth/dal";
+import { adminShell } from "@/features/usuarios/shell";
 
 export default async function AdminCuentaPage() {
   const perfil = await requireAdmin();
   const user = await getUser();
 
   return (
-    <DashboardShell
-      profile={{
-        nombre: perfil.nombre ?? "Administrador",
-        subtitulo: "Administración",
-        avatarUrl: perfil.avatar_url ?? undefined,
-        badge: "Admin",
-      }}
-      navKey="admin"
-    >
+    <DashboardShell profile={adminShell(perfil)} navKey="admin">
       <FormularioCuenta
         titulo="Administrar cuenta"
         descripcion="Datos de la cuenta de administración de la plataforma."

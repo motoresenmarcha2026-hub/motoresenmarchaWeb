@@ -20,7 +20,7 @@ export default function PrivacidadPage() {
           personales recabados a través de la plataforma{" "}
           <strong>motoresenmarcha.com</strong>. Contacto:{" "}
           <a
-            className="text-action-primary underline"
+            className="font-semibold text-foreground-primary underline decoration-emergency decoration-2 underline-offset-2 hover:text-emergency-dark"
             href="mailto:motoresenmarcha2026@gmail.com"
           >
             motoresenmarcha2026@gmail.com
@@ -78,7 +78,7 @@ export default function PrivacidadPage() {
           (derechos ARCO) sobre tus datos, así como la eliminación de tu
           cuenta, escribiendo a{" "}
           <a
-            className="text-action-primary underline"
+            className="font-semibold text-foreground-primary underline decoration-emergency decoration-2 underline-offset-2 hover:text-emergency-dark"
             href="mailto:motoresenmarcha2026@gmail.com"
           >
             motoresenmarcha2026@gmail.com

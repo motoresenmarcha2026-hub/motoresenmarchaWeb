@@ -38,8 +38,10 @@ const HORARIO_ESTANDAR: Horario[] = [
   { dia: "domingo", abre: "", cierra: "", cerrado: true },
 ];
 
-// Fotos de prueba estables (picsum con seed). TODO: Supabase Storage.
-const foto = (seed: number) => `https://picsum.photos/seed/meca-${seed}/800/600`;
+// Sin foto de stock: si un taller no trae imagen propia, la UI dibuja la
+// plancha de tinta con su trama. La tesis del mundo rechaza la fotografía
+// de catálogo, así que el camino de respaldo no puede reintroducirla.
+const foto = () => "";
 
 export const TALLERES: Taller[] = [
   {
@@ -58,7 +60,7 @@ export const TALLERES: Taller[] = [
     },
     distanciaKm: 1.2,
     etaMin: 15,
-    fotoUrl: foto(1486262715619),
+    fotoUrl: foto(),
     avatarUrl: "https://picsum.photos/seed/face12/150",
     whatsapp: "+525512345678",
     descripcion:
@@ -85,7 +87,7 @@ export const TALLERES: Taller[] = [
     },
     distanciaKm: 2.7,
     etaMin: 22,
-    fotoUrl: foto(1530046339160),
+    fotoUrl: foto(),
     avatarUrl: "https://picsum.photos/seed/face33/150",
     whatsapp: "+525587654321",
     descripcion:
@@ -112,7 +114,7 @@ export const TALLERES: Taller[] = [
     },
     distanciaKm: 3.4,
     etaMin: 28,
-    fotoUrl: foto(1487754180451),
+    fotoUrl: foto(),
     avatarUrl: "https://picsum.photos/seed/face54/150",
     whatsapp: "+525511223344",
     descripcion:
@@ -139,7 +141,7 @@ export const TALLERES: Taller[] = [
     },
     distanciaKm: 0.8,
     etaMin: 10,
-    fotoUrl: foto(1600861195091),
+    fotoUrl: foto(),
     avatarUrl: "https://picsum.photos/seed/face68/150",
     whatsapp: "+525599887766",
     descripcion:
@@ -166,7 +168,7 @@ export const TALLERES: Taller[] = [
     },
     distanciaKm: 4.9,
     etaMin: 35,
-    fotoUrl: foto(1503376780353),
+    fotoUrl: foto(),
     avatarUrl: "https://picsum.photos/seed/face15/150",
     whatsapp: "+525522334455",
     descripcion:
@@ -193,7 +195,7 @@ export const TALLERES: Taller[] = [
     },
     distanciaKm: 2.1,
     etaMin: 18,
-    fotoUrl: foto(1580273916550),
+    fotoUrl: foto(),
     avatarUrl: "https://picsum.photos/seed/face25/150",
     whatsapp: "+525533445566",
     descripcion:
@@ -220,7 +222,7 @@ export const TALLERES: Taller[] = [
     },
     distanciaKm: 5.6,
     etaMin: 40,
-    fotoUrl: foto(1605164599901),
+    fotoUrl: foto(),
     avatarUrl: "https://picsum.photos/seed/face51/150",
     whatsapp: "+525544556677",
     descripcion:
@@ -247,7 +249,7 @@ export const TALLERES: Taller[] = [
     },
     distanciaKm: 3.0,
     etaMin: 24,
-    fotoUrl: foto(1632823469850),
+    fotoUrl: foto(),
     avatarUrl: "https://picsum.photos/seed/face60/150",
     whatsapp: "+525555667788",
     descripcion:

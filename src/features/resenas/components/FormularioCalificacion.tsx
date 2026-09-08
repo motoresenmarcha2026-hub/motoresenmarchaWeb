@@ -55,9 +55,9 @@ export function FormularioCalificacion({
   }
 
   return (
-    <div className="flex flex-col gap-lg rounded-2xl border border-border-subtle bg-surface-card p-lg">
+    <div className="flex flex-col gap-lg rounded-none border-2 border-border-primary bg-surface-card p-lg">
       <div>
-        <h2 className="font-heading text-xl font-bold text-foreground-primary">
+        <h2 className="font-heading text-2xl font-extrabold uppercase leading-none text-foreground-primary">
           ¿Cómo estuvo tu servicio?
         </h2>
         <p className="font-body text-sm text-foreground-secondary">
@@ -68,14 +68,14 @@ export function FormularioCalificacion({
       {/* Estrellas */}
       <div className="flex flex-col items-center gap-sm">
         <EstrellasCalificacion valor={rating} onChange={setRating} />
-        <span className="font-caption text-sm font-semibold text-foreground-secondary">
+        <span className="font-heading text-xs font-extrabold uppercase tracking-[0.1em] text-foreground-secondary">
           {TEXTO_RATING[rating] || "Toca para calificar"}
         </span>
       </div>
 
       {/* Destacados */}
       <div>
-        <p className="mb-sm font-caption text-sm font-semibold text-foreground-primary">
+        <p className="mb-sm font-heading text-xs font-extrabold uppercase tracking-[0.1em] text-foreground-primary">
           ¿Qué destacarías?
         </p>
         <div className="flex flex-wrap gap-xs">
@@ -87,10 +87,10 @@ export function FormularioCalificacion({
                 type="button"
                 onClick={() => toggle(t)}
                 className={cn(
-                  "rounded-full border px-md py-1.5 font-caption text-sm font-medium transition-colors",
+                  "inline-flex h-11 items-center rounded-none border-2 px-md font-heading text-xs font-extrabold uppercase tracking-[0.1em] transition-colors",
                   activo
-                    ? "border-action-primary bg-action-primary text-foreground-inverse"
-                    : "border-border-subtle bg-surface-card text-foreground-secondary hover:border-foreground-secondary"
+                    ? "border-emergency bg-emergency text-foreground-inverse"
+                    : "border-border-primary bg-surface-card text-foreground-primary hover:bg-surface-page"
                 )}
               >
                 {t}
@@ -108,7 +108,7 @@ export function FormularioCalificacion({
       />
 
       {error && (
-        <p className="rounded-lg bg-emergency/10 px-md py-2.5 font-caption text-sm text-emergency">
+        <p className="rounded-none border-2 border-emergency-dark bg-surface-card px-md py-2.5 font-body text-sm font-semibold text-emergency-dark">
           {error}
         </p>
       )}

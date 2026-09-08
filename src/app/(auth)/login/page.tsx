@@ -13,7 +13,7 @@ export default function LoginPage() {
   return (
     <div className="mx-auto flex max-w-[26rem] flex-col gap-lg">
       <div className="text-center">
-        <h1 className="font-heading text-3xl font-extrabold text-foreground-primary">
+        <h1 className="font-heading text-4xl font-extrabold uppercase leading-none text-foreground-primary md:text-5xl">
           Inicia sesión
         </h1>
         <p className="mt-xs font-body text-foreground-secondary">
@@ -21,7 +21,7 @@ export default function LoginPage() {
         </p>
       </div>
 
-      <div className="flex flex-col gap-md rounded-2xl border border-border-subtle bg-surface-card p-lg">
+      <div className="flex flex-col gap-md border-2 border-border-primary bg-surface-card p-lg">
         <form action={action} className="flex flex-col gap-md">
           <FormField label="Correo electrónico" htmlFor="email" required>
             <Input id="email" name="email" type="email" placeholder="tucorreo@ejemplo.mx" required />
@@ -31,7 +31,7 @@ export default function LoginPage() {
           </FormField>
 
           {state?.error && (
-            <p className="rounded-lg bg-emergency/10 px-md py-2.5 font-caption text-sm text-emergency">
+            <p className="border-2 border-emergency-dark bg-surface-card px-md py-2.5 font-body text-sm font-semibold text-emergency-dark">
               {state.error}
             </p>
           )}
@@ -45,9 +45,9 @@ export default function LoginPage() {
         <BotonGoogle />
       </div>
 
-      <p className="text-center font-caption text-sm text-foreground-secondary">
+      <p className="text-center font-body text-sm text-foreground-secondary">
         ¿No tienes cuenta?{" "}
-        <Link href="/registro" className="font-semibold text-action-primary hover:underline">
+        <Link href="/registro" className="inline-flex min-h-11 items-center font-heading text-xs font-extrabold uppercase tracking-[0.1em] text-foreground-primary underline-offset-4 hover:text-emergency-dark hover:underline hover:decoration-2">
           Regístrate
         </Link>
       </p>

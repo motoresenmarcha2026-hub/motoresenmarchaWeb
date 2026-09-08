@@ -5,21 +5,14 @@ import { buttonVariants } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import { requirePerfil, getUser } from "@/lib/auth/dal";
 import { getTallerDelUsuario } from "@/features/talleres/data";
+import { tallerShell } from "@/features/usuarios/shell";
 
 export default async function PanelCuentaPage() {
   const perfil = await requirePerfil();
   const [user, taller] = await Promise.all([getUser(), getTallerDelUsuario()]);
 
   return (
-    <DashboardShell
-      profile={{
-        nombre: taller?.nombre ?? perfil.nombre ?? "Mi taller",
-        subtitulo: taller?.ubicacion.ciudad ?? perfil.ciudad ?? "",
-        avatarUrl: taller?.avatarUrl || undefined,
-        badge: taller?.disponibilidad === "available" ? "Disponible" : "Ocupado",
-      }}
-      navKey="taller"
-    >
+    <DashboardShell profile={tallerShell(perfil, taller)} navKey="taller">
       {taller ? (
         <FormCuentaTaller
           taller={taller}

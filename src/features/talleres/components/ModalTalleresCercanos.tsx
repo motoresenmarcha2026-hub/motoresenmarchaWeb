@@ -14,7 +14,7 @@ const MapaUbicacion = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="flex h-[300px] items-center justify-center rounded-xl border border-border-subtle bg-surface-page font-caption text-sm text-foreground-secondary">
+      <div className="flex h-[300px] items-center justify-center rounded-none border-2 border-border-primary bg-surface-page font-body text-sm text-foreground-secondary">
         Cargando mapa…
       </div>
     ),
@@ -165,7 +165,7 @@ export function ModalTalleresCercanos({
           </div>
 
           {error && (
-            <p className="rounded-lg bg-emergency/10 px-md py-2.5 font-caption text-sm text-emergency">
+            <p className="rounded-none border-2 border-emergency-dark bg-surface-card px-md py-2.5 font-body text-sm font-semibold text-emergency-dark">
               {error}
             </p>
           )}
@@ -174,7 +174,7 @@ export function ModalTalleresCercanos({
           <div>
             <label
               htmlFor="radio-km"
-              className="mb-xs block font-caption text-sm text-foreground-secondary"
+              className="mb-xs block font-body text-sm text-foreground-secondary"
             >
               A la redonda
             </label>
@@ -201,7 +201,7 @@ export function ModalTalleresCercanos({
             onReducirRadio={() => moverRadio(-1)}
           />
 
-          <p className="font-caption text-xs text-foreground-secondary">
+          <p className="font-body text-xs text-foreground-secondary">
             Arrastra el pin o toca el mapa para moverte. Usa + / − para ampliar
             o reducir el radio a la redonda.
           </p>

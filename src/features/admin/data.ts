@@ -11,6 +11,8 @@ export interface ResumenAdmin {
   conteos: {
     conductores: number;
     talleres: number;
+    vendedores: number;
+    refacciones: number;
     solicitudes: number;
     citas: number;
     resenas: number;
@@ -50,10 +52,24 @@ export interface ResumenAdmin {
   }[];
   resenas: {
     id: string;
-    taller_id: string;
+    taller_nombre: string | null;
     autor: string;
     rating: number;
     comentario: string | null;
+    created_at: string;
+  }[];
+  vendedores: {
+    id: string;
+    nombre_negocio: string;
+    ciudad: string | null;
+    verificado: boolean;
+  }[];
+  refacciones: {
+    id: string;
+    nombre: string;
+    precio: number;
+    categoria: string | null;
+    vendedor_nombre: string | null;
     created_at: string;
   }[];
 }
@@ -75,6 +91,8 @@ export async function getResumenAdmin(): Promise<ResumenAdmin> {
   const [
     conductores,
     talleresCount,
+    vendedoresCount,
+    refaccionesCount,
     solicitudesCount,
     citasCount,
     resenasCount,
@@ -84,9 +102,13 @@ export async function getResumenAdmin(): Promise<ResumenAdmin> {
     solicitudes,
     citas,
     resenas,
+    vendedores,
+    refacciones,
   ] = await Promise.all([
     contar(supabase, "profiles", { col: "rol", val: "conductor" }),
     contar(supabase, "talleres"),
+    contar(supabase, "vendedores"),
+    contar(supabase, "refacciones"),
     contar(supabase, "solicitudes"),
     contar(supabase, "citas"),
     contar(supabase, "resenas"),
@@ -117,7 +139,17 @@ export async function getResumenAdmin(): Promise<ResumenAdmin> {
       .limit(10),
     supabase
       .from("resenas")
-      .select("id, taller_id, autor, rating, comentario, created_at")
+      .select("id, autor, rating, comentario, created_at, talleres(nombre)")
+      .order("created_at", { ascending: false })
+      .limit(10),
+    supabase
+      .from("vendedores")
+      .select("id, nombre_negocio, ciudad, verificado")
+      .order("created_at", { ascending: false })
+      .limit(10),
+    supabase
+      .from("refacciones")
+      .select("id, nombre, precio, categoria, created_at, vendedores(nombre_negocio)")
       .order("created_at", { ascending: false })
       .limit(10),
   ]);
@@ -126,6 +158,8 @@ export async function getResumenAdmin(): Promise<ResumenAdmin> {
     conteos: {
       conductores,
       talleres: talleresCount,
+      vendedores: vendedoresCount,
+      refacciones: refaccionesCount,
       solicitudes: solicitudesCount,
       citas: citasCount,
       resenas: resenasCount,
@@ -135,6 +169,31 @@ export async function getResumenAdmin(): Promise<ResumenAdmin> {
     talleres: talleres.data ?? [],
     solicitudes: solicitudes.data ?? [],
     citas: citas.data ?? [],
-    resenas: resenas.data ?? [],
+    resenas: (resenas.data ?? []).map((r) => {
+      const taller = r.talleres as { nombre: string } | { nombre: string }[] | null;
+      return {
+        id: r.id,
+        autor: r.autor,
+        rating: r.rating,
+        comentario: r.comentario,
+        created_at: r.created_at,
+        taller_nombre: (Array.isArray(taller) ? taller[0] : taller)?.nombre ?? null,
+      };
+    }),
+    vendedores: vendedores.data ?? [],
+    refacciones: (refacciones.data ?? []).map((r) => {
+      const vend = r.vendedores as
+        | { nombre_negocio: string }
+        | { nombre_negocio: string }[]
+        | null;
+      return {
+        id: r.id,
+        nombre: r.nombre,
+        precio: Number(r.precio),
+        categoria: r.categoria,
+        created_at: r.created_at,
+        vendedor_nombre: (Array.isArray(vend) ? vend[0] : vend)?.nombre_negocio ?? null,
+      };
+    }),
   };
 }

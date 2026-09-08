@@ -1,61 +1,72 @@
 import Link from "next/link";
-import { Car, Wrench, ArrowRight } from "lucide-react";
+import { Car, Wrench, Package, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/Button";
 
-/** Selección del tipo de cuenta: conductor o taller. */
+const TIPOS = [
+  {
+    href: "/registro/conductor",
+    icono: Car,
+    titulo: "Soy conductor",
+    texto:
+      "Busca mecánicos, pide ayuda de emergencia y agenda citas para tu vehículo.",
+    cta: "Regístrate como conductor",
+    variante: "primary" as const,
+  },
+  {
+    href: "/registro/taller",
+    icono: Wrench,
+    titulo: "Soy taller / mecánico",
+    texto:
+      "Recibe solicitudes, gestiona citas y haz crecer tu taller en el marketplace.",
+    cta: "Regístrate como taller",
+    variante: "emergency" as const,
+  },
+  {
+    href: "/registro/vendedor",
+    icono: Package,
+    titulo: "Soy vendedor de refacciones",
+    texto:
+      "Publica tu catálogo de autopartes y recibe pedidos de conductores y talleres por WhatsApp.",
+    cta: "Regístrate como vendedor",
+    variante: "primary" as const,
+  },
+];
+
+/** Selección del tipo de cuenta: conductor, taller o vendedor. */
 export function SelectorTipoUsuario() {
   return (
-    <div className="grid gap-md sm:grid-cols-2">
-      {/* Conductor */}
-      <div className="flex flex-col items-start gap-md rounded-2xl border border-border-subtle bg-surface-card p-lg">
-        <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-action-primary/10 text-action-primary">
-          <Car size={24} />
-        </span>
-        <div>
-          <h2 className="font-heading text-xl font-bold text-foreground-primary">
-            Soy conductor
-          </h2>
-          <p className="mt-xs font-body text-sm text-foreground-secondary">
-            Busca mecánicos, pide ayuda de emergencia y agenda citas para tu
-            vehículo.
-          </p>
-        </div>
-        <Link
-          href="/registro/conductor"
-          className={cn(
-            buttonVariants({ variant: "primary", fullWidth: true }),
-            "mt-auto"
-          )}
-        >
-          Regístrate como conductor <ArrowRight size={18} />
-        </Link>
-      </div>
-
-      {/* Taller */}
-      <div className="flex flex-col items-start gap-md rounded-2xl border border-border-subtle bg-surface-card p-lg">
-        <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-emergency/10 text-emergency">
-          <Wrench size={24} />
-        </span>
-        <div>
-          <h2 className="font-heading text-xl font-bold text-foreground-primary">
-            Soy taller / mecánico
-          </h2>
-          <p className="mt-xs font-body text-sm text-foreground-secondary">
-            Recibe solicitudes, gestiona citas y haz crecer tu taller en el
-            marketplace.
-          </p>
-        </div>
-        <Link
-          href="/registro/taller"
-          className={cn(
-            buttonVariants({ variant: "emergency", fullWidth: true }),
-            "mt-auto"
-          )}
-        >
-          Regístrate como taller <ArrowRight size={18} />
-        </Link>
-      </div>
+    <div className="grid gap-md sm:grid-cols-3">
+      {TIPOS.map((t) => {
+        const Icono = t.icono;
+        return (
+          <div
+            key={t.href}
+            className="flex flex-col items-start gap-md border-2 border-border-primary bg-surface-card p-lg"
+          >
+            <span className="flex h-12 w-12 items-center justify-center border-2 border-border-primary bg-surface-page text-foreground-primary">
+              <Icono size={24} aria-hidden />
+            </span>
+            <div>
+              <h2 className="font-heading text-xl font-extrabold uppercase leading-none text-foreground-primary">
+                {t.titulo}
+              </h2>
+              <p className="mt-sm font-body text-sm leading-relaxed text-foreground-secondary">
+                {t.texto}
+              </p>
+            </div>
+            <Link
+              href={t.href}
+              className={cn(
+                buttonVariants({ variant: t.variante, fullWidth: true }),
+                "mt-auto"
+              )}
+            >
+              {t.cta} <ArrowRight size={18} aria-hidden />
+            </Link>
+          </div>
+        );
+      })}
     </div>
   );
 }

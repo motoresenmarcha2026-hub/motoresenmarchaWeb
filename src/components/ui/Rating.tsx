@@ -1,6 +1,12 @@
 import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+/**
+ * Tono del suelo sobre el que se imprime. Sobre plancha oscura la tinta
+ * negra desaparece: el valor medía 1:1 en la ficha del taller.
+ */
+type TonoRating = "tinta" | "papel";
+
 interface RatingProps {
   /** Valor 0–5 (puede ser decimal). */
   valor: number;
@@ -9,6 +15,8 @@ interface RatingProps {
   size?: number;
   /** Muestra el valor numérico junto a las estrellas. */
   mostrarValor?: boolean;
+  /** `papel` para imprimir sobre plancha oscura. */
+  tono?: TonoRating;
   className?: string;
 }
 
@@ -18,8 +26,10 @@ export function Rating({
   numResenas,
   size = 16,
   mostrarValor = true,
+  tono = "tinta",
   className,
 }: RatingProps) {
+  const sobrePapel = tono === "papel";
   return (
     <div className={cn("inline-flex items-center gap-xs", className)}>
       <div className="flex items-center" aria-hidden>
@@ -28,7 +38,10 @@ export function Rating({
           const parcial = !lleno && valor > i;
           return (
             <span key={i} className="relative">
-              <Star size={size} className="text-border-subtle" />
+              <Star
+                size={size}
+                className={sobrePapel ? "text-foreground-inverse-secondary" : "text-border-subtle"}
+              />
               {(lleno || parcial) && (
                 <span
                   className="absolute inset-0 overflow-hidden"
@@ -36,7 +49,11 @@ export function Rating({
                 >
                   <Star
                     size={size}
-                    className="fill-action-urgent text-action-urgent"
+                    className={
+                      sobrePapel
+                        ? "fill-emergency-plancha text-emergency-plancha"
+                        : "fill-action-urgent text-action-urgent"
+                    }
                   />
                 </span>
               )}
@@ -45,12 +62,22 @@ export function Rating({
         })}
       </div>
       {mostrarValor && (
-        <span className="font-data text-sm font-semibold text-foreground-primary">
+        <span
+          className={cn(
+            "cifras font-heading text-sm font-extrabold",
+            sobrePapel ? "text-foreground-inverse" : "text-foreground-primary"
+          )}
+        >
           {valor.toFixed(1)}
         </span>
       )}
       {numResenas !== undefined && (
-        <span className="font-caption text-sm text-foreground-secondary">
+        <span
+          className={cn(
+            "cifras font-body text-sm",
+            sobrePapel ? "text-foreground-inverse-secondary" : "text-foreground-secondary"
+          )}
+        >
           ({numResenas})
         </span>
       )}

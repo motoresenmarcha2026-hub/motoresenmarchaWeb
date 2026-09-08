@@ -5,10 +5,10 @@ export default function RegistroTipoPage() {
   return (
     <div className="flex flex-col gap-lg">
       <div className="text-center">
-        <span className="font-caption text-sm font-semibold uppercase tracking-wide text-accent-primary">
+        <span className="font-heading text-xs font-extrabold uppercase tracking-[0.14em] text-emergency-dark">
           Crear cuenta
         </span>
-        <h1 className="mt-xs font-heading text-3xl font-extrabold text-foreground-primary">
+        <h1 className="mt-xs font-heading text-4xl font-extrabold uppercase leading-none text-foreground-primary md:text-5xl">
           ¿Cómo quieres usar la plataforma?
         </h1>
         <p className="mt-xs font-body text-foreground-secondary">
@@ -19,9 +19,9 @@ export default function RegistroTipoPage() {
 
       <SelectorTipoUsuario />
 
-      <p className="text-center font-caption text-sm text-foreground-secondary">
+      <p className="text-center font-body text-sm text-foreground-secondary">
         ¿Ya tienes cuenta?{" "}
-        <Link href="/login" className="font-semibold text-action-primary hover:underline">
+        <Link href="/login" className="inline-flex min-h-11 items-center font-heading text-xs font-extrabold uppercase tracking-[0.1em] text-foreground-primary underline-offset-4 hover:text-emergency-dark hover:underline hover:decoration-2">
           Inicia sesión
         </Link>
       </p>

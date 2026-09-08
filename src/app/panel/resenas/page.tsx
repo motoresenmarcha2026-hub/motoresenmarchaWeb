@@ -6,6 +6,7 @@ import { Rating } from "@/components/ui/Rating";
 import { requirePerfil } from "@/lib/auth/dal";
 import { getTallerDelUsuario } from "@/features/talleres/data";
 import { getResenas } from "@/features/resenas/data";
+import { tallerShell } from "@/features/usuarios/shell";
 
 export default async function PanelResenasPage() {
   const perfil = await requirePerfil();
@@ -13,15 +14,7 @@ export default async function PanelResenasPage() {
   const resenas = taller ? await getResenas(taller.id) : [];
 
   return (
-    <DashboardShell
-      profile={{
-        nombre: taller?.nombre ?? perfil.nombre ?? "Mi taller",
-        subtitulo: taller?.ubicacion.ciudad ?? perfil.ciudad ?? "",
-        avatarUrl: taller?.avatarUrl || undefined,
-        badge: taller?.disponibilidad === "available" ? "Disponible" : "Ocupado",
-      }}
-      navKey="taller"
-    >
+    <DashboardShell profile={tallerShell(perfil, taller)} navKey="taller">
       {!taller || resenas.length === 0 ? (
         <EstadoVacio
           icono={Star}

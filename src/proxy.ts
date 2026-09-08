@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { updateSession } from "@/lib/supabase/session";
 
 // Rutas que requieren sesión iniciada.
-const PROTEGIDAS = ["/panel", "/cuenta", "/citas", "/calificar", "/admin", "/onboarding"];
+const PROTEGIDAS = ["/panel", "/cuenta", "/citas", "/calificar", "/admin", "/vendedor", "/onboarding"];
 // Rutas de auth: si ya hay sesión, no tiene sentido volver a entrar/registrarse.
 const SOLO_INVITADOS = ["/login", "/registro"];
 

@@ -1,0 +1,254 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-07T00:00:00.000Z",
+  "title": "Design System: Motores en Marcha",
+  "extensions": {
+    "colorMeta": {
+      "action-primary": {
+        "role": "primary",
+        "displayName": "Soot Black",
+        "canonical": "#171410",
+        "tonalRamp": ["#0a0908", "#171410", "#2b2620", "#453e34", "#5f574a", "#8a8074", "#b5aa94", "#e8e0d0"]
+      },
+      "emergency": {
+        "role": "secondary",
+        "displayName": "Press Red",
+        "canonical": "#c8241c",
+        "tonalRamp": ["#3d0a07", "#5c100c", "#7a130e", "#9e1a14", "#c8241c", "#e04034", "#ef5a41", "#f9b3a5"]
+      },
+      "emergency-plancha": {
+        "role": "secondary",
+        "displayName": "Second-Pass Red",
+        "canonical": "#ef5a41",
+        "tonalRamp": ["#4a1409", "#6e1d0e", "#932714", "#b8341c", "#d84528", "#ef5a41", "#f78d7c", "#fcd2c9"]
+      },
+      "action-urgent": {
+        "role": "secondary",
+        "displayName": "Urgent Oxblood",
+        "canonical": "#9e1a14",
+        "tonalRamp": ["#2d0705", "#4a0d09", "#66120d", "#7a130e", "#9e1a14", "#c2261e", "#dd5a4e", "#f3b7b1"]
+      },
+      "whatsapp": {
+        "role": "tertiary",
+        "displayName": "Channel Green",
+        "canonical": "#125c31",
+        "tonalRamp": ["#04170c", "#0b3d20", "#125c31", "#197a41", "#219b53", "#3cbd70", "#7ad39c", "#c6ecd5"]
+      },
+      "surface-page": {
+        "role": "neutral",
+        "displayName": "Cream Newsprint",
+        "canonical": "#ecddbc",
+        "tonalRamp": ["#3a3021", "#5c4d34", "#7e6a49", "#a08a63", "#c0ac87", "#d9c9a5", "#ecddbc", "#f7efdd"]
+      },
+      "surface-card": {
+        "role": "neutral",
+        "displayName": "Fresh Sheet",
+        "canonical": "#f4e9cf",
+        "tonalRamp": ["#3e3524", "#615338", "#84724c", "#a79364", "#c6b48d", "#e0d3b0", "#f4e9cf", "#fbf6ea"]
+      },
+      "surface-inverse": {
+        "role": "neutral",
+        "displayName": "Full Ink",
+        "canonical": "#171410",
+        "tonalRamp": ["#000000", "#0d0b09", "#171410", "#2b2620", "#453e34", "#5c554a", "#8a8378", "#b5aa94"]
+      },
+      "foreground-secondary": {
+        "role": "neutral",
+        "displayName": "Halftone Text",
+        "canonical": "#5c554a",
+        "tonalRamp": ["#1a1815", "#2e2a25", "#443f37", "#5c554a", "#7a7264", "#9c9382", "#c0b7a4", "#e4dccb"]
+      },
+      "accent-primary": {
+        "role": "neutral",
+        "displayName": "Halftone Gray",
+        "canonical": "#8a8378",
+        "tonalRamp": ["#26241f", "#3d3a33", "#555049", "#6e6860", "#8a8378", "#a8a196", "#c6c0b6", "#e6e2db"]
+      },
+      "border-subtle": {
+        "role": "neutral",
+        "displayName": "Faint Rule",
+        "canonical": "#c4b79e",
+        "tonalRamp": ["#332c20", "#4f4634", "#6c6049", "#8a7c60", "#a89a7d", "#c4b79e", "#ddd3bf", "#f0ebdf"]
+      },
+      "status-available": {
+        "role": "tertiary",
+        "displayName": "Available Green",
+        "canonical": "#17703c",
+        "tonalRamp": ["#061c0f", "#0c3a20", "#125430", "#17703c", "#1f8f4d", "#33b268", "#6fcf98", "#c2ecd4"]
+      },
+      "status-busy": {
+        "role": "neutral",
+        "displayName": "Busy Gray",
+        "canonical": "#5c554a",
+        "tonalRamp": ["#1a1815", "#2e2a25", "#443f37", "#5c554a", "#7a7264", "#9c9382", "#c0b7a4", "#e4dccb"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "The landing headline only. Uppercase stencil caps on one rotation axis, bled off the left viewport edge." },
+      "headline": { "displayName": "Headline", "purpose": "Section titles, one per train car. Uppercase." },
+      "title": { "displayName": "Title", "purpose": "Plate and stop names inside panels. Uppercase." },
+      "body": { "displayName": "Body", "purpose": "All read prose. Capped at 24-36rem measure." },
+      "label": { "displayName": "Label", "purpose": "Panel title bars, stamps, tags, nav items, measurement bands." },
+      "data": { "displayName": "Data", "purpose": "Measured values: distance, ETA, price, rating. Always tabular figures." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "ease-drive", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Arrivals and settles; the train decelerating into the station." },
+      { "name": "ease-press", "value": "cubic-bezier(0.3, 0, 0.2, 1)", "purpose": "Press and hover feedback at 150ms." },
+      { "name": "duration-press", "value": "150ms", "purpose": "Every hover and active state transition." },
+      { "name": "duration-registra", "value": "520ms", "purpose": "The .registra entrance: a second ink landing a beat late, from an already-visible state." },
+      { "name": "avance", "value": "--avance (0 to 1, rAF-driven)", "purpose": "Scroll progress variable driving the red progress rail. Not animation-timeline: scroll(), which Safari lacks." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "container", "value": "80rem" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The everyday work action: a soot-black stencil plate with a sheared trailing edge.",
+      "html": "<button class=\"ds-btn-primary\">Pedir ayuda ahora</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 48px; padding: 0 32px 0 24px; background: var(--color-action-primary, #171410); color: var(--color-foreground-inverse, #fbf6ea); font-family: var(--font-heading, 'Big Shoulders', 'Arial Narrow', sans-serif); font-weight: 800; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.06em; line-height: 1; border: none; border-radius: 0; clip-path: polygon(0 0, 100% 0, calc(100% - 0.7em) 100%, 0 100%); transition: background-color 150ms cubic-bezier(0.3,0,0.2,1), transform 150ms cubic-bezier(0.3,0,0.2,1); cursor: pointer; } .ds-btn-primary:hover { background: var(--color-action-primary-dark, #000000); } .ds-btn-primary:active { transform: translateX(2px); } .ds-btn-primary:focus-visible { outline: 3px solid var(--color-emergency, #c8241c); outline-offset: 2px; }"
+    },
+    {
+      "name": "Emergency Button",
+      "kind": "button",
+      "refersTo": "button-emergency",
+      "description": "The wedge that pushes: press red, spent only on emergency and urgent actions.",
+      "html": "<button class=\"ds-btn-emergency\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M7 18v-6a5 5 0 1 1 10 0v6\"/><path d=\"M5 21a1 1 0 0 0 1-1v-2h12v2a1 1 0 0 0 1 1z\"/><path d=\"M21 12h1M18.5 4.5 18 5M2 12h1M12 2v1M4.929 4.929l.707.707\"/></svg>Solicitar ayuda urgente</button>",
+      "css": ".ds-btn-emergency { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 56px; padding: 0 48px 0 32px; background: var(--color-emergency, #c8241c); color: var(--color-foreground-inverse, #fbf6ea); font-family: var(--font-heading, 'Big Shoulders', 'Arial Narrow', sans-serif); font-weight: 800; font-size: 1.125rem; text-transform: uppercase; letter-spacing: 0.06em; line-height: 1; border: none; border-radius: 0; clip-path: polygon(0 0, 100% 0, calc(100% - 0.7em) 100%, 0 100%); transition: background-color 150ms cubic-bezier(0.3,0,0.2,1), transform 150ms cubic-bezier(0.3,0,0.2,1); cursor: pointer; } .ds-btn-emergency:hover { background: var(--color-emergency-dark, #9e1a14); } .ds-btn-emergency:active { transform: translateX(2px); } .ds-btn-emergency:focus-visible { outline: 3px solid var(--color-action-primary, #171410); outline-offset: 2px; }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Secondary plate whose 2px frame is painted with the background so the shear cannot leave it open.",
+      "html": "<button class=\"ds-btn-outline\">Ver perfil</button>",
+      "css": ".ds-btn-outline { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 24px 0 16px; border: 2px solid transparent; border-radius: 0; background: linear-gradient(var(--color-surface-card, #f4e9cf), var(--color-surface-card, #f4e9cf)) padding-box, linear-gradient(var(--color-border-primary, #171410), var(--color-border-primary, #171410)) border-box; color: var(--color-foreground-primary, #171410); font-family: var(--font-heading, 'Big Shoulders', 'Arial Narrow', sans-serif); font-weight: 800; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.06em; line-height: 1; clip-path: polygon(0 0, 100% 0, calc(100% - 0.7em) 100%, 0 100%); transition: background 150ms cubic-bezier(0.3,0,0.2,1), color 150ms cubic-bezier(0.3,0,0.2,1), transform 150ms; cursor: pointer; } .ds-btn-outline:hover { background: linear-gradient(var(--color-border-primary, #171410), var(--color-border-primary, #171410)); color: var(--color-foreground-inverse, #fbf6ea); } .ds-btn-outline:active { transform: translateX(2px); } .ds-btn-outline:focus-visible { outline: 3px solid var(--color-emergency, #c8241c); outline-offset: 2px; }"
+    },
+    {
+      "name": "WhatsApp Button",
+      "kind": "button",
+      "refersTo": "button-whatsapp",
+      "description": "Channel green, used only on controls literally labeled WhatsApp. Never a generic success color.",
+      "html": "<button class=\"ds-btn-whatsapp\">WhatsApp</button>",
+      "css": ".ds-btn-whatsapp { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 24px 0 16px; background: var(--color-whatsapp, #125c31); color: var(--color-foreground-inverse, #fbf6ea); font-family: var(--font-heading, 'Big Shoulders', 'Arial Narrow', sans-serif); font-weight: 800; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.06em; line-height: 1; border: none; border-radius: 0; clip-path: polygon(0 0, 100% 0, calc(100% - 0.7em) 100%, 0 100%); transition: background-color 150ms cubic-bezier(0.3,0,0.2,1), transform 150ms; cursor: pointer; } .ds-btn-whatsapp:hover { background: var(--color-whatsapp-dark, #0b3d20); } .ds-btn-whatsapp:active { transform: translateX(2px); } .ds-btn-whatsapp:focus-visible { outline: 3px solid var(--color-emergency, #c8241c); outline-offset: 2px; }"
+    },
+    {
+      "name": "Search Input",
+      "kind": "input",
+      "refersTo": "input-search",
+      "description": "Fresh-sheet ground inside a 2px black frame; the frame and its corner notch turn red on focus.",
+      "html": "<div class=\"ds-field\"><svg class=\"ds-field-icon\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" aria-hidden=\"true\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><path d=\"m21 21-4.3-4.3\"/></svg><input class=\"ds-field-input\" placeholder=\"¿Qué servicio necesitas?\" /><span class=\"ds-field-notch\" aria-hidden=\"true\"></span></div>",
+      "css": ".ds-field { position: relative; display: block; max-width: 26rem; } .ds-field-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--color-foreground-secondary, #5c554a); pointer-events: none; } .ds-field-input { width: 100%; height: 48px; padding: 0 16px 0 44px; background: var(--color-surface-card, #f4e9cf); border: 2px solid var(--color-border-primary, #171410); border-radius: 0; color: var(--color-foreground-primary, #171410); font-family: var(--font-body, Archivo, sans-serif); font-size: 1rem; transition: border-color 150ms cubic-bezier(0.3,0,0.2,1); } .ds-field-input::placeholder { color: var(--color-foreground-secondary, #5c554a); } .ds-field-input:focus { outline: none; border-color: var(--color-emergency, #c8241c); } .ds-field-notch { position: absolute; right: 0; bottom: 0; width: 0; height: 0; border-bottom: 10px solid var(--color-border-primary, #171410); border-left: 10px solid transparent; pointer-events: none; } .ds-field-input:focus ~ .ds-field-notch { border-bottom-color: var(--color-emergency, #c8241c); }"
+    },
+    {
+      "name": "Header Navigation",
+      "kind": "nav",
+      "refersTo": "panel-titlebar",
+      "description": "Full-ink plane with a red wedge entering from the left, a paper screen over the bar, and a solid red block on the current stop.",
+      "html": "<header class=\"ds-nav\"><span class=\"ds-nav-wedge\" aria-hidden=\"true\"></span><span class=\"ds-nav-screen\" aria-hidden=\"true\"></span><div class=\"ds-nav-inner\"><span class=\"ds-nav-brand\">Motores en Marcha</span><nav class=\"ds-nav-links\"><a class=\"ds-nav-link ds-nav-link--active\" href=\"#\">Inicio</a><a class=\"ds-nav-link\" href=\"#\">Mecánicos</a><a class=\"ds-nav-link\" href=\"#\">Solicitar ayuda</a></nav></div></header>",
+      "css": ".ds-nav { position: relative; overflow: hidden; background: var(--color-surface-inverse, #171410); border-bottom: 3px solid var(--color-emergency, #c8241c); } .ds-nav-wedge { position: absolute; inset-block: 0; left: 0; width: 16rem; background: var(--color-emergency, #c8241c); opacity: 0.9; clip-path: polygon(0 0, 100% 0, 62% 100%, 0 100%); pointer-events: none; } .ds-nav-screen { position: absolute; inset: 0; background-image: radial-gradient(var(--color-accent-primary, #8a8378) 0.5px, transparent 0.5px); background-size: 4px 4px; opacity: 0.14; pointer-events: none; } .ds-nav-inner { position: relative; display: flex; align-items: stretch; justify-content: space-between; height: 64px; padding: 0 16px; } .ds-nav-brand { align-self: center; font-family: var(--font-heading, 'Big Shoulders', sans-serif); font-weight: 800; font-size: 1.125rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--color-foreground-inverse, #fbf6ea); } .ds-nav-links { display: flex; align-items: stretch; } .ds-nav-link { display: flex; align-items: center; padding: 0 16px; font-family: var(--font-heading, 'Big Shoulders', sans-serif); font-weight: 700; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-foreground-inverse-secondary, #b5aa94); text-decoration: none; transition: background-color 150ms, color 150ms; } .ds-nav-link:hover { background: rgb(255 255 255 / 0.1); color: var(--color-foreground-inverse, #fbf6ea); } .ds-nav-link--active { background: var(--color-emergency, #c8241c); color: var(--color-foreground-inverse, #fbf6ea); } .ds-nav-link:focus-visible { outline: 3px solid var(--color-emergency, #c8241c); outline-offset: -3px; }"
+    },
+    {
+      "name": "Specialty Tag",
+      "kind": "chip",
+      "refersTo": "tag",
+      "description": "Stencil outline label on a transparent ground; used for workshop specialties.",
+      "html": "<span class=\"ds-tag\">Frenos</span>",
+      "css": ".ds-tag { display: inline-flex; align-items: center; padding: 2px 8px; background: transparent; border: 1px solid var(--color-border-primary, #171410); border-radius: 0; color: var(--color-foreground-primary, #171410); font-family: var(--font-heading, 'Big Shoulders', sans-serif); font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; }"
+    },
+    {
+      "name": "Availability Stamp",
+      "kind": "chip",
+      "refersTo": "badge-available",
+      "description": "Solid ink stamp with a square dot; green when available, gray when busy.",
+      "html": "<span class=\"ds-stamp\"><span class=\"ds-stamp-dot\" aria-hidden=\"true\"></span>Disponible</span><span class=\"ds-stamp ds-stamp--busy\"><span class=\"ds-stamp-dot\" aria-hidden=\"true\"></span>Ocupado</span>",
+      "css": ".ds-stamp { display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; background: var(--color-status-available, #17703c); border-radius: 0; color: var(--color-foreground-inverse, #fbf6ea); font-family: var(--font-heading, 'Big Shoulders', sans-serif); font-weight: 800; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; } .ds-stamp--busy { background: var(--color-status-busy, #5c554a); margin-left: 8px; } .ds-stamp-dot { width: 8px; height: 8px; border-radius: 0; background: var(--color-foreground-inverse, #fbf6ea); }"
+    },
+    {
+      "name": "Workshop Plate",
+      "kind": "card",
+      "refersTo": "card-plancha",
+      "description": "The recurring container: a 2px black frame on fresh sheet, with a full-ink measurement band bled to the plate edges. Frame turns red on hover.",
+      "html": "<article class=\"ds-plate\"><div class=\"ds-plate-body\"><h3 class=\"ds-plate-title\">Taller El Águila</h3><p class=\"ds-plate-sub\">Ramón Iturbe</p></div><div class=\"ds-plate-band\"><span class=\"ds-plate-num\">2.4 km</span><span class=\"ds-plate-rule\" aria-hidden=\"true\"></span><span class=\"ds-plate-num\">12 min</span></div></article>",
+      "css": ".ds-plate { display: flex; flex-direction: column; max-width: 22rem; background: var(--color-surface-card, #f4e9cf); border: 2px solid var(--color-border-primary, #171410); border-radius: 0; transition: border-color 200ms cubic-bezier(0.16,1,0.3,1), transform 200ms cubic-bezier(0.16,1,0.3,1); } .ds-plate:hover { border-color: var(--color-emergency, #c8241c); transform: translateY(-2px); } .ds-plate-body { padding: 8px 16px 12px; } .ds-plate-title { margin: 0; font-family: var(--font-heading, 'Big Shoulders', sans-serif); font-weight: 800; font-size: 1.25rem; line-height: 1; text-transform: uppercase; color: var(--color-foreground-primary, #171410); } .ds-plate-sub { margin: 4px 0 0; font-family: var(--font-body, Archivo, sans-serif); font-size: 0.875rem; color: var(--color-foreground-secondary, #5c554a); } .ds-plate-band { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 16px; background: var(--color-surface-inverse, #171410); } .ds-plate-num { font-family: var(--font-heading, 'Big Shoulders', sans-serif); font-weight: 800; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--color-foreground-inverse, #fbf6ea); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1; } .ds-plate-rule { flex: 1; height: 2px; background: var(--color-emergency-plancha, #ef5a41); opacity: 0.6; }"
+    },
+    {
+      "name": "Stop Row",
+      "kind": "custom",
+      "refersTo": "card-plancha",
+      "description": "A stop on the rail: square red marker that fills on hover, name in display caps turning red, distance and ETA in tabular figures that never hide on small screens.",
+      "html": "<a class=\"ds-stop\" href=\"#\"><span class=\"ds-stop-mark\" aria-hidden=\"true\"></span><span class=\"ds-stop-text\"><span class=\"ds-stop-name\">Servicio Zaragoza</span><span class=\"ds-stop-meta\">3.1 km · 15 min</span></span><svg class=\"ds-stop-chev\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" aria-hidden=\"true\"><path d=\"m9 18 6-6-6-6\"/></svg></a>",
+      "css": ".ds-stop { display: flex; align-items: center; gap: 16px; padding: 12px 16px; background: var(--color-surface-card, #f4e9cf); border-bottom: 2px solid var(--color-border-primary, #171410); text-decoration: none; transition: background-color 150ms cubic-bezier(0.3,0,0.2,1); } .ds-stop:hover { background: var(--color-surface-page, #ecddbc); } .ds-stop-mark { flex: none; width: 12px; height: 12px; border: 3px solid var(--color-emergency, #c8241c); background: var(--color-surface-card, #f4e9cf); border-radius: 0; transition: background-color 150ms; } .ds-stop:hover .ds-stop-mark { background: var(--color-emergency, #c8241c); } .ds-stop-text { flex: 1; min-width: 0; } .ds-stop-name { display: block; font-family: var(--font-heading, 'Big Shoulders', sans-serif); font-weight: 800; font-size: 1.125rem; line-height: 1; text-transform: uppercase; color: var(--color-foreground-primary, #171410); transition: color 150ms; } .ds-stop:hover .ds-stop-name { color: var(--color-emergency, #c8241c); } .ds-stop-meta { display: block; margin-top: 2px; font-family: var(--font-heading, 'Big Shoulders', sans-serif); font-weight: 800; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-foreground-primary, #171410); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1; } .ds-stop-chev { flex: none; color: var(--color-emergency, #c8241c); transition: transform 150ms cubic-bezier(0.3,0,0.2,1); } .ds-stop:hover .ds-stop-chev { transform: translateX(4px); } .ds-stop:focus-visible { outline: 3px solid var(--color-emergency, #c8241c); outline-offset: -3px; }"
+    },
+    {
+      "name": "Ruled Manifest",
+      "kind": "custom",
+      "refersTo": "panel-titlebar",
+      "description": "Plate with a full-ink title bar that names and counts itself, then ruled rows that flood to press red on hover with inverted type.",
+      "html": "<div class=\"ds-manifest\"><div class=\"ds-manifest-bar\"><span>Manifiesto de fallas</span><span class=\"ds-manifest-count\">10 renglones</span></div><a class=\"ds-manifest-row\" href=\"#\"><span class=\"ds-manifest-label\">No arranca<span class=\"ds-manifest-desc\">Batería, marcha o sistema eléctrico</span></span><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" aria-hidden=\"true\"><path d=\"m9 18 6-6-6-6\"/></svg></a></div>",
+      "css": ".ds-manifest { max-width: 30rem; background: var(--color-surface-card, #f4e9cf); border: 2px solid var(--color-border-primary, #171410); } .ds-manifest-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 6px 16px; background: var(--color-surface-inverse, #171410); border-bottom: 2px solid var(--color-border-primary, #171410); font-family: var(--font-heading, 'Big Shoulders', sans-serif); font-weight: 800; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--color-foreground-inverse, #fbf6ea); } .ds-manifest-count { color: var(--color-foreground-inverse-secondary, #b5aa94); font-variant-numeric: tabular-nums; } .ds-manifest-row { display: flex; align-items: center; gap: 16px; padding: 12px 16px; color: var(--color-foreground-primary, #171410); text-decoration: none; transition: background-color 150ms cubic-bezier(0.3,0,0.2,1), color 150ms; } .ds-manifest-row:hover { background: var(--color-emergency, #c8241c); color: var(--color-foreground-inverse, #fbf6ea); } .ds-manifest-row svg { flex: none; color: var(--color-emergency, #c8241c); transition: transform 150ms, color 150ms; } .ds-manifest-row:hover svg { color: var(--color-foreground-inverse, #fbf6ea); transform: translateX(4px); } .ds-manifest-label { flex: 1; min-width: 0; font-family: var(--font-heading, 'Big Shoulders', sans-serif); font-weight: 800; font-size: 1rem; line-height: 1; text-transform: uppercase; letter-spacing: 0.04em; } .ds-manifest-desc { display: block; margin-top: 4px; font-family: var(--font-body, Archivo, sans-serif); font-weight: 400; font-size: 0.875rem; letter-spacing: normal; text-transform: none; color: inherit; opacity: 0.75; }"
+    },
+    {
+      "name": "Empty State",
+      "kind": "custom",
+      "refersTo": "card-plancha",
+      "description": "The stated empty car: dashed black frame on cream, the container named in display caps, one sentence, and a way out.",
+      "html": "<div class=\"ds-empty\"><p class=\"ds-empty-title\">Vagón vacío</p><p class=\"ds-empty-text\">Todavía no hay refacciones publicadas. En cuanto los vendedores suban su inventario, aparecerán aquí.</p></div>",
+      "css": ".ds-empty { max-width: 34rem; padding: 32px 16px; text-align: center; background: var(--color-surface-page, #ecddbc); border: 2px dashed var(--color-border-primary, #171410); border-radius: 0; } .ds-empty-title { margin: 0; font-family: var(--font-heading, 'Big Shoulders', sans-serif); font-weight: 800; font-size: 1.25rem; line-height: 1; text-transform: uppercase; color: var(--color-foreground-primary, #171410); } .ds-empty-text { margin: 8px auto 0; max-width: 30rem; font-family: var(--font-body, Archivo, sans-serif); font-size: 1rem; color: var(--color-foreground-secondary, #5c554a); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Agitation Train",
+    "overview": "The site is a train that carries a stranded driver's problem to whoever can fix it: every section is a car, every workshop is a stop. That metaphor is not decoration on top of a neutral UI — it is the printing method. The world prints in three inks on newsprint: soot black on cream stock, red rationed to the diagonal wedge that pushes the action, and a channel green that appears only where contact actually closes. Photography arrives as a real halftone plate, not a tinted image. Rules of black ink separate things, never shadows, never gray cards floating on gray.\n\nThe system's central mechanism is that components never name a color; they name a job. Every surface in the codebase writes bg-action-primary, text-foreground-secondary, border-border-subtle. Raw hex values in components are effectively absent. The world lives in one @theme block in src/app/globals.css, so reassigning a token there propagates the world to every surface without editing those files. The zero-radius scale is the same lever pulled a second time: setting every --radius-* to 0px squares every pre-existing rounded-lg in the codebase at once. Future work inherits the world by using the semantic names, not by copying values.\n\nDensity is high and confident. Type is condensed stencil caps stacked tight; measurement is tabular and never abbreviated away on small screens, because the confirmed primary scene is one hand on a phone at the roadside. Confirmed rejections: no split hero with stock photography, and no grid of three identical cards where a hierarchy of stops belongs.",
+    "keyCharacteristics": [
+      "Semantic tokens only; components never carry raw hex.",
+      "Zero radius everywhere; corners are live, not softened.",
+      "Black rules and ink planes carry structure; no shadows, no elevation.",
+      "Red is rationed to the wedge; black is the everyday work action.",
+      "Two typefaces total: condensed stencil display over grotesque body/data.",
+      "Tabular figures on everything measured (km, ETA, price, rating).",
+      "One authored motion moment for the whole site."
+    ],
+    "rules": [
+      { "name": "The Rationed Red Rule", "body": "Black is the everyday action; red is spent only on the wedge, on emergency and urgent, on the active stop, and on focus. If a screen's red covers more than the diagonal plus one control, the ration has been broken.", "section": "colors" },
+      { "name": "The Second-Pass Rule", "body": "Red on a black plane is always emergency-plancha, never the base red. The base red on ink black measures 3.3:1 and fails.", "section": "colors" },
+      { "name": "The Channel Green Rule", "body": "Green identifies WhatsApp and nothing else. It never becomes a success color, a decorative accent, or a second brand hue.", "section": "colors" },
+      { "name": "The Tabular Measurement Rule", "body": "Anything the product asks the user to believe — distance, ETA, price, rating, dates — carries .cifras (or is a <time> element) and renders in tabular figures. Numbers that shift width while scanning are not evidence.", "section": "typography" },
+      { "name": "The No-Kicker Rule", "body": "Sections open on the headline. There is no eyebrow, kicker, or small-caps label floating above a title anywhere in this system; the black panel title bar is the only labeled opener, and it is a bar, not a floating line of type.", "section": "typography" },
+      { "name": "The All-Caps Display Rule", "body": "The stencil face is used in uppercase only. It has no lowercase register in this world.", "section": "typography" },
+      { "name": "The Full-Bleed Left Rule", "body": "When a display block bleeds off the left edge, it uses .sangra-izq, which cancels both the container padding and the centering margin of max-w-7xl so the block reaches the viewport edge at every width. Rotating the block instead pulls it back inboard on desktop and breaks the bleed.", "section": "layout" },
+      { "name": "The Ink-Not-Air Rule", "body": "Never add a box-shadow, a drop-shadow, a backdrop blur, or a translucent gray band to create separation. Separate with a black rule, a full-ink plane, or a step between surface-page and surface-card.", "section": "elevation" },
+      { "name": "The Closed-Frame Rule", "body": "A sheared element still closes its frame. Use .filete-banderin, which paints the border with the background across border-box and padding-box so the clip cuts both layers, instead of an inset shadow that the clip would leave open on the slanted side.", "section": "shapes" }
+    ],
+    "dos": [
+      "Do write semantic tokens (bg-action-primary, text-foreground-secondary, border-border-primary) and never a raw hex in a component. The world reassigns from globals.css, and any hardcoded value breaks that.",
+      "Do use soot black for the everyday action and reserve red for the wedge, emergency, urgent, the active stop, and focus.",
+      "Do switch to emergency-plancha for any red type, rule, or marker on an ink-black plane.",
+      "Do frame with 2px black rules and separate sections with a rule on the section edge.",
+      "Do give every measured value .cifras so distance, ETA, price, and rating render in tabular figures.",
+      "Do keep interactive targets at 44px minimum and keep distance and ETA visible at 390px.",
+      "Do let diagonals steepen on tall screens rather than removing them on mobile.",
+      "Do close a frame under a shear with .filete-banderin.",
+      "Do state empty regions in display caps with a named container and a way out."
+    ],
+    "donts": [
+      "Don't add a box-shadow, drop-shadow, backdrop blur, or translucent gray band. This system conveys depth with ink, rules, and paper steps only.",
+      "Don't round anything. Every radius token is 0 and that is what squares the site's inherited rounded-* utilities.",
+      "Don't use green for anything other than a WhatsApp-labeled control.",
+      "Don't make red the default button color; a red everyday action spends the ration and kills the wedge.",
+      "Don't add an eyebrow or kicker line above a heading. Sections open on the headline or on a black title bar.",
+      "Don't introduce a third or fourth typeface. The four --font-* token names exist for compatibility and must keep resolving to the two shipped families.",
+      "Don't put a photograph on a surface without the halftone plate treatment, and don't substitute a flat gray tint for the color-burn screen.",
+      "Don't replace the stop sequence with a grid of three identical cards, which is the topology this world rejects by name.",
+      "Don't add a second orchestrated motion moment. The scroll rail is the one authored moment; everything else is press and hover feedback.",
+      "Don't use max-w-{xs..2xl}; the spacing scale occupies that namespace in Tailwind v4. Use max-w-[28rem] or max-w-7xl."
+    ]
+  }
+}

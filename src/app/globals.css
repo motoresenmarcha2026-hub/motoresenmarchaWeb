@@ -2,68 +2,207 @@
 
 /*
   Motores en Marcha — Design tokens
-  Fuente de verdad: diseño Pencil (meca2.pen). Tailwind v4 config CSS-first.
-  Cada --color-* genera utilidades bg-*, text-*, border-*, etc.
+  Mundo visual: tren de agitación constructivista (seed 6c8762a5).
+  Contrato de dirección en .impeccable/surfaces/src-app-page-tsx.md
+
+  Los NOMBRES de los tokens se conservan del sistema anterior a propósito:
+  todo el sitio escribe `bg-action-primary`, `text-foreground-secondary`, etc.,
+  así que reasignar aquí propaga el mundo a las ~35 superficies sin tocarlas.
+  Tailwind v4 config CSS-first — no hay tailwind.config.ts.
 */
 @theme {
-  /* Marca / acentos */
-  --color-accent-primary: #8f5a3c;
+  /* ── Tintas del mundo ─────────────────────────────────────────────
+     El taller imprime a tres tintas: negro hollín sobre papel periódico,
+     y rojo racionado a la cuña que empuja la acción. El verde solo
+     aparece donde de verdad se cierra el contacto. */
 
-  /* Acción principal */
-  --color-action-primary: #1e56a8;
-  --color-action-primary-dark: #163f80;
+  /* Halftone de papel: gris de trama, no un gris de interfaz */
+  --color-accent-primary: #8a8378;
 
-  /* Urgente */
-  --color-action-urgent: #dd7a1f;
-  --color-action-urgent-dark: #b4620f;
+  /* Acción de trabajo: negro de plantilla. El rojo NO es el botón de
+     todos los días — se gasta solo en lo que empuja hacia adelante. */
+  --color-action-primary: #171410;
+  --color-action-primary-dark: #000000;
 
-  /* Emergencia / SOS */
-  --color-emergency: #cc2e27;
-  --color-emergency-dark: #a11f19;
+  /* Urgente y emergencia son el mismo eje a dos profundidades */
+  --color-action-urgent: #9e1a14;
+  --color-action-urgent-dark: #7a130e;
+  --color-emergency: #c8241c;
+  --color-emergency-dark: #9e1a14;
+  /* Tinta roja sobre plancha negra: la segunda pasada imprime más clara
+     sobre negro que sobre papel. Además es lo que hace que el rojo pase
+     contraste sobre el fondo oscuro (5.4:1 contra 3.3:1). */
+  --color-emergency-plancha: #ef5a41;
 
-  /* WhatsApp */
-  --color-whatsapp: #25d366;
-  --color-whatsapp-dark: #128c7e;
+  /* WhatsApp: rendición impresa del verde de canal. El #25d366 crudo
+     no alcanza 4.5:1 sobre papel; este sí (4.8:1 texto, 5.6:1 invertido). */
+  --color-whatsapp: #125c31;
+  --color-whatsapp-dark: #0b3d20;
 
   /* Estatus */
-  --color-status-available: #2f9e58;
-  --color-status-busy: #8c8880;
+  --color-status-available: #17703c;
+  --color-status-busy: #5c554a;
 
   /* Texto */
-  --color-foreground-primary: #1a1a1a;
-  --color-foreground-secondary: #666666;
-  --color-foreground-inverse: #ffffff;
-  --color-foreground-inverse-secondary: #b8b5b0;
+  --color-foreground-primary: #171410;
+  --color-foreground-secondary: #5c554a;
+  --color-foreground-inverse: #fbf6ea;
+  --color-foreground-inverse-secondary: #b5aa94;
 
-  /* Superficies */
-  --color-surface-page: #e8e9eb;
-  --color-surface-card: #ffffff;
-  --color-surface-inverse: #1a1a1a;
+  /* Superficies: papel periódico, hoja fresca, y tinta plena */
+  --color-surface-page: #ecddbc;
+  --color-surface-card: #f4e9cf;
+  --color-surface-inverse: #171410;
 
-  /* Bordes */
-  --color-border-primary: #1a1a1a;
-  --color-border-subtle: #d6d3ce;
+  /* Filetes: este mundo separa con reglas negras, no con sombras */
+  --color-border-primary: #171410;
+  --color-border-subtle: #c4b79e;
 
-  /* Tipografías (las var --font-* provienen de next/font en layout.tsx) */
-  --font-heading: var(--font-funnel), ui-sans-serif, system-ui, sans-serif;
-  --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-caption: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
-  --font-data: var(--font-geist-mono), ui-monospace, monospace;
+  /* ── Tipografía ───────────────────────────────────────────────────
+     Dos familias, no cuatro. Versales de plantilla para el registro de
+     cartel; grotesca de tabla para todo lo que se lee y se mide. */
+  --font-heading: var(--font-stencil), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-caption: var(--font-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-data: var(--font-grotesk), ui-sans-serif, system-ui, sans-serif;
 
-  /* Espaciado (escala del diseño) */
+  /* ── Espaciado (escala del diseño) ────────────────────────────────
+     ⚠️ Colisiona con el namespace max-w-* de Tailwind v4.
+     NO usar max-w-{xs,sm,md,lg,xl,2xl} → usar max-w-[28rem] o max-w-7xl. */
   --spacing-xs: 4px;
   --spacing-sm: 8px;
   --spacing-md: 16px;
   --spacing-lg: 24px;
   --spacing-xl: 32px;
   --spacing-2xl: 48px;
+
+  /* ── Radios: este mundo no tiene esquinas redondeadas ─────────────
+     Poner los radios en 0 convierte cada `rounded-lg` que ya existe en
+     el sitio en una esquina viva, sin editar esos archivos. */
+  --radius-xs: 0px;
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-3xl: 0px;
+  --radius-4xl: 0px;
+
+  /* ── Movimiento ───────────────────────────────────────────────────
+     Salida exponencial: el tren desacelera al llegar a la estación. */
+  --ease-drive: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-press: cubic-bezier(0.3, 0, 0.2, 1);
+
+  /* Zona que ocupa el sello SOS flotante en la esquina inferior derecha:
+     su ancho más su separación del borde. El sello está SIEMPRE visible, así
+     que son los controles los que la esquivan. */
+  --zona-sos: 15rem;
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   Material del mundo
+   ══════════════════════════════════════════════════════════════════ */
+
+/* Trama de papel periódico. Es material declarado por el mundo, no
+   decoración: la fotografía va en halftone y el fondo lleva su grano. */
+.trama-papel {
+  background-image: radial-gradient(
+    var(--color-accent-primary) 0.5px,
+    transparent 0.5px
+  );
+  background-size: 4px 4px;
+  opacity: 0.14;
+}
+
+/* Grano de papel periódico sobre el suelo: material declarado del mundo. */
+.grano-papel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(
+      circle at 30% 20%,
+      rgb(0 0 0 / 0.045) 0.6px,
+      transparent 0.7px
+    ),
+    radial-gradient(circle at 70% 65%, rgb(0 0 0 / 0.035) 0.5px, transparent 0.6px);
+  background-size: 7px 7px, 11px 11px;
+}
+
+/*
+  Trama de medios tonos. `color-burn` sobre la fotografía en gris con el
+  contraste estirado: el punto se pierde en las luces y cierra en las
+  sombras, que es lo que hace una trama de imprenta. No es un velo plano.
+*/
+.plancha-foto {
+  filter: grayscale(1) contrast(1.55) brightness(1.06);
+}
+
+.plancha-foto-trama::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: color-burn;
+  background-image: radial-gradient(
+    circle,
+    rgb(90 84 74) 0 38%,
+    transparent 42%
+  );
+  background-size: var(--trama, 6px) var(--trama, 6px);
+}
+
+/* Tinta plana de la segunda plancha: el rojo entra por multiplicación,
+   como una segunda pasada de prensa sobre la primera. */
+.tinta-roja {
+  mix-blend-mode: multiply;
+  background-color: var(--color-emergency);
+}
+
+/* La cuña: el diagonal que empuja la acción. En pantalla ancha se
+   recuesta; en pantalla alta se empina hasta casi vertical, que es la
+   regla responsive del propio mundo y lo que salva la legibilidad en
+   celular. */
+/*
+  La diagonal se empina en pantalla alta y se relaja en ancha — regla del
+  propio mundo. En celular baja casi a vertical, así el eje diagonal sigue
+  presente en la composición en vez de desaparecer, que es como se resuelve
+  el riesgo declarado de la carta en vez de esquivarlo.
+*/
+.cuna {
+  clip-path: polygon(0 0, 100% 0, 100% 88%, 0 30%);
+}
+@media (min-width: 768px) {
+  .cuna {
+    clip-path: polygon(0 0, 100% 0, 100% 34%, 0 78%);
+  }
+}
+
+/* Banda de borde: en celular la cuña se convierte en el filo angulado
+   que recorre el costado de la plancha. */
+.filo-cuna {
+  clip-path: polygon(0 0, 100% 6%, 100% 100%, 0 94%);
+}
+
+/* Paralelogramo del botón primario: el borde derecho sesgado, como en
+   el banderín de la locomotora. */
+.banderin {
+  clip-path: polygon(0 0, 100% 0, calc(100% - 0.7em) 100%, 0 100%);
+}
+.banderin-izq {
+  clip-path: polygon(0.7em 0, 100% 0, 100% 100%, 0 100%);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   Superficies del navegador
+   Lo que no dibujamos también lleva el diseño.
+   ══════════════════════════════════════════════════════════════════ */
 
 body {
   font-family: var(--font-body);
+  background-color: var(--color-surface-page);
 }
 
-/* Headings usan Funnel Sans por defecto */
 h1,
 h2,
 h3,
@@ -71,4 +210,165 @@ h4,
 h5,
 h6 {
   font-family: var(--font-heading);
+  letter-spacing: 0.01em;
+}
+
+::selection {
+  background-color: var(--color-emergency);
+  color: var(--color-foreground-inverse);
+}
+
+:root {
+  caret-color: var(--color-emergency);
+  color-scheme: light;
+  scrollbar-color: var(--color-foreground-primary) var(--color-surface-page);
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-surface-page);
+  border-left: 1px solid var(--color-border-subtle);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-foreground-primary);
+  border: 3px solid var(--color-surface-page);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-emergency);
+}
+
+/* Anillo de foco: cuadrado y de tinta, como todo lo demás */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 3px solid var(--color-emergency);
+  outline-offset: 2px;
+  border-radius: 0;
+}
+
+/* Cifras tabulares en todo lo que se mide: distancia, ETA, precio,
+   calificación. Es medición, no disfraz técnico. */
+.cifras,
+time,
+[data-cifras] {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   Movimiento: el tren avanza con el scroll
+   Un solo momento orquestado, desde un estado ya visible.
+   ══════════════════════════════════════════════════════════════════ */
+
+@keyframes avanza-cuna {
+  from {
+    transform: translate3d(-8%, 0, 0);
+  }
+  to {
+    transform: translate3d(4%, 0, 0);
+  }
+}
+
+/*
+  Riel de avance. `animation-timeline: scroll()` no existe en Safari, es
+  decir no existe en el celular del conductor varado, así que el progreso
+  lo empuja un componente cliente sobre --avance (0 a 1) y esto solo lo
+  dibuja. La página es la ruta; el riel dice en qué parte vas.
+*/
+.locomotora {
+  transform: translate3d(
+    calc(1rem + var(--avance, 0) * (100vw - 9rem)),
+    0,
+    0
+  );
+  will-change: transform;
+}
+
+@keyframes registra {
+  from {
+    opacity: 0.55;
+    transform: translate3d(0, 10px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* La plancha "registra": llega ligeramente corrida y cuadra, como una
+   segunda tinta que entra un instante tarde. Parte de un estado ya
+   visible — nunca esconde contenido. */
+.registra {
+  animation: registra var(--duracion, 520ms) var(--ease-drive) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .avanza,
+  .registra {
+    animation: none !important;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* El botón fantasma es texto, no plancha: no lleva el sesgo. */
+.banderin-none {
+  clip-path: none;
+}
+
+/*
+  Filete que sobrevive al sesgo del banderín.
+  Una sombra interior la corta el clip-path por el lado sesgado y el borde
+  queda abierto. Aquí el filete se pinta con el propio fondo: la capa de
+  `border-box` es la tinta y la de `padding-box` es el papel, así que el
+  recorte atraviesa las dos y el borde cierra sobre la diagonal.
+*/
+.filete-banderin {
+  border: 2px solid transparent;
+  background:
+    linear-gradient(var(--color-surface-card), var(--color-surface-card))
+      padding-box,
+    linear-gradient(var(--color-border-primary), var(--color-border-primary))
+      border-box;
+}
+.filete-banderin:hover {
+  background: linear-gradient(
+    var(--color-border-primary),
+    var(--color-border-primary)
+  );
+}
+
+/*
+  Sangrado por el borde izquierdo.
+  Cancela a la vez el padding del contenedor y el margen de centrado del
+  `max-w-7xl`, así el bloque arranca en el borde del viewport en cualquier
+  ancho. Rotar el bloque como una pieza lo había metido hacia adentro en
+  escritorio y rompió la promesa del FIRST VIEWPORT, que sí se cumplía en
+  celular.
+*/
+.sangra-izq {
+  margin-left: calc(-1 * max(1rem, (100vw - 80rem) / 2 + 1rem) - 0.03em);
+}
+@media (min-width: 768px) {
+  .sangra-izq {
+    margin-left: calc(-1 * max(1.5rem, (100vw - 80rem) / 2 + 1.5rem) - 0.03em);
+  }
+}
+
+
+/*
+  Cuánto invade el sello SOS el contenido, medido desde el borde del
+  contenedor centrado (`max-w-7xl` = 80rem). En pantallas anchas el margen
+  del contenedor ya lo absorbe y vale 0; a 1280px vale la zona completa.
+*/
+:root {
+  --sos-invade: max(0px, calc(var(--zona-sos) - max(0px, (100vw - 80rem) / 2)));
 }

@@ -41,18 +41,18 @@ export function Modal({
       aria-label={titulo}
     >
       <div
-        className="absolute inset-0 bg-surface-inverse/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-surface-inverse/80"
         onClick={onCerrar}
       />
       <div
         className={cn(
-          "relative z-10 max-h-[85vh] w-full max-w-[42rem] overflow-y-auto rounded-2xl bg-surface-card p-lg shadow-xl",
+          "relative z-10 max-h-[85vh] w-full max-w-[42rem] overflow-y-auto rounded-none border-2 border-border-primary bg-surface-card",
           className
         )}
       >
-        <div className="mb-md flex items-center justify-between">
+        <div className="flex items-center justify-between gap-md border-b-2 border-border-primary bg-surface-inverse pl-md">
           {titulo && (
-            <h2 className="font-heading text-xl font-bold text-foreground-primary">
+            <h2 className="font-heading text-sm font-extrabold uppercase tracking-[0.12em] text-foreground-inverse">
               {titulo}
             </h2>
           )}
@@ -60,12 +60,12 @@ export function Modal({
             type="button"
             onClick={onCerrar}
             aria-label="Cerrar"
-            className="ml-auto rounded-full p-xs text-foreground-secondary hover:bg-surface-page"
+            className="ml-auto flex h-11 w-11 items-center justify-center rounded-none text-foreground-inverse transition-colors hover:bg-emergency"
           >
-            <X size={20} />
+            <X size={20} aria-hidden />
           </button>
         </div>
-        {children}
+        <div className="p-lg">{children}</div>
       </div>
     </div>
   );

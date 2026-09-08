@@ -72,7 +72,7 @@ export function AgendarCita({ taller }: { taller: Taller }) {
       <div className="flex flex-col gap-xl">
         {/* Servicio */}
         <fieldset className="flex flex-col gap-sm">
-          <legend className="font-heading text-lg font-bold text-foreground-primary">
+          <legend className="font-heading text-xl font-extrabold uppercase leading-none text-foreground-primary">
             ¿Qué servicio necesitas?
           </legend>
           <div className="flex flex-wrap gap-xs">
@@ -82,10 +82,10 @@ export function AgendarCita({ taller }: { taller: Taller }) {
                 type="button"
                 onClick={() => setServicio(e)}
                 className={cn(
-                  "rounded-full border px-md py-1.5 font-caption text-sm font-medium transition-colors",
+                  "inline-flex h-11 items-center rounded-none border-2 px-md font-heading text-xs font-extrabold uppercase tracking-[0.1em] transition-colors",
                   servicio === e
-                    ? "border-action-primary bg-action-primary text-foreground-inverse"
-                    : "border-border-subtle bg-surface-card text-foreground-secondary hover:border-foreground-secondary"
+                    ? "border-emergency bg-emergency text-foreground-inverse"
+                    : "border-border-primary bg-surface-card text-foreground-primary hover:bg-surface-page"
                 )}
               >
                 {especialidadMeta(e).label}
@@ -96,7 +96,7 @@ export function AgendarCita({ taller }: { taller: Taller }) {
 
         {/* Fecha */}
         <fieldset className="flex flex-col gap-sm">
-          <legend className="font-heading text-lg font-bold text-foreground-primary">
+          <legend className="font-heading text-xl font-extrabold uppercase leading-none text-foreground-primary">
             Elige la fecha
           </legend>
           <div className="grid grid-cols-4 gap-xs sm:grid-cols-7">
@@ -108,10 +108,10 @@ export function AgendarCita({ taller }: { taller: Taller }) {
                   type="button"
                   onClick={() => setDiaSel(i)}
                   className={cn(
-                    "flex flex-col items-center rounded-xl border p-sm transition-colors",
+                    "flex min-h-[3.5rem] flex-col items-center justify-center rounded-none border-2 p-sm transition-colors",
                     activo
-                      ? "border-action-primary bg-action-primary text-foreground-inverse"
-                      : "border-border-subtle bg-surface-card hover:border-foreground-secondary"
+                      ? "border-emergency bg-emergency text-foreground-inverse"
+                      : "border-border-primary bg-surface-card hover:bg-surface-page"
                   )}
                 >
                   <span className="font-caption text-xs opacity-80">
@@ -128,7 +128,7 @@ export function AgendarCita({ taller }: { taller: Taller }) {
 
         {/* Hora */}
         <fieldset className="flex flex-col gap-sm">
-          <legend className="font-heading text-lg font-bold text-foreground-primary">
+          <legend className="font-heading text-xl font-extrabold uppercase leading-none text-foreground-primary">
             Elige la hora
           </legend>
           <div className="grid grid-cols-3 gap-xs sm:grid-cols-4">
@@ -139,13 +139,13 @@ export function AgendarCita({ taller }: { taller: Taller }) {
                 disabled={!f.disponible}
                 onClick={() => setHora(f.hora)}
                 className={cn(
-                  "rounded-lg border px-sm py-2.5 font-data text-sm font-semibold transition-colors",
+                  "cifras rounded-none border-2 px-sm py-2.5 font-heading text-sm font-extrabold uppercase tracking-[0.06em] transition-colors",
                   !f.disponible &&
-                    "cursor-not-allowed border-border-subtle bg-surface-page text-border-subtle line-through",
+                    "cursor-not-allowed border-border-subtle bg-surface-page text-foreground-secondary line-through",
                   f.disponible && hora === f.hora
-                    ? "border-action-primary bg-action-primary text-foreground-inverse"
+                    ? "border-emergency bg-emergency text-foreground-inverse"
                     : f.disponible &&
-                        "border-border-subtle bg-surface-card text-foreground-primary hover:border-foreground-secondary"
+                        "border-border-primary bg-surface-card text-foreground-primary hover:bg-surface-page"
                 )}
               >
                 {f.hora}
@@ -167,11 +167,11 @@ export function AgendarCita({ taller }: { taller: Taller }) {
 
       {/* Resumen */}
       <aside className="lg:sticky lg:top-24 lg:self-start">
-        <div className="flex flex-col gap-md rounded-2xl border border-border-subtle bg-surface-card p-lg">
-          <h2 className="font-heading text-lg font-bold text-foreground-primary">
+        <div className="flex flex-col gap-md rounded-none border-2 border-border-primary bg-surface-card p-lg">
+          <h2 className="font-heading text-xl font-extrabold uppercase leading-none text-foreground-primary">
             Resumen de la cita
           </h2>
-          <dl className="flex flex-col gap-sm font-caption text-sm">
+          <dl className="flex flex-col gap-sm font-body text-sm">
             <Fila label="Taller" valor={taller.nombre} />
             <Fila label="Servicio" valor={especialidadMeta(servicio).label} />
             <Fila
@@ -181,15 +181,15 @@ export function AgendarCita({ taller }: { taller: Taller }) {
             <Fila label="Hora" valor={hora ?? "Sin seleccionar"} />
           </dl>
 
-          <div className="flex items-start gap-sm rounded-lg bg-status-available/10 p-sm">
+          <div className="flex items-start gap-sm rounded-none border-2 border-status-available bg-surface-card p-sm">
             <Check size={18} className="mt-0.5 shrink-0 text-status-available" />
-            <p className="font-caption text-xs text-foreground-secondary">
+            <p className="font-body text-xs text-foreground-secondary">
               El taller confirmará tu cita y podrás coordinar por WhatsApp.
             </p>
           </div>
 
           {error && (
-            <p className="rounded-lg bg-emergency/10 px-md py-2.5 font-caption text-sm text-emergency">
+            <p className="rounded-none border-2 border-emergency-dark bg-surface-card px-md py-2.5 font-body text-sm font-semibold text-emergency-dark">
               {error}
             </p>
           )}

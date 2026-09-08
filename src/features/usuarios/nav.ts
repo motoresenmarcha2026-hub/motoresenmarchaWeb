@@ -8,6 +8,7 @@ import {
   User,
   Car,
   BarChart3,
+  Package,
   type LucideIcon,
 } from "lucide-react";
 
@@ -46,11 +47,18 @@ export const NAV_ADMIN: NavItem[] = [
   { href: "/admin/cuenta", label: "Mi cuenta", icon: User },
 ];
 
+/** Navegación del panel del vendedor de refacciones. */
+export const NAV_VENDEDOR: NavItem[] = [
+  { href: "/vendedor/refacciones", label: "Mis refacciones", icon: Package },
+  { href: "/vendedor/cuenta", label: "Mi negocio", icon: Store },
+];
+
 /** Mapa de navegaciones por rol (evita pasar componentes de íconos a través del boundary server→client). */
 export const NAVS = {
   taller: NAV_TALLER,
   conductor: NAV_CONDUCTOR,
   admin: NAV_ADMIN,
+  vendedor: NAV_VENDEDOR,
 } as const;
 
 export type NavKey = keyof typeof NAVS;

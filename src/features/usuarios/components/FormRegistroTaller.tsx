@@ -59,7 +59,7 @@ export function FormRegistroTaller() {
                   type="button"
                   onClick={() => toggle(e.key)}
                   className={cn(
-                    "rounded-full border px-md py-1.5 font-caption text-sm font-medium transition-colors",
+                    "inline-flex h-11 items-center rounded-none border-2 px-md font-heading text-xs font-extrabold uppercase tracking-[0.1em] transition-colors",
                     activo
                       ? "border-action-primary bg-action-primary text-foreground-inverse"
                       : "border-border-subtle bg-surface-card text-foreground-secondary hover:border-foreground-secondary"
@@ -75,15 +75,15 @@ export function FormRegistroTaller() {
           <input key={e} type="hidden" name="especialidades" value={e} />
         ))}
 
-        <label className="flex cursor-pointer items-start gap-sm py-xs font-caption text-sm text-foreground-secondary">
+        <label className="flex cursor-pointer items-start gap-sm py-xs font-body text-sm text-foreground-secondary">
           <input type="checkbox" required className="mt-0.5 h-5 w-5 shrink-0 accent-action-primary" />
           <span>
             Acepto los{" "}
-            <Link href="/terminos" target="_blank" className="text-action-primary underline">
+            <Link href="/terminos" target="_blank" className="font-semibold text-foreground-primary underline decoration-emergency decoration-2 underline-offset-2 hover:text-emergency-dark">
               términos y condiciones
             </Link>{" "}
             y el{" "}
-            <Link href="/privacidad" target="_blank" className="text-action-primary underline">
+            <Link href="/privacidad" target="_blank" className="font-semibold text-foreground-primary underline decoration-emergency decoration-2 underline-offset-2 hover:text-emergency-dark">
               aviso de privacidad
             </Link>
             .
@@ -91,7 +91,7 @@ export function FormRegistroTaller() {
         </label>
 
         {state?.error && (
-          <p className="rounded-lg bg-emergency/10 px-md py-2.5 font-caption text-sm text-emergency">
+          <p className="border-2 border-emergency-dark bg-surface-card px-md py-2.5 font-body text-sm font-semibold text-emergency-dark">
             {state.error}
           </p>
         )}

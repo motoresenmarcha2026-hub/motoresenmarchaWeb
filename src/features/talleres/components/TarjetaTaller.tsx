@@ -3,13 +3,18 @@ import Link from "next/link";
 import { MapPin, ShieldCheck } from "lucide-react";
 import { cn, enlaceWhatsApp, formatearDistancia } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/Button";
-import { BadgeDisponibilidad, BadgeEta } from "@/components/ui/Badge";
+import { BadgeDisponibilidad } from "@/components/ui/Badge";
 import { Rating } from "@/components/ui/Rating";
 import { Tag } from "@/components/ui/Tag";
 import { especialidadMeta } from "../mock";
 import type { Taller } from "../types";
 
-/** Tarjeta de taller para el marketplace y la Home (Card/Taller Marketplace). */
+/**
+ * Tarjeta de taller con la geometría del componente del mundo: la plancha
+ * fotográfica se corta en diagonal, la esquina roja entra por arriba a la
+ * izquierda, y abajo corre la banda de tinta con la medición. Al enfocar o
+ * pasar, el filete se vuelve rojo — el estado activo del sistema.
+ */
 export function TarjetaTaller({
   taller,
   className,
@@ -20,63 +25,88 @@ export function TarjetaTaller({
   return (
     <article
       className={cn(
-        "flex flex-col overflow-hidden rounded-2xl border border-border-subtle bg-surface-card shadow-sm transition-shadow hover:shadow-md",
+        "group/plancha flex flex-col rounded-none border-2 border-border-primary bg-surface-card",
+        "transition-[border-color,transform] duration-200 ease-drive",
+        "hover:-translate-y-0.5 hover:border-emergency focus-within:border-emergency",
         className
       )}
     >
-      {/* Foto */}
-      <div className="relative h-44 w-full">
-        <Image
-          src={taller.fotoUrl}
-          alt={`Taller ${taller.nombre}`}
-          fill
-          sizes="(max-width: 768px) 100vw, 33vw"
-          className="object-cover"
+      {/* Plancha fotográfica, cortada en diagonal */}
+      <div
+        className="relative h-44 w-full overflow-hidden bg-surface-inverse"
+        style={{ clipPath: "polygon(0 0, 100% 0, 100% 86%, 0 100%)" }}
+      >
+        {taller.fotoUrl ? (
+          <Image
+            src={taller.fotoUrl}
+            alt={`Taller ${taller.nombre}`}
+            fill
+            sizes="(max-width: 768px) 100vw, 33vw"
+            className="plancha-foto object-cover transition-[filter] duration-300 ease-drive group-hover/plancha:grayscale-0 group-hover/plancha:contrast-100"
+          />
+        ) : null}
+        <span aria-hidden className="plancha-foto-trama absolute inset-0" />
+
+        {/*
+          La cuña de la esquina, con geometría fija y tinta plena. Antes iba
+          por multiplicación y su extensión la decidía la luminancia de la
+          foto: una plancha clara salía casi entera roja y otra sin nada.
+          Igual en toda tarjeta, y acotada para que la trama siga leyéndose.
+        */}
+        <span
+          aria-hidden
+          className="pointer-events-none absolute left-0 top-0 h-24 w-36 bg-emergency"
+          style={{ clipPath: "polygon(0 0, 100% 0, 0 100%)" }}
         />
-        <div className="absolute left-sm top-sm">
-          <BadgeDisponibilidad estado={taller.disponibilidad} className="bg-surface-card/90 backdrop-blur" />
-        </div>
+
+        <span className="absolute left-0 top-sm">
+          <BadgeDisponibilidad estado={taller.disponibilidad} />
+        </span>
+
         {taller.verificado && (
-          <span className="absolute right-sm top-sm inline-flex items-center gap-xs rounded-full bg-action-primary/90 px-sm py-xs text-xs font-semibold text-foreground-inverse backdrop-blur">
-            <ShieldCheck size={12} /> Verificado
+          <span className="absolute right-sm top-sm inline-flex items-center gap-xs bg-surface-inverse px-sm py-1 font-heading text-xs font-extrabold uppercase tracking-[0.1em] text-foreground-inverse">
+            <ShieldCheck size={12} aria-hidden /> Verificado
           </span>
         )}
       </div>
 
       {/* Cuerpo */}
-      <div className="flex flex-1 flex-col gap-sm p-md">
-        <div className="flex items-start justify-between gap-sm">
-          <div>
-            <h3 className="font-heading text-lg font-bold leading-tight text-foreground-primary">
-              {taller.nombre}
-            </h3>
-            <p className="font-caption text-sm text-foreground-secondary">
-              {taller.mecanicoPrincipal}
-            </p>
-          </div>
-          <BadgeEta minutos={taller.etaMin} />
+      <div className="flex flex-1 flex-col gap-sm px-md pb-md pt-sm">
+        <div className="min-w-0">
+          <h3 className="font-heading text-xl font-extrabold uppercase leading-none text-foreground-primary">
+            {taller.nombre}
+          </h3>
+          <p className="mt-1 font-body text-sm text-foreground-secondary">
+            {taller.mecanicoPrincipal}
+          </p>
         </div>
 
         <Rating valor={taller.rating} numResenas={taller.numResenas} />
 
-        {/* Especialidades */}
         <div className="flex flex-wrap gap-xs">
           {taller.especialidades.slice(0, 3).map((e) => (
             <Tag key={e}>{especialidadMeta(e).label}</Tag>
           ))}
         </div>
 
-        {/* Ubicación */}
-        <p className="flex items-center gap-xs font-caption text-sm text-foreground-secondary">
-          <MapPin size={14} className="shrink-0" />
+        <p className="flex items-center gap-xs font-body text-sm text-foreground-secondary">
+          <MapPin size={14} aria-hidden className="shrink-0" />
           <span className="min-w-0 truncate">{taller.ubicacion.direccion}</span>
-          <span className="shrink-0 whitespace-nowrap">
-            · {formatearDistancia(taller.distanciaKm)}
-          </span>
         </p>
 
+        {/* Banda de tinta: la medición del renglón */}
+        <div className="-mx-md flex items-center justify-between gap-sm bg-surface-inverse px-md py-1.5">
+          <span className="cifras font-heading text-xs font-extrabold uppercase tracking-[0.12em] text-foreground-inverse">
+            {formatearDistancia(taller.distanciaKm)}
+          </span>
+          <span aria-hidden className="h-[2px] flex-1 bg-emergency/50" />
+          <span className="cifras font-heading text-xs font-extrabold uppercase tracking-[0.12em] text-foreground-inverse">
+            {taller.etaMin} min
+          </span>
+        </div>
+
         {/* Acciones */}
-        <div className="mt-auto flex gap-sm pt-sm">
+        <div className="mt-auto flex gap-sm pt-xs">
           <a
             href={enlaceWhatsApp(
               taller.whatsapp,

@@ -32,7 +32,7 @@ export function BotonGoogle({ label = "Continuar con Google" }: { label?: string
     <form action={iniciarConGoogle}>
       <button
         type="submit"
-        className="flex h-12 w-full items-center justify-center gap-sm rounded-lg border border-border-primary bg-surface-card font-body text-sm font-semibold text-foreground-primary transition-colors hover:bg-black/5"
+        className="flex h-12 w-full items-center justify-center gap-sm rounded-none border-2 border-border-primary bg-surface-card font-heading text-sm font-extrabold uppercase tracking-[0.06em] text-foreground-primary transition-colors hover:bg-surface-page"
       >
         <GoogleIcon />
         {label}
@@ -45,11 +45,11 @@ export function BotonGoogle({ label = "Continuar con Google" }: { label?: string
 export function SeparadorO() {
   return (
     <div className="flex items-center gap-sm">
-      <span className="h-px flex-1 bg-border-subtle" />
-      <span className="font-caption text-xs uppercase tracking-wide text-foreground-secondary">
+      <span className="h-[2px] flex-1 bg-border-primary" />
+      <span className="font-heading text-xs font-extrabold uppercase tracking-[0.14em] text-foreground-secondary">
         o
       </span>
-      <span className="h-px flex-1 bg-border-subtle" />
+      <span className="h-[2px] flex-1 bg-border-primary" />
     </div>
   );
 }

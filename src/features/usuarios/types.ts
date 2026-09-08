@@ -5,7 +5,7 @@
  * TODO: conectar a Supabase Auth — el `id` corresponderá a auth.users.id (uuid).
  */
 
-export type RolUsuario = "conductor" | "taller" | "admin";
+export type RolUsuario = "conductor" | "taller" | "admin" | "vendedor";
 
 /** Tabla base `usuarios` (1:1 con auth.users). */
 export interface Usuario {

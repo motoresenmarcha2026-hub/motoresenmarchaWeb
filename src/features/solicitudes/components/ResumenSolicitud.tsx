@@ -41,10 +41,12 @@ export function ResumenSolicitud({
   const listo = tipo !== null && ubicacion.trim().length > 0;
 
   return (
-    <aside className="flex flex-col gap-md rounded-2xl bg-surface-inverse p-lg text-foreground-inverse">
-      <h2 className="font-heading text-lg font-bold">Resumen de la solicitud</h2>
+    <aside className="flex flex-col gap-md border-2 border-border-primary bg-surface-inverse p-lg text-foreground-inverse">
+      <h2 className="font-heading text-lg font-extrabold uppercase tracking-[0.06em]">
+        Resumen de la solicitud
+      </h2>
 
-      <dl className="flex flex-col gap-sm font-caption text-sm">
+      <dl className="flex flex-col gap-sm font-body text-sm">
         {cliente && <Fila label="Cliente" valor={cliente} />}
         {taller && <Fila label="Taller" valor={taller.nombre} />}
         <Fila
