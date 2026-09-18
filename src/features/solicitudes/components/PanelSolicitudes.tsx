@@ -19,10 +19,10 @@ const TABS: { key: Tab; label: string }[] = [
 ];
 
 const ESTADO_CITA: Record<EstadoCita, { label: string; class: string }> = {
-  pendiente: { label: "Pendiente", class: "bg-action-urgent/15 text-action-urgent" },
-  confirmada: { label: "Confirmada", class: "bg-action-primary/15 text-action-primary" },
-  completada: { label: "Completada", class: "bg-status-available/15 text-status-available" },
-  cancelada: { label: "Cancelada", class: "bg-status-busy/15 text-status-busy" },
+  pendiente: { label: "Pendiente", class: "bg-action-urgent" },
+  confirmada: { label: "Confirmada", class: "bg-action-primary" },
+  completada: { label: "Completada", class: "bg-status-available" },
+  cancelada: { label: "Cancelada", class: "bg-status-busy" },
 };
 
 /**
@@ -107,7 +107,7 @@ export function PanelSolicitudes({
     <div className="flex flex-col gap-xl">
       <div className="flex flex-col gap-md">
         <div>
-          <h1 className="font-heading text-2xl font-extrabold text-foreground-primary">
+          <h1 className="font-heading text-2xl font-extrabold uppercase text-foreground-primary">
             Citas y solicitudes
           </h1>
           <p className="font-body text-foreground-secondary">
@@ -116,7 +116,7 @@ export function PanelSolicitudes({
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-xs overflow-x-auto border-b border-border-subtle">
+        <div className="flex gap-xs overflow-x-auto border-b-2 border-border-primary">
           {TABS.map((t) => {
             const activo = tab === t.key;
             const count =
@@ -129,9 +129,9 @@ export function PanelSolicitudes({
                 type="button"
                 onClick={() => setTab(t.key)}
                 className={cn(
-                  "shrink-0 border-b-2 px-sm py-sm font-caption text-sm font-semibold transition-colors",
+                  "shrink-0 border-b-2 px-sm py-sm font-heading text-xs font-extrabold uppercase tracking-[0.06em] transition-colors",
                   activo
-                    ? "border-action-primary text-action-primary"
+                    ? "border-action-primary text-foreground-primary"
                     : "border-transparent text-foreground-secondary hover:text-foreground-primary"
                 )}
               >
@@ -149,7 +149,7 @@ export function PanelSolicitudes({
             ))}
           </div>
         ) : (
-          <p className="rounded-xl border border-dashed border-border-subtle p-xl text-center font-body text-sm text-foreground-secondary">
+          <p className="border-2 border-dashed border-border-primary p-xl text-center font-body text-sm text-foreground-secondary">
             No hay solicitudes en esta categoría.
           </p>
         )}
@@ -157,7 +157,7 @@ export function PanelSolicitudes({
 
       {/* Citas agendadas */}
       <section className="flex flex-col gap-md">
-        <h2 className="font-heading text-xl font-bold text-foreground-primary">
+        <h2 className="font-heading text-xl font-extrabold uppercase text-foreground-primary">
           Citas agendadas ({citas.length})
         </h2>
         {citas.length > 0 ? (
@@ -167,24 +167,24 @@ export function PanelSolicitudes({
               return (
                 <article
                   key={c.id}
-                  className="flex flex-wrap items-center justify-between gap-sm rounded-xl border border-border-subtle bg-surface-card p-md"
+                  className="flex flex-wrap items-center justify-between gap-sm border-2 border-border-primary bg-surface-card p-md"
                 >
                   <div className="flex items-center gap-sm">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-page text-accent-primary">
+                    <span className="flex h-10 w-10 items-center justify-center border-2 border-border-primary bg-surface-page text-foreground-primary">
                       <Calendar size={18} />
                     </span>
                     <div>
-                      <p className="font-heading text-sm font-bold text-foreground-primary">
+                      <p className="font-heading text-sm font-extrabold uppercase text-foreground-primary">
                         {c.clienteNombre} · {c.servicio}
                       </p>
-                      <p className="font-caption text-xs text-foreground-secondary">
+                      <p className="cifras font-body text-xs text-foreground-secondary">
                         {formatearFecha(c.fecha)} · {c.hora}
                       </p>
                     </div>
                   </div>
                   <span
                     className={cn(
-                      "rounded-full px-sm py-xs font-caption text-xs font-semibold",
+                      "rounded-none px-sm py-1 font-heading text-xs font-extrabold uppercase tracking-[0.1em] text-foreground-inverse",
                       est.class
                     )}
                   >
@@ -195,7 +195,7 @@ export function PanelSolicitudes({
             })}
           </div>
         ) : (
-          <p className="rounded-xl border border-dashed border-border-subtle p-lg text-center font-body text-sm text-foreground-secondary">
+          <p className="border-2 border-dashed border-border-primary p-lg text-center font-body text-sm text-foreground-secondary">
             Aún no tienes citas agendadas.
           </p>
         )}

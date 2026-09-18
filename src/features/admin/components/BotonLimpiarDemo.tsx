@@ -18,7 +18,7 @@ export function BotonLimpiarDemo({ demoCount }: { demoCount: number }) {
   if (demoCount === 0 && !resultado) {
     return (
       <p className="font-body text-sm text-foreground-secondary">
-        No hay datos de demostración en la plataforma. 🎉
+        No hay datos de demostración en la plataforma.
       </p>
     );
   }
@@ -37,7 +37,7 @@ export function BotonLimpiarDemo({ demoCount }: { demoCount: number }) {
 
   if (resultado) {
     return (
-      <p className="rounded-lg bg-status-available/10 px-md py-2.5 font-body text-sm text-status-available">
+      <p className="border-2 border-status-available bg-surface-card px-md py-2.5 font-body text-sm font-semibold text-status-available">
         {resultado}
       </p>
     );
@@ -52,15 +52,15 @@ export function BotonLimpiarDemo({ demoCount }: { demoCount: number }) {
       </p>
 
       {error && (
-        <p className="rounded-lg bg-emergency/10 px-md py-2.5 font-caption text-sm text-emergency">
+        <p className="border-2 border-emergency-dark bg-surface-card px-md py-2.5 font-body text-sm font-semibold text-emergency-dark">
           {error}
         </p>
       )}
 
       {armado ? (
-        <div className="flex flex-wrap items-center gap-sm rounded-xl border border-emergency/40 bg-emergency/10 p-md">
+        <div className="flex flex-wrap items-center gap-sm border-2 border-emergency bg-surface-card p-md">
           <AlertTriangle size={18} className="shrink-0 text-emergency" />
-          <p className="flex-1 font-caption text-sm font-semibold text-foreground-primary">
+          <p className="flex-1 font-body text-sm font-semibold text-foreground-primary">
             ¿Seguro? Esta acción no se puede deshacer.
           </p>
           <Button

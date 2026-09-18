@@ -11,11 +11,21 @@ export default async function AdminResumenPage() {
   const perfil = await requireAdmin();
   const r = await getResumenAdmin();
 
+  const CONTEOS = [
+    { icono: Users, label: "Conductores", valor: r.conteos.conductores },
+    { icono: Store, label: "Talleres", valor: r.conteos.talleres },
+    { icono: ShoppingBag, label: "Vendedores", valor: r.conteos.vendedores },
+    { icono: Package, label: "Refacciones", valor: r.conteos.refacciones },
+    { icono: ClipboardList, label: "Solicitudes", valor: r.conteos.solicitudes },
+    { icono: Calendar, label: "Citas", valor: r.conteos.citas },
+    { icono: Star, label: "Reseñas", valor: r.conteos.resenas },
+  ];
+
   return (
     <DashboardShell profile={adminShell(perfil)} navKey="admin">
       <div className="flex flex-col gap-lg">
         <div>
-          <h1 className="font-heading text-2xl font-extrabold text-foreground-primary">
+          <h1 className="font-heading text-2xl font-extrabold uppercase text-foreground-primary">
             Resumen de la plataforma
           </h1>
           <p className="font-body text-foreground-secondary">
@@ -23,16 +33,33 @@ export default async function AdminResumenPage() {
           </p>
         </div>
 
-        {/* Conteos */}
-        <div className="grid grid-cols-2 gap-sm md:grid-cols-4 lg:grid-cols-7">
-          <Stat icono={<Users size={18} />} label="Conductores" valor={r.conteos.conductores} />
-          <Stat icono={<Store size={18} />} label="Talleres" valor={r.conteos.talleres} />
-          <Stat icono={<ShoppingBag size={18} />} label="Vendedores" valor={r.conteos.vendedores} />
-          <Stat icono={<Package size={18} />} label="Refacciones" valor={r.conteos.refacciones} />
-          <Stat icono={<ClipboardList size={18} />} label="Solicitudes" valor={r.conteos.solicitudes} />
-          <Stat icono={<Calendar size={18} />} label="Citas" valor={r.conteos.citas} />
-          <Stat icono={<Star size={18} />} label="Reseñas" valor={r.conteos.resenas} />
-        </div>
+        {/* Conteos: manifiesto reglado, no tarjetas de stat. */}
+        <section className="border-2 border-border-primary bg-surface-card">
+          <div className="border-b-2 border-border-primary bg-surface-inverse px-md py-1.5">
+            <h2 className="font-heading text-xs font-extrabold uppercase tracking-[0.14em] text-foreground-inverse">
+              Conteos
+            </h2>
+          </div>
+          <ul>
+            {CONTEOS.map((c) => {
+              const Icono = c.icono;
+              return (
+                <li
+                  key={c.label}
+                  className="flex items-center justify-between gap-md border-b border-border-subtle px-md py-sm last:border-b-0"
+                >
+                  <span className="flex items-center gap-sm font-heading text-xs font-extrabold uppercase tracking-[0.08em] text-foreground-secondary">
+                    <Icono size={16} className="text-accent-primary" aria-hidden />
+                    {c.label}
+                  </span>
+                  <span className="cifras font-heading text-xl font-extrabold text-foreground-primary">
+                    {c.valor}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
 
         {/* Solicitudes recientes */}
         <Panel titulo="Últimas solicitudes">
@@ -217,26 +244,6 @@ export default async function AdminResumenPage() {
   );
 }
 
-function Stat({
-  icono,
-  label,
-  valor,
-}: {
-  icono: React.ReactNode;
-  label: string;
-  valor: number;
-}) {
-  return (
-    <div className="rounded-2xl border border-border-subtle bg-surface-card p-md">
-      <span className="text-accent-primary">{icono}</span>
-      <p className="mt-xs font-data text-2xl font-bold text-foreground-primary">
-        {valor}
-      </p>
-      <p className="font-caption text-xs text-foreground-secondary">{label}</p>
-    </div>
-  );
-}
-
 function Panel({
   titulo,
   children,
@@ -245,18 +252,20 @@ function Panel({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-2xl border border-border-subtle bg-surface-card p-lg">
-      <h2 className="mb-sm font-heading text-lg font-bold text-foreground-primary">
-        {titulo}
-      </h2>
-      {children}
+    <section className="border-2 border-border-primary bg-surface-card">
+      <div className="border-b-2 border-border-primary bg-surface-inverse px-md py-1.5">
+        <h2 className="font-heading text-xs font-extrabold uppercase tracking-[0.14em] text-foreground-inverse">
+          {titulo}
+        </h2>
+      </div>
+      <div className="p-md">{children}</div>
     </section>
   );
 }
 
 function Chip({ texto }: { texto: string }) {
   return (
-    <span className="rounded-full bg-surface-page px-sm py-xs font-caption text-xs font-semibold capitalize text-foreground-secondary">
+    <span className="inline-flex items-center rounded-none bg-action-primary px-sm py-1 font-heading text-xs font-extrabold uppercase tracking-[0.08em] text-foreground-inverse">
       {texto}
     </span>
   );
@@ -264,7 +273,7 @@ function Chip({ texto }: { texto: string }) {
 
 function Vacio({ texto }: { texto: string }) {
   return (
-    <p className="rounded-xl border border-dashed border-border-subtle p-lg text-center font-body text-sm text-foreground-secondary">
+    <p className="rounded-none border-2 border-dashed border-border-primary p-lg text-center font-body text-sm text-foreground-secondary">
       {texto}
     </p>
   );

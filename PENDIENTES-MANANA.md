@@ -1,11 +1,53 @@
-# Pendientes para retomar — rediseño visual (fases 1 y 2 hechas)
+# Pendientes para retomar — rediseño visual (fases 1, 2 y 3 hechas)
 
 > Escrito el 2026-09-07 al cierre de la sesión. Actualizado 2026-09-18.
 > **El trabajo está commiteado y pusheado** (`f7826fc`, 141 archivos, +26,288 líneas)
 > y **ya está vivo en producción**: `https://www.motoresenmarcha.com` sirve el mundo
 > nuevo (verificado: el eyebrow y la cifra "+500 mecánicos" ya no existen ahí).
 
-## ✅ 2026-09-18 — hecho hoy
+## ✅ 2026-09-18 (tarde) — Fase 3: paneles y roles
+
+Se rehizo la composición de los 13 archivos pendientes de la Fase 3 (paneles de
+taller/vendedor/admin), la única parte del rediseño visual que faltaba.
+
+- **`DashboardShell.tsx`** (chasis de los 4 roles): plancha con barra de título
+  en tinta, avatar cuadrado con marco de 2px, sello de perfil en tinta sólida
+  (`badgeTono()` mapea Disponible/Ocupado/Verificado/rol), renglones de
+  navegación reglados con plancha sólida (no tinte) en el renglón activo.
+- **`admin/page.tsx`**: los 7 stat-tiles (el *hero-metric template* que el piso
+  de calidad de Impeccable rechaza por nombre — número grande + etiqueta chica
+  + acento) → reemplazados por un **manifiesto reglado de conteos** (plancha +
+  barra de título + renglones). `Panel`/`Chip`/`Vacio` migrados al mismo patrón
+  de plancha con barra de título y sellos en tinta sólida.
+- **Los 13 archivos**: esquinas cuadradas (`rounded-2xl/xl/lg/full` →
+  `rounded-none` o eliminado), planchas con borde de 2px en vez de
+  `border border-border-subtle`, sellos de estado en **tinta sólida** en vez
+  de tintes al 15% (`TarjetaSolicitud`, `PanelSolicitudes`,
+  `InventarioRefacciones`), mayúsculas en todos los títulos `font-heading`
+  (regla de versales del mundo), franjas de error/éxito con marco de 2px en
+  vez de fondo con tinte (mismo patrón que ya tenía `FormCuentaVendedor.tsx`).
+  Los 4 bloques "aún no tienes taller/negocio registrado" ahora usan el
+  componente `EstadoVacio` en vez de markup manual duplicado.
+- **Los 4 "callejones sin salida"** (`panel/sucursales`, `panel/notificaciones`,
+  `cuenta/vehiculo`, `cuenta/notificaciones`) **ya estaban resueltos** desde el
+  commit `f7826fc` con `EstadoVacio` — este documento estaba desactualizado en
+  ese punto, no era un pendiente real.
+- **Revisión independiente** (agente en contexto limpio, solo lectura) encontró
+  un hallazgo real: el estado activo del sidebar reintroducía el tinte al 15%
+  que ya se había quitado en otros 3 archivos del mismo diff, aplicando a todos
+  los breakpoints la excepción del renglón activo móvil del Header (que en
+  `Header.tsx` está acotada a `lg:hidden`). Corregido a plancha sólida
+  (`bg-action-primary text-foreground-inverse`) en todos los tamaños. También
+  se corrigió `EstadoVacio.tsx` (le faltaba `uppercase` en el título — bug
+  preexistente que ahora hereda más superficies por este cambio) y dos usos de
+  `hover:bg-black/5` (token crudo) → `hover:bg-surface-page`.
+- **Verificado:** `tsc --noEmit`, `eslint` y `next build` en verde; detector
+  mecánico de Impeccable (`impeccable detect`) en 0 hallazgos tras las
+  correcciones. **No se probó con sesión autenticada en navegador** (los
+  paneles requieren login; hacerlo habría escrito usuarios/datos de prueba en
+  el Supabase real). **Sin commitear todavía.**
+
+## ✅ 2026-09-18 (mañana) — hecho hoy
 
 - **Migración `0006` corrida en Supabase.** Ya no es bloqueante: `/refacciones`
   y `/vendedor/*` pueden dejar el estado vacío.
@@ -48,38 +90,9 @@ horizontal, `impeccable detect` en exit 0, `tsc` · `eslint` · `next build` en 
 
 ## 🚧 Lo que falta (en orden)
 
-### 1. Fase 3 — paneles y roles (lo único del rediseño que falta)
-Heredaron paleta, tipografías, esquinas vivas y los inputs nuevos, pero su
-**composición** sigue siendo la del mundo anterior. 13 archivos:
-
-```
-src/components/layout/DashboardShell.tsx      ← el chasis de los 4 roles
-src/app/panel/cuenta/page.tsx
-src/app/panel/solicitudes/page.tsx
-src/app/vendedor/cuenta/page.tsx
-src/app/vendedor/refacciones/page.tsx
-src/app/admin/page.tsx
-src/features/solicitudes/components/PanelSolicitudes.tsx
-src/features/solicitudes/components/TarjetaSolicitud.tsx
-src/features/citas/components/ListaCitas.tsx
-src/features/talleres/components/FormCuentaTaller.tsx
-src/features/vendedores/components/FormCuentaVendedor.tsx
-src/features/refacciones/components/InventarioRefacciones.tsx
-src/features/admin/components/BotonLimpiarDemo.tsx
-```
-
-Para encontrarlos otra vez:
-```bash
-grep -rlnE "rounded-(full|xl|2xl|3xl)|shadow-(sm|md|lg|xl)|backdrop-blur|border border-border-subtle" src/
-```
-
-Dos cosas concretas dentro de esta fase:
-- **4 destinos de navegación siguen siendo callejones vacíos**: `panel/sucursales`,
-  `panel/notificaciones`, `cuenta/vehiculo`, `cuenta/notificaciones`. Un panel con
-  4 callejones sin salida se siente roto, y es lo que el cliente ve a diario.
-- **`admin/page.tsx`**: los 7 stat tiles son literalmente el *hero-metric template*
-  (número grande, etiqueta chica, acento) que el piso de calidad de Impeccable
-  rechaza por nombre.
+### 1. ✅ Fase 3 — paneles y roles (hecho, sesión 2026-09-18 tarde)
+Ver la entrada de arriba. Los 13 archivos, los 4 callejones (ya estaban resueltos)
+y los stat tiles de `admin` quedaron resueltos y verificados. **Sin commitear.**
 
 ### 2. Correr los E2E que faltan
 Solo se corrió **`e2e/publico.spec.ts` → 15/15 en verde**, sin modificar ningún test.

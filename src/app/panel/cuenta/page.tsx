@@ -1,8 +1,7 @@
-import Link from "next/link";
+import { Store } from "lucide-react";
 import { DashboardShell } from "@/components/layout/DashboardShell";
 import { FormCuentaTaller } from "@/features/talleres/components/FormCuentaTaller";
-import { buttonVariants } from "@/components/ui/Button";
-import { cn } from "@/lib/utils";
+import { EstadoVacio } from "@/components/ui/EstadoVacio";
 import { requirePerfil, getUser } from "@/lib/auth/dal";
 import { getTallerDelUsuario } from "@/features/talleres/data";
 import { tallerShell } from "@/features/usuarios/shell";
@@ -20,20 +19,12 @@ export default async function PanelCuentaPage() {
           userId={perfil.id}
         />
       ) : (
-        <div className="rounded-2xl border border-dashed border-border-subtle p-2xl text-center">
-          <h1 className="font-heading text-xl font-bold text-foreground-primary">
-            Aún no tienes un taller registrado
-          </h1>
-          <p className="mt-xs font-body text-foreground-secondary">
-            Completa tu registro de taller para administrar tu negocio.
-          </p>
-          <Link
-            href="/registro/taller"
-            className={cn(buttonVariants({ variant: "primary", size: "md" }), "mt-md")}
-          >
-            Registrar mi taller
-          </Link>
-        </div>
+        <EstadoVacio
+          icono={Store}
+          titulo="Aún no tienes un taller registrado"
+          descripcion="Completa tu registro de taller para administrar tu negocio."
+          cta={{ href: "/registro/taller", label: "Registrar mi taller" }}
+        />
       )}
     </DashboardShell>
   );

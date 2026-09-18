@@ -88,7 +88,7 @@ export function FormCuentaVendedor({
   return (
     <div className="flex flex-col gap-md">
       <div>
-        <h1 className="font-heading text-2xl font-extrabold text-foreground-primary">
+        <h1 className="font-heading text-2xl font-extrabold uppercase text-foreground-primary">
           Información del negocio
         </h1>
         <p className="font-body text-foreground-secondary">
@@ -97,14 +97,14 @@ export function FormCuentaVendedor({
       </div>
 
       {/* Logo */}
-      <div className="flex items-center gap-md rounded-2xl border border-border-subtle bg-surface-card p-lg">
-        <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-surface-page">
+      <div className="flex items-center gap-md border-2 border-border-primary bg-surface-card p-lg">
+        <div className="relative h-20 w-20 shrink-0 overflow-hidden border-2 border-border-primary bg-surface-page">
           {logoUrl && (
             <Image src={logoUrl} alt={vendedor.nombreNegocio} fill className="object-cover" sizes="80px" />
           )}
         </div>
         <div>
-          <p className="font-heading text-sm font-bold text-foreground-primary">
+          <p className="font-heading text-sm font-extrabold uppercase text-foreground-primary">
             Logo del negocio
           </p>
           <p className="mb-sm font-body text-xs text-foreground-secondary">
@@ -112,7 +112,7 @@ export function FormCuentaVendedor({
           </p>
           <label
             className={cn(
-              "inline-flex cursor-pointer items-center gap-xs rounded-lg border border-border-primary px-md py-2 font-body text-sm font-semibold text-foreground-primary transition-colors hover:bg-black/5",
+              "inline-flex cursor-pointer items-center gap-xs rounded-none border-2 border-border-primary px-md py-2 font-body text-sm font-semibold text-foreground-primary transition-colors hover:bg-surface-page",
               subiendo && "pointer-events-none opacity-50"
             )}
           >
@@ -123,9 +123,9 @@ export function FormCuentaVendedor({
       </div>
 
       {/* Datos del negocio */}
-      <form ref={formRef} className="rounded-2xl border border-border-subtle bg-surface-card p-lg">
+      <form ref={formRef} className="border-2 border-border-primary bg-surface-card p-lg">
         <div className="mb-md flex items-center justify-between">
-          <h2 className="font-heading text-lg font-bold text-foreground-primary">
+          <h2 className="font-heading text-lg font-extrabold uppercase text-foreground-primary">
             Datos del negocio
           </h2>
           <Button
@@ -166,7 +166,7 @@ export function FormCuentaVendedor({
 
         {/* Categorías (editables en modo edición) */}
         <div className="mt-lg">
-          <p className="mb-sm font-caption text-sm font-semibold text-foreground-primary">
+          <p className="mb-sm font-heading text-xs font-extrabold uppercase tracking-[0.1em] text-foreground-primary">
             Categorías que vendes
           </p>
           <div className="flex flex-wrap gap-xs">
@@ -182,7 +182,7 @@ export function FormCuentaVendedor({
                     "inline-flex h-11 items-center rounded-none border-2 px-md font-heading text-xs font-extrabold uppercase tracking-[0.1em] transition-colors",
                     activo
                       ? "border-action-primary bg-action-primary text-foreground-inverse"
-                      : "border-border-subtle bg-surface-card text-foreground-secondary",
+                      : "border-border-primary bg-surface-card text-foreground-secondary",
                     editando ? "cursor-pointer hover:border-foreground-secondary" : "cursor-default opacity-90"
                   )}
                 >

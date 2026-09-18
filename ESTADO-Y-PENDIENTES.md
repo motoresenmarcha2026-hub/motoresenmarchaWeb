@@ -332,6 +332,35 @@ sin tocar.
   `/refacciones` y `/vendedor/*`.
 - **Sin commitear** al cierre de la sesión.
 
+## ✅ Fase 12 — Rediseño visual, Fase 3: paneles y roles (sesión 2026-09-18 tarde)
+
+Se cerró la única parte del rediseño de la Fase 10 que faltaba: la composición
+de los paneles de los 4 roles (heredaban tokens/tipografía/esquinas pero no la
+composición del mundo nuevo). 13 archivos, con `/impeccable onboard`:
+
+- **`DashboardShell.tsx`** (chasis compartido): plancha con barra de título en
+  tinta, avatar cuadrado, sello de perfil en tinta sólida, renglones de nav
+  reglados con plancha sólida (no tinte) en el activo.
+- **`admin/page.tsx`**: los 7 stat tiles (*hero-metric template*, rechazado por
+  el piso de calidad de Impeccable) → manifiesto reglado de conteos; `Panel`,
+  `Chip` y `Vacio` migrados al mismo patrón de plancha + barra de título.
+- Los 13 archivos: esquinas cuadradas, planchas de 2px, sellos de estado en
+  tinta sólida (no tintes al 15%), mayúsculas en títulos `font-heading`,
+  franjas de error/éxito con marco de 2px. Los bloques "aún no tienes
+  taller/negocio registrado" ahora usan `EstadoVacio` en vez de markup manual.
+- Los 4 "callejones sin salida" que `PENDIENTES-MANANA.md` reportaba como
+  pendientes **ya estaban resueltos** desde `f7826fc` — el documento estaba
+  desactualizado.
+- **Revisión independiente** (agente en contexto limpio) encontró y corrigió un
+  hallazgo real: el estado activo del sidebar reintroducía el tinte al 15%
+  que se había quitado en el resto del diff, aplicado sin acotar a un
+  breakpoint (la excepción de `DESIGN.md` es solo para el menú móvil del
+  Header). También corrigió `EstadoVacio.tsx` (le faltaba `uppercase`).
+- **Verificado:** `tsc --noEmit`, `eslint`, `next build` en verde; detector
+  mecánico de Impeccable en 0 hallazgos. **No probado con sesión autenticada
+  en navegador** (evita escribir datos de prueba en el Supabase real).
+- **Sin commitear** al cierre de esta sesión.
+
 ## 🔜 Pendientes que requieren acción humana
 
 | Quién | Pendiente |

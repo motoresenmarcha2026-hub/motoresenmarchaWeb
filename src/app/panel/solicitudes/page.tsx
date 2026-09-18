@@ -1,6 +1,8 @@
 import Link from "next/link";
+import { Camera, Store } from "lucide-react";
 import { DashboardShell } from "@/components/layout/DashboardShell";
 import { PanelSolicitudes } from "@/features/solicitudes/components/PanelSolicitudes";
+import { EstadoVacio } from "@/components/ui/EstadoVacio";
 import { buttonVariants } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import { requirePerfil } from "@/lib/auth/dal";
@@ -22,15 +24,18 @@ export default async function PanelSolicitudesPage() {
       {taller ? (
         <div className="flex flex-col gap-md">
           {!taller.fotoUrl && (
-            <div className="flex flex-wrap items-center justify-between gap-sm rounded-2xl border border-action-urgent/40 bg-action-urgent/10 p-md">
-              <div>
-                <p className="font-heading font-bold text-foreground-primary">
-                  📸 Tu taller aún no tiene foto
-                </p>
-                <p className="font-caption text-sm text-foreground-secondary">
-                  Los talleres con foto generan más confianza y reciben más
-                  solicitudes. Súbela ahora, toma un minuto.
-                </p>
+            <div className="flex flex-wrap items-center justify-between gap-sm border-2 border-action-urgent bg-surface-card p-md">
+              <div className="flex items-center gap-sm">
+                <Camera size={20} className="shrink-0 text-action-urgent" />
+                <div>
+                  <p className="font-heading text-sm font-extrabold uppercase text-foreground-primary">
+                    Tu taller aún no tiene foto
+                  </p>
+                  <p className="font-body text-sm text-foreground-secondary">
+                    Los talleres con foto generan más confianza y reciben más
+                    solicitudes. Súbela ahora, toma un minuto.
+                  </p>
+                </div>
               </div>
               <Link
                 href="/panel/cuenta"
@@ -47,23 +52,12 @@ export default async function PanelSolicitudesPage() {
           />
         </div>
       ) : (
-        <div className="rounded-2xl border border-dashed border-border-subtle p-2xl text-center">
-          <h1 className="font-heading text-xl font-bold text-foreground-primary">
-            Aún no tienes un taller registrado
-          </h1>
-          <p className="mt-xs font-body text-foreground-secondary">
-            Completa tu registro de taller para empezar a recibir solicitudes.
-          </p>
-          <Link
-            href="/registro/taller"
-            className={cn(
-              buttonVariants({ variant: "primary", size: "md" }),
-              "mt-md"
-            )}
-          >
-            Registrar mi taller
-          </Link>
-        </div>
+        <EstadoVacio
+          icono={Store}
+          titulo="Aún no tienes un taller registrado"
+          descripcion="Completa tu registro de taller para empezar a recibir solicitudes."
+          cta={{ href: "/registro/taller", label: "Registrar mi taller" }}
+        />
       )}
     </DashboardShell>
   );

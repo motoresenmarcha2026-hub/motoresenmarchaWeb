@@ -6,17 +6,12 @@ import { tipoProblemaMeta } from "../mock";
 import { BotonRechazar } from "./BotonRechazar";
 import type { Solicitud, EstadoSolicitud, Prioridad } from "../types";
 
+/* Plancha de tinta plena por estado — el tinte suave al 15% era aire. */
 const ESTADO: Record<EstadoSolicitud, { label: string; class: string }> = {
-  pendiente: {
-    label: "Pendiente",
-    class: "bg-action-urgent/15 text-action-urgent",
-  },
-  agendado: { label: "Agendado", class: "bg-action-primary/15 text-action-primary" },
-  completado: {
-    label: "Completado",
-    class: "bg-status-available/15 text-status-available",
-  },
-  rechazado: { label: "Rechazado", class: "bg-status-busy/15 text-status-busy" },
+  pendiente: { label: "Pendiente", class: "bg-action-urgent" },
+  agendado: { label: "Agendado", class: "bg-action-primary" },
+  completado: { label: "Completado", class: "bg-status-available" },
+  rechazado: { label: "Rechazado", class: "bg-status-busy" },
 };
 
 const PRIORIDAD: Record<Prioridad, { label: string; class: string }> = {
@@ -33,22 +28,27 @@ export function TarjetaSolicitud({ solicitud }: { solicitud: Solicitud }) {
     solicitud.estado === "pendiente" || solicitud.estado === "agendado";
 
   return (
-    <article className="rounded-2xl border border-border-subtle bg-surface-card p-md">
+    <article className="border-2 border-border-primary bg-surface-card p-md">
       <div className="flex flex-wrap items-start justify-between gap-sm">
         <div className="flex items-center gap-sm">
-          <h3 className="font-heading text-lg font-bold text-foreground-primary">
+          <h3 className="font-heading text-lg font-extrabold uppercase leading-none text-foreground-primary">
             {solicitud.clienteNombre}
           </h3>
           <span
             className={cn(
-              "rounded-full px-sm py-xs font-caption text-xs font-semibold",
+              "rounded-none px-sm py-1 font-heading text-xs font-extrabold uppercase tracking-[0.1em] text-foreground-inverse",
               estado.class
             )}
           >
             {estado.label}
           </span>
         </div>
-        <span className={cn("font-caption text-xs font-semibold", prioridad.class)}>
+        <span
+          className={cn(
+            "font-heading text-xs font-extrabold uppercase tracking-[0.08em]",
+            prioridad.class
+          )}
+        >
           {prioridad.label}
         </span>
       </div>

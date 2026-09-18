@@ -28,7 +28,7 @@ export function ListaCitas({ citas }: { citas: Cita[] }) {
   return (
     <div className="flex flex-col gap-md">
       <div>
-        <h1 className="font-heading text-2xl font-extrabold text-foreground-primary">
+        <h1 className="font-heading text-2xl font-extrabold uppercase text-foreground-primary">
           Mis citas y reservas
         </h1>
         <p className="font-body text-foreground-secondary">
@@ -36,7 +36,7 @@ export function ListaCitas({ citas }: { citas: Cita[] }) {
         </p>
       </div>
 
-      <div className="flex gap-xs overflow-x-auto border-b border-border-subtle">
+      <div className="flex gap-xs overflow-x-auto border-b-2 border-border-primary">
         {TABS.map((t) => {
           const activo = tab === t.key;
           const count = citas.filter((c) => pertenece(c, t.key)).length;
@@ -46,9 +46,9 @@ export function ListaCitas({ citas }: { citas: Cita[] }) {
               type="button"
               onClick={() => setTab(t.key)}
               className={cn(
-                "shrink-0 border-b-2 px-sm py-sm font-caption text-sm font-semibold transition-colors",
+                "shrink-0 border-b-2 px-sm py-sm font-heading text-xs font-extrabold uppercase tracking-[0.06em] transition-colors",
                 activo
-                  ? "border-action-primary text-action-primary"
+                  ? "border-action-primary text-foreground-primary"
                   : "border-transparent text-foreground-secondary hover:text-foreground-primary"
               )}
             >
@@ -65,7 +65,7 @@ export function ListaCitas({ citas }: { citas: Cita[] }) {
           ))}
         </div>
       ) : (
-        <p className="rounded-xl border border-dashed border-border-subtle p-xl text-center font-body text-sm text-foreground-secondary">
+        <p className="border-2 border-dashed border-border-primary p-xl text-center font-body text-sm text-foreground-secondary">
           No tienes citas en esta categoría.
         </p>
       )}

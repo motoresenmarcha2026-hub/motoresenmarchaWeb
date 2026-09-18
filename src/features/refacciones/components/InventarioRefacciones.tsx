@@ -164,7 +164,7 @@ export function InventarioRefacciones({
     <div className="flex flex-col gap-md">
       <div className="flex flex-wrap items-center justify-between gap-sm">
         <div>
-          <h1 className="font-heading text-2xl font-extrabold text-foreground-primary">
+          <h1 className="font-heading text-2xl font-extrabold uppercase text-foreground-primary">
             Mis refacciones
           </h1>
           <p className="font-body text-foreground-secondary">
@@ -187,9 +187,9 @@ export function InventarioRefacciones({
           {refacciones.map((r) => (
             <li
               key={r.id}
-              className="flex flex-wrap items-center gap-md rounded-2xl border border-border-subtle bg-surface-card p-md"
+              className="flex flex-wrap items-center gap-md border-2 border-border-primary bg-surface-card p-md"
             >
-              <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-surface-page">
+              <div className="relative h-16 w-16 shrink-0 overflow-hidden border-2 border-border-primary bg-surface-page">
                 {r.fotoUrl ? (
                   <Image src={r.fotoUrl} alt={r.nombre} fill className="object-cover" sizes="64px" />
                 ) : (
@@ -201,17 +201,17 @@ export function InventarioRefacciones({
 
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-xs">
-                  <p className="font-heading font-bold text-foreground-primary">
+                  <p className="font-heading font-extrabold uppercase text-foreground-primary">
                     {r.nombre}
                   </p>
                   {r.categoria && <Tag>{categoriaMeta(r.categoria).label}</Tag>}
                   {!r.activo && (
-                    <span className="rounded-full bg-surface-page px-sm py-0.5 font-caption text-xs text-foreground-secondary">
+                    <span className="rounded-none border border-border-primary bg-surface-page px-sm py-0.5 font-heading text-xs font-bold uppercase tracking-[0.08em] text-foreground-secondary">
                       Inactiva
                     </span>
                   )}
                 </div>
-                <p className="font-caption text-sm text-foreground-secondary">
+                <p className="cifras font-body text-sm text-foreground-secondary">
                   {formatearPrecio(r.precio)}
                   {r.marca && ` · ${r.marca}`} ·{" "}
                   {r.stock > 0 ? `${r.stock} en stock` : "Sin stock"}
@@ -232,7 +232,7 @@ export function InventarioRefacciones({
                     variant="ghost"
                     size="sm"
                     aria-label={`Eliminar ${r.nombre}`}
-                    className="text-emergency hover:bg-emergency/10"
+                    className="text-emergency"
                     onClick={() => borrar(r.id)}
                   >
                     <Trash2 size={16} />
@@ -323,7 +323,7 @@ export function InventarioRefacciones({
                 type="file"
                 accept="image/*"
                 onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-                className="block w-full font-caption text-sm text-foreground-secondary file:mr-md file:rounded-lg file:border-0 file:bg-surface-page file:px-md file:py-2 file:font-body file:text-sm file:font-semibold file:text-foreground-primary"
+                className="block w-full font-body text-sm text-foreground-secondary file:mr-md file:rounded-none file:border-2 file:border-border-primary file:bg-surface-page file:px-md file:py-2 file:font-body file:text-sm file:font-semibold file:text-foreground-primary"
               />
             </FormField>
           </div>
@@ -339,7 +339,7 @@ export function InventarioRefacciones({
           </label>
 
           {error && (
-            <p className="rounded-lg bg-emergency/10 px-md py-2.5 font-caption text-sm text-emergency">
+            <p className="border-2 border-emergency-dark bg-surface-card px-md py-2.5 font-body text-sm font-semibold text-emergency-dark">
               {error}
             </p>
           )}

@@ -20,7 +20,7 @@ export function EstadoVacio({
       <span className="flex h-14 w-14 items-center justify-center rounded-none border-2 border-border-primary bg-surface-page text-foreground-primary">
         <Icono size={28} />
       </span>
-      <h1 className="mt-md font-heading text-xl font-bold text-foreground-primary">
+      <h1 className="mt-md font-heading text-xl font-extrabold uppercase text-foreground-primary">
         {titulo}
       </h1>
       <p className="mt-xs max-w-[28rem] font-body text-sm text-foreground-secondary">

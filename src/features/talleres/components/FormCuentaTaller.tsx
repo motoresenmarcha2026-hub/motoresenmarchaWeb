@@ -20,7 +20,7 @@ const MapaUbicacion = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="flex h-[300px] items-center justify-center rounded-xl border border-border-subtle bg-surface-page font-caption text-sm text-foreground-secondary">
+      <div className="flex h-[300px] items-center justify-center border-2 border-border-primary bg-surface-page font-body text-sm text-foreground-secondary">
         Cargando mapa…
       </div>
     ),
@@ -142,7 +142,7 @@ export function FormCuentaTaller({
   return (
     <div className="flex flex-col gap-md">
       <div>
-        <h1 className="font-heading text-2xl font-extrabold text-foreground-primary">
+        <h1 className="font-heading text-2xl font-extrabold uppercase text-foreground-primary">
           Información del taller
         </h1>
         <p className="font-body text-foreground-secondary">
@@ -151,14 +151,14 @@ export function FormCuentaTaller({
       </div>
 
       {/* Foto / logo */}
-      <div className="flex items-center gap-md rounded-2xl border border-border-subtle bg-surface-card p-lg">
-        <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-surface-page">
+      <div className="flex items-center gap-md border-2 border-border-primary bg-surface-card p-lg">
+        <div className="relative h-20 w-20 shrink-0 overflow-hidden border-2 border-border-primary bg-surface-page">
           {fotoUrl && (
             <Image src={fotoUrl} alt={taller.nombre} fill className="object-cover" sizes="80px" />
           )}
         </div>
         <div>
-          <p className="font-heading text-sm font-bold text-foreground-primary">
+          <p className="font-heading text-sm font-extrabold uppercase text-foreground-primary">
             Foto del taller
           </p>
           <p className="mb-sm font-caption text-xs text-foreground-secondary">
@@ -166,7 +166,7 @@ export function FormCuentaTaller({
           </p>
           <label
             className={cn(
-              "inline-flex cursor-pointer items-center gap-xs rounded-lg border border-border-primary px-md py-2 font-body text-sm font-semibold text-foreground-primary transition-colors hover:bg-black/5",
+              "inline-flex cursor-pointer items-center gap-xs rounded-none border-2 border-border-primary px-md py-2 font-body text-sm font-semibold text-foreground-primary transition-colors hover:bg-surface-page",
               subiendo && "pointer-events-none opacity-50"
             )}
           >
@@ -177,9 +177,9 @@ export function FormCuentaTaller({
       </div>
 
       {/* Datos del negocio */}
-      <form ref={formRef} className="rounded-2xl border border-border-subtle bg-surface-card p-lg">
+      <form ref={formRef} className="border-2 border-border-primary bg-surface-card p-lg">
         <div className="mb-md flex items-center justify-between">
-          <h2 className="font-heading text-lg font-bold text-foreground-primary">
+          <h2 className="font-heading text-lg font-extrabold uppercase text-foreground-primary">
             Datos del negocio
           </h2>
           <Button
@@ -220,7 +220,7 @@ export function FormCuentaTaller({
 
         {/* Especialidades (solo lectura por ahora) */}
         <div className="mt-lg">
-          <p className="mb-sm font-caption text-sm font-semibold text-foreground-primary">
+          <p className="mb-sm font-heading text-xs font-extrabold uppercase tracking-[0.1em] text-foreground-primary">
             Servicios que ofreces
           </p>
           <div className="flex flex-wrap gap-xs">
@@ -231,7 +231,7 @@ export function FormCuentaTaller({
         </div>
 
         {error && (
-          <p className="mt-md rounded-lg bg-emergency/10 px-md py-2.5 font-caption text-sm text-emergency">
+          <p className="mt-md border-2 border-emergency-dark bg-surface-card px-md py-2.5 font-body text-sm font-semibold text-emergency-dark">
             {error}
           </p>
         )}
@@ -249,19 +249,19 @@ export function FormCuentaTaller({
       </form>
 
       {/* Ubicación en el mapa (lat/lng → búsquedas por cercanía) */}
-      <section className="rounded-2xl border border-border-subtle bg-surface-card p-lg">
-        <h2 className="mb-xs font-heading text-lg font-bold text-foreground-primary">
+      <section className="border-2 border-border-primary bg-surface-card p-lg">
+        <h2 className="mb-xs font-heading text-lg font-extrabold uppercase text-foreground-primary">
           Ubicación en el mapa
         </h2>
-        <p className="mb-md font-caption text-sm text-foreground-secondary">
+        <p className="mb-md font-body text-sm text-foreground-secondary">
           Coloca el pin donde está tu taller para aparecer en las búsquedas por
           cercanía de los conductores.
         </p>
 
         {sinUbicacion && !ubiGuardada && (
-          <div className="mb-md flex items-start gap-sm rounded-xl border border-action-urgent/40 bg-action-urgent/10 p-md">
+          <div className="mb-md flex items-start gap-sm border-2 border-action-urgent bg-surface-card p-md">
             <MapPin size={18} className="mt-0.5 shrink-0 text-action-urgent" />
-            <p className="font-caption text-sm text-foreground-primary">
+            <p className="font-body text-sm text-foreground-primary">
               Tu taller aún no tiene ubicación —{" "}
               <strong>no aparece en las búsquedas por cercanía</strong>. Coloca
               el pin y guarda.
@@ -288,12 +288,12 @@ export function FormCuentaTaller({
         </p>
 
         {errorUbi && (
-          <p className="mt-md rounded-lg bg-emergency/10 px-md py-2.5 font-caption text-sm text-emergency">
+          <p className="mt-md border-2 border-emergency-dark bg-surface-card px-md py-2.5 font-body text-sm font-semibold text-emergency-dark">
             {errorUbi}
           </p>
         )}
         {ubiGuardada && (
-          <p className="mt-md rounded-lg bg-status-available/10 px-md py-2.5 font-caption text-sm text-status-available">
+          <p className="mt-md border-2 border-status-available bg-surface-card px-md py-2.5 font-body text-sm font-semibold text-status-available">
             Ubicación guardada. Ya apareces en las búsquedas por cercanía.
           </p>
         )}
