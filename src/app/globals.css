@@ -35,7 +35,8 @@
   --color-emergency-plancha: #ef5a41;
 
   /* WhatsApp: rendición impresa del verde de canal. El #25d366 crudo
-     no alcanza 4.5:1 sobre papel; este sí (4.8:1 texto, 5.6:1 invertido). */
+     no alcanza 4.5:1 sobre papel; este sí (6.9:1 texto sobre el papel
+     hueso actual, 7.5:1 invertido). */
   --color-whatsapp: #125c31;
   --color-whatsapp-dark: #0b3d20;
 
@@ -49,14 +50,17 @@
   --color-foreground-inverse: #fbf6ea;
   --color-foreground-inverse-secondary: #b5aa94;
 
-  /* Superficies: papel periódico, hoja fresca, y tinta plena */
-  --color-surface-page: #ecddbc;
-  --color-surface-card: #f4e9cf;
+  /* Superficies: papel hueso muy claro, hoja fresca, y tinta plena.
+     Bajado de saturación desde el crema original (#ecddbc/#f4e9cf) a pedido
+     de Edgar — se leía amarillo. El contraste de todo el texto/acentos
+     contra estas dos SOLO mejora al aclarar (ver cálculos abajo). */
+  --color-surface-page: #f1ede2;
+  --color-surface-card: #faf7ef;
   --color-surface-inverse: #171410;
 
   /* Filetes: este mundo separa con reglas negras, no con sombras */
   --color-border-primary: #171410;
-  --color-border-subtle: #c4b79e;
+  --color-border-subtle: #cec7b6;
 
   /* ── Tipografía ───────────────────────────────────────────────────
      Dos familias, no cuatro. Versales de plantilla para el registro de

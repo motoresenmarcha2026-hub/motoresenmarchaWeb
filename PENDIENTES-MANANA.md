@@ -1,110 +1,193 @@
-# Pendientes para retomar — rol vendedor + refacciones
+# Pendientes para retomar — rediseño visual (fases 1 y 2 hechas)
 
-> Escrito el 2026-09-02. El código de la feature **ya está completo y compila**
-> (`tsc`, `eslint`, `next build` en verde), pero **NADA se ha corrido en Supabase
-> ni se ha commiteado a git**. Todo vive en el working tree sin commit.
+> Escrito el 2026-09-07 al cierre de la sesión. Actualizado 2026-09-18.
+> **El trabajo está commiteado y pusheado** (`f7826fc`, 141 archivos, +26,288 líneas)
+> y **ya está vivo en producción**: `https://www.motoresenmarcha.com` sirve el mundo
+> nuevo (verificado: el eyebrow y la cifra "+500 mecánicos" ya no existen ahí).
+
+## ✅ 2026-09-18 — hecho hoy
+
+- **Migración `0006` corrida en Supabase.** Ya no es bloqueante: `/refacciones`
+  y `/vendedor/*` pueden dejar el estado vacío.
+- **Tono de fondo ajustado.** El crema original (`#ecddbc`/`#f4e9cf`) se leía
+  amarillo — Edgar pidió cambiarlo. Ahora es hueso claro neutro:
+  `--color-surface-page: #f1ede2`, `--color-surface-card: #faf7ef`,
+  `--color-border-subtle: #cec7b6` (mismo nivel de sutileza que antes, 1.44:1
+  vs 1.47:1). Contraste de texto/acentos contra el fondo **mejoró en todos los
+  casos** (nunca empeoró) al aclarar. Un solo lugar: `src/app/globals.css`.
+  También se actualizó el color hardcodeado del pin del mapa en
+  `MapaUbicacion.tsx` (`PAPEL`) para que combine. Verificado con `tsc --noEmit`
+  y visualmente en `/` y `/solicitar` con el dev server. **Sin commitear
+  todavía** — revisar el diff antes del próximo commit.
 
 ---
 
-## ⛳ Estado actual (dónde quedamos)
+## ⛳ Dónde quedamos
 
-- ✅ Toda la implementación del **rol `vendedor`** y el **marketplace de refacciones**
-  está escrita (ver "Archivos" abajo).
-- ✅ Verificado local: `npx tsc --noEmit`, `npm run lint`, `npm run build` sin errores.
-- ❌ **NO se corrió la migración `0006` en Supabase** (Antigravity se buggeó antes).
-- ❌ **NO hay commit** — 24 archivos modificados + carpetas nuevas sin trackear.
-- ❌ **NO se probó el flujo end-to-end** (falta la DB).
+Se reemplazó el mundo visual del sitio con la skill **Impeccable**. El mundo elegido
+—por ti, sobre la asignación de los dados y sobre la salida estándar— es el
+**tren de agitación constructivista** (seed `6c8762a5`): papel periódico crema, negro
+hollín, rojo racionado a la cuña que empuja la acción, verde solo donde se cierra el
+contacto por WhatsApp. Esquinas vivas en todo el sitio, cero sombras.
 
-Sin la migración, la app **no falla**: las vistas de refacciones muestran su estado
-vacío porque las tablas aún no existen / no hay datos.
+**Hecho y verificado:**
+
+- **Fase 1 — portada.** Dos rondas de revisión independiente (`rebuild` → `fix` →
+  7 de 8 arreglos resueltos, el octavo retirado por el revisor tras remedir).
+- **Fase 2 — catálogos y flujo.** `/talleres`, `/talleres/[id]`, `/refacciones`,
+  `/refacciones/[id]`, `/solicitar`, agendar cita, calificar, reseñas, modal de
+  ubicación, mapa Leaflet.
+- **Auth completo.** `/login`, los tres registros, onboarding, confirmación.
+- **Documentación.** `PRODUCT.md` y `DESIGN.md` (+ `.impeccable/design.json`).
+
+**Medido al cierre — 24 vistas, escritorio y celular:** contraste 0 fallos reales,
+áreas táctiles bajo 44px 0, radios distintos de 0 → 0, sombras 0, sin desbordamiento
+horizontal, `impeccable detect` en exit 0, `tsc` · `eslint` · `next build` en verde.
 
 ---
 
-## ✅ Qué hacer mañana (en orden)
+## 🚧 Lo que falta (en orden)
 
-### 1. Correr la migración en Supabase (BLOQUEANTE — es lo único que falta para probar)
-El pegado automatizado en el editor Monaco de Supabase no funciona (nota conocida del
-proyecto), así que:
+### 1. Fase 3 — paneles y roles (lo único del rediseño que falta)
+Heredaron paleta, tipografías, esquinas vivas y los inputs nuevos, pero su
+**composición** sigue siendo la del mundo anterior. 13 archivos:
 
-```bash
-cd ~/Desktop/Daniel/NewProjects/MecaWeb
-pbcopy < supabase/migrations/0006_vendedores_refacciones.sql
+```
+src/components/layout/DashboardShell.tsx      ← el chasis de los 4 roles
+src/app/panel/cuenta/page.tsx
+src/app/panel/solicitudes/page.tsx
+src/app/vendedor/cuenta/page.tsx
+src/app/vendedor/refacciones/page.tsx
+src/app/admin/page.tsx
+src/features/solicitudes/components/PanelSolicitudes.tsx
+src/features/solicitudes/components/TarjetaSolicitud.tsx
+src/features/citas/components/ListaCitas.tsx
+src/features/talleres/components/FormCuentaTaller.tsx
+src/features/vendedores/components/FormCuentaVendedor.tsx
+src/features/refacciones/components/InventarioRefacciones.tsx
+src/features/admin/components/BotonLimpiarDemo.tsx
 ```
 
-Luego, en el **SQL Editor** de Supabase (proyecto `ygxxsgypnoflqbwrrlxq`):
-pegar (⌘V) y **Run**. La migración es idempotente.
-
-**Qué crea:** constraint de rol con los 4 roles · tablas `vendedores` y `refacciones`
-· RLS · `handle_new_user()` extendido (crea la tienda al registrarse) · bucket
-Storage `refacciones`.
-
-**Verificar tras correr:**
-- `select * from public.vendedores;` y `select * from public.refacciones;` no dan error.
-- En Storage aparece el bucket `refacciones` (público).
-- `select tablename, policyname from pg_policies where tablename in ('vendedores','refacciones');`
-  muestra las policies.
-
-### 2. Probar el flujo (con `npm run dev`)
+Para encontrarlos otra vez:
 ```bash
-npm run dev   # http://localhost:3000
+grep -rlnE "rounded-(full|xl|2xl|3xl)|shadow-(sm|md|lg|xl)|backdrop-blur|border border-border-subtle" src/
 ```
-- **Registro** `/registro/vendedor` → debe crear perfil `vendedor` + fila en `vendedores`
-  (por el trigger). El login redirige a `/vendedor/refacciones`.
-- **Inventario** `/vendedor/refacciones`: crear una refacción con foto, editarla, borrarla.
-- **Tienda** `/vendedor/cuenta`: editar datos + subir logo.
-- **Marketplace** `/refacciones`: aparece el producto, filtros por categoría/precio/texto,
-  detalle `/refacciones/[id]`, botón WhatsApp abre `wa.me` con mensaje prellenado.
-- **Home**: sección "Refacciones destacadas" (marca `destacado=true` en la BD a mano para verla).
-- **Admin** `/admin`: conteos y paneles de vendedores/refacciones.
-- **Proxy**: `/vendedor/*` redirige a `/login` sin sesión.
 
-### 3. Commit + push
-Nada se ha commiteado. Cuando el flujo esté probado:
-```bash
-git add -A
-git commit -m "feat: rol vendedor + marketplace de refacciones"
-git push
+Dos cosas concretas dentro de esta fase:
+- **4 destinos de navegación siguen siendo callejones vacíos**: `panel/sucursales`,
+  `panel/notificaciones`, `cuenta/vehiculo`, `cuenta/notificaciones`. Un panel con
+  4 callejones sin salida se siente roto, y es lo que el cliente ve a diario.
+- **`admin/page.tsx`**: los 7 stat tiles son literalmente el *hero-metric template*
+  (número grande, etiqueta chica, acento) que el piso de calidad de Impeccable
+  rechaza por nombre.
+
+### 2. Correr los E2E que faltan
+Solo se corrió **`e2e/publico.spec.ts` → 15/15 en verde**, sin modificar ningún test.
+
+**NO se corrieron** `conductor.spec.ts`, `taller.spec.ts` ni `admin.spec.ts` porque
+**crean usuarios en la Supabase real**. Correrlos y después ejecutar el SQL de
+limpieza de `e2e/README.md`.
+
+⚠️ Playwright levanta su propio servidor en 3100 y Next 16 **no permite dos dev
+servers del mismo proyecto**: hay que bajar cualquier `next dev` antes de correrlos.
+
+### 3. Datos basura visibles en producción
+En `/talleres` hay un taller real llamado **LOPEX** con 0 reseñas, sin coordenadas
+(por eso no muestra distancia ni ETA) y cuya foto **es la captura de un documento de
+texto** ("I'm John Smith…"). El diseño ya lo protege —la plancha principal exige
+tener foto y calificación, así que LOPEX cae a renglón— pero el registro sigue ahí y
+se ve. Decidir si se borra o se le pide al dueño que lo complete.
+
+### 4. Limpieza de repo
+Se commitearon **8.8 MB de capturas** en `.impeccable/review/` (42 PNG). Son
+evidencia de las revisiones, no código. Considerar añadir a `.gitignore`:
+
+```gitignore
+.impeccable/review/
 ```
-(Ojo: `meca2.pen` también aparece sin trackear — decidir si se commitea o se ignora.)
+(`PRODUCT.md`, `DESIGN.md`, `.impeccable/design.json` y `.impeccable/surfaces/`
+**sí** deben quedarse: son el sistema de diseño y lo que gobierna las fases futuras.)
 
 ---
 
-## ⚠️ Gotchas ya resueltos (para no re-romper)
-- El constraint de rol en `0006` re-agrega los **4** roles (`conductor,taller,admin,vendedor`);
-  no quitar `admin` o se rompen los admins.
-- Slug de refacciones es único **por vendedor** (índice compuesto), no global. El ruteo es por `id`.
-- Foto de producto: la fila se crea primero (para tener `id`) y luego se sube la imagen a
-  `refacciones/${userId}/${refaccionId}.ext` y se guarda la URL. El logo va a `${userId}/logo.ext`.
+## ⚠️ Trampas nuevas — no re-romper
 
-## 🔮 Fuera de alcance (posible trabajo futuro, NO pendiente inmediato)
-- Reseñas de refacciones/vendedores (hoy no hay; se reusaría el patrón de `resenas` de talleres).
-- Pagos / carrito (hoy solo contacto por WhatsApp).
-- Seed de refacciones de ejemplo (hoy no hay datos de prueba).
-- Tests E2E para el flujo vendedor (seguir el patrón de `e2e/taller.spec.ts`).
+- **El copy NO cambia.** Fue una decisión explícita tuya: el rediseño es solo visual.
+  Ya se violó una vez durante la sesión (se renombró "talleres encontrados",
+  "Disponibilidad", etc.) y **se revirtió todo**. Los tests E2E dependen de esos
+  textos exactos.
+- **Los tokens son la palanca.** `src/app/globals.css` usa nombres semánticos
+  (`bg-action-primary`, `text-foreground-secondary`). Reasignar valores ahí propaga
+  el mundo a todo el sitio sin tocar componentes. **No hay `tailwind.config.ts`.**
+- **`rounded-full` es el único radio que los tokens NO alcanzan.** Todos los
+  `--radius-*` están en `0px`, así que cualquier `rounded-lg`/`xl`/`2xl` ya sale
+  cuadrado solo; `rounded-full` hay que cambiarlo a mano.
+- **`inputBaseClass` (en `FormField.tsx`) alcanza 6 archivos.** Editarlo una vez
+  propaga a todos los formularios del sitio. Misma palanca que los tokens.
+- **`.filete-banderin`** pinta el borde con el fondo (`border-box` tinta,
+  `padding-box` papel) porque una sombra interior la corta el `clip-path` del
+  banderín y el filete queda abierto por la derecha. No sustituir por `box-shadow`.
+- **`--sos-invade`** calcula cuánto invade el sello SOS el contenido, medido contra
+  el **viewport**, no contra el contenedor: a 1280px el `max-w-7xl` toca el borde y
+  el sello se mete 240px dentro. Los controles de renglón lo esquivan con eso. El
+  sello **siempre está visible** (decisión tuya) y no debe volver a ocultarse solo.
+- **El puerto 3000 lo tiene otro proyecto tuyo** (XALAPA/PLAN); también corre
+  Trevana. Durante la sesión se capturó el sitio equivocado una vez por esto. Usar
+  `npx next dev -p 3200` y **verificar identidad antes de medir**.
 
 ---
 
-## 📁 Archivos de esta feature
+## 🔮 Techo no alcanzado (opcional, lo dijo el revisor)
 
-**Nuevos**
-- `supabase/migrations/0006_vendedores_refacciones.sql`
-- `src/features/vendedores/{types.ts, data.ts, actions.ts, components/FormCuentaVendedor.tsx}`
-- `src/features/refacciones/{types.ts, mock.ts, data.ts, actions.ts}`
-- `src/features/refacciones/components/{InventarioRefacciones, RefaccionesCliente, TarjetaRefaccion, PerfilRefaccion}.tsx`
-- `src/features/usuarios/components/FormRegistroVendedor.tsx`
-- `src/app/(auth)/registro/vendedor/page.tsx`
-- `src/app/refacciones/page.tsx`, `src/app/refacciones/[id]/page.tsx`
-- `src/app/vendedor/refacciones/page.tsx`, `src/app/vendedor/cuenta/page.tsx`
+Ninguno bloquea el envío. Si se financia otra ronda, el propio revisor señaló que el
+de mayor rendimiento y más barato es el primero:
 
-**Modificados**
-- `src/lib/auth/dal.ts` (Rol + `requireVendedor`)
-- `src/features/usuarios/{actions.ts, types.ts, nav.ts, shell.ts}`
-- `src/features/usuarios/components/{SelectorTipoUsuario, OnboardingForm, ConfirmacionContenido}.tsx`
-- `src/components/layout/{AuthNav, Header}.tsx`
-- `src/app/auth/callback/route.ts`, `src/proxy.ts`, `src/app/robots.ts`, `src/app/sitemap.ts`
-- `src/app/page.tsx` (sección destacadas)
-- `src/features/admin/data.ts`, `src/app/admin/page.tsx`
-- `ESTADO-Y-PENDIENTES.md` (Fase 9)
+1. **Sobreimpresión y desregistro** — la firma más reconocible de este mundo, sobre
+   un build que ya imprime el rojo como segunda pasada.
+2. Filetes de grosor graduado (hoy todo es 2px uniforme).
+3. Tipografía cruzando la fotografía (hoy titular y plancha viven en cajas vecinas).
 
-> Nota: `DashboardShell.tsx`, `panel/*` y `admin/cuenta` también aparecen modificados por
-> la limpieza previa (helpers `tallerShell`/`adminShell` y fix del botón "Cerrar sesión").
+---
+
+## 📌 No es un defecto — no lo "arregles"
+
+- Mi instrumento de medición reporta **"Ver talleres" en 1.25:1** en la portada. Es
+  un falso positivo: el script recorre la cadena de fondos CSS y no ve la cuña roja
+  superpuesta. El valor real es **~6:1**, verificado a mano y confirmado por el
+  revisor independiente, que **retiró** su propio hallazgo tras remedir los píxeles.
+- El sello SOS se solapa transitoriamente con enlaces del footer a media página. Con
+  un botón siempre visible eso es geometría inevitable; **en reposo (scroll al
+  fondo) no tapa nada**, verificado en 5 anchos. El botón de WhatsApp —la acción
+  primaria— queda entre 0% y 21% tapado según el ancho.
+- `BadgeEta` quedó como export sin usar tras rehacer las tarjetas. Se dejó a
+  propósito para la Fase 3 en vez de churn.
+- `picsum.photos` sigue en `next.config.ts` solo para **avatares** de mock. La foto
+  de stock ya no puede reaparecer: `talleres/mock.ts` devuelve `""` y la UI dibuja
+  la plancha de tinta. `images.unsplash.com` se retiró por completo.
+
+---
+
+## 🔑 Artefactos del sistema de diseño
+
+| Archivo | Qué es |
+|---|---|
+| `PRODUCT.md` | Verdad del producto: usuarios, propósito, restricciones, evidencia. **Registra que no existe cifra de mecánicos verificados — no inventarla.** |
+| `DESIGN.md` | El sistema visual, escrito desde lo construido. Gobierna la Fase 3. |
+| `.impeccable/design.json` | Sidecar del anterior. |
+| `.impeccable/surfaces/src-app-page-tsx.md` | Contrato de dirección de la portada, con el seed `6c8762a5`. |
+
+Para retomar con la skill: `/impeccable` (menú) o directo, p. ej.
+`/impeccable onboard src/app/panel` para los 4 callejones vacíos.
+
+---
+
+## 🔜 Pendientes heredados que siguen abiertos
+
+| Quién | Pendiente |
+|---|---|
+| **Edgar (1 clic)** | Activar **Web Analytics** en Vercel (sin esto el script no recolecta) |
+| Admin | Botón "Eliminar datos de demostración" en `/admin` cuando arranquen en serio |
+| Cliente | Contenido de **"Sobre nosotros"** |
+| Cliente | **Revisión de los textos legales por un abogado** |
+| Decisión | **Confirmación de email** al registrarse (hoy OFF) |
+| Futuro | Pagos (Stripe/Conekta) · horarios reales por taller (hoy 09:00–17:30 fijos, sin anti-doble-reserva) |

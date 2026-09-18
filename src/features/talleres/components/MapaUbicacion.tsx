@@ -18,7 +18,7 @@ export interface PuntoUbicacion {
 */
 const TINTA_ROJA = "#c8241c";
 const TINTA_NEGRA = "#171410";
-const PAPEL = "#ecddbc";
+const PAPEL = "#f1ede2";
 
 const PIN_ICON = L.divIcon({
   className: "",

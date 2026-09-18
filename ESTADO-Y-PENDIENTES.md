@@ -4,7 +4,7 @@
 > ayuda de emergencia (SOS/WhatsApp). Stack: **Next.js 16 (App Router) · React 19 ·
 > TypeScript · Tailwind v4 · Supabase**. Arquitectura **feature-based** en `src/features/*`.
 >
-> Última actualización: sesión del 2026-08-14 (tarde).
+> Última actualización: sesión del 2026-09-18.
 > **✅ PROYECTO ENTREGADO AL CLIENTE el 2026-08-14.**
 
 ---
@@ -240,8 +240,97 @@ por ahora. Todo replica el patrón de `talleres`.
 - **SEO:** `/refacciones` en sitemap (+ una URL por producto); `/vendedor` en
   robots disallow. `next.config` sin cambios (mismo host de Supabase Storage).
 - **Verificado:** `tsc --noEmit`, `eslint` y `next build` en verde.
-- **Pendiente humano:** correr la migración `0006` en Supabase antes de usar el flujo;
-  el bucket `refacciones` se crea con esa migración.
+- ✅ **Migración `0006` corrida en Supabase** (2026-09-18). El bucket `refacciones`
+  y el flujo de vendedor ya no dependen de un pendiente humano.
+
+## ✅ Fase 10 — Rediseño visual completo con la skill Impeccable (sesión 2026-09-07)
+
+Se **reemplazó el mundo visual** del sitio. Decisión del cliente: solo lo visual —
+producto, copy factual, categorías, rutas y funciones no cambian.
+
+**El mundo:** tren de agitación constructivista (seed `6c8762a5`). Elegido por Edgar
+sobre la dirección que asignaron los dados y sobre la salida estándar de la categoría.
+Papel periódico crema · negro hollín · rojo racionado a la cuña que empuja la acción ·
+verde solo en controles rotulados WhatsApp. Esquinas vivas en todo el sitio, cero
+sombras, superficies del navegador tematizadas.
+
+### Sistema
+- **`src/app/globals.css` reescrito.** Los NOMBRES de los tokens se conservaron a
+  propósito (`action-primary`, `surface-page`, …) para que reasignar valores propague
+  el mundo a las ~35 superficies sin tocarlas. Radios todos en `0px`. Se añadieron
+  utilidades de material: `.plancha-foto` + `.plancha-foto-trama` (trama de medios
+  tonos real por `color-burn`), `.cuna` / `.filo-cuna`, `.banderin`,
+  `.filete-banderin`, `.sangra-izq`, `.grano-papel`, `.locomotora`.
+- **De 4 familias tipográficas a 2**: Big Shoulders (versales de plantilla) sobre
+  Archivo (texto y datos, con cifras tabulares en todo lo que se mide).
+- **Movimiento**: un solo momento orquestado — `RielDeAvance`, la cuña roja que
+  recorre el viewport ligada al scroll. Va por rAF sobre variable CSS y **no** por
+  `animation-timeline: scroll()`, que no existe en Safari.
+
+### Superficies rehechas
+Portada · `/talleres` · `/talleres/[id]` · `/refacciones` · `/refacciones/[id]` ·
+`/solicitar` · agendar cita · calificar · reseñas · modal de ubicación · mapa ·
+`/login` · los tres registros · onboarding · confirmación.
+
+Composiciones nuevas que `DESIGN.md` canoniza para reusar: la **secuencia de paradas**
+(plancha líder + renglones reglados sobre el riel, que reemplazó una rejilla de tres
+tarjetas iguales), el **manifiesto reglado**, la **plancha de taller** con fotografía
+tramada y banda de medición, y el **estado vacío declarado**.
+
+### Proceso
+Dos rondas de revisión independiente por agente en contexto limpio. Primer veredicto
+`rebuild`, segundo `fix` con 7 de 8 arreglos resueltos y el octavo **retirado por el
+propio revisor** tras remedir los píxeles. El documenter escribió `DESIGN.md` desde lo
+construido y **se negó a canonizar dos defectos** (la sombra dura del sello SOS y el
+`inputBaseClass` con halo suave); ambos se corrigieron.
+
+### Correcciones de datos y contenido
+- Se **retiró la cifra "+500 mecánicos verificados"** del hero: Edgar confirmó que no
+  es cierta todavía. Queda registrado en `PRODUCT.md` para que no se reintroduzca.
+- Se cerró el camino a la foto de stock: `talleres/mock.ts` ya no devuelve
+  `picsum.photos` y `images.unsplash.com` salió de `next.config.ts`.
+- Imagen de OpenGraph dedicada `public/og.jpg` (1538 KB → 212 KB). Nota: `logo.png`
+  **no** costaba 1.5 MB en carga — `next/image` ya lo redimensiona a 3.6 KB; el peso
+  solo afectaba a los rastreadores de redes.
+
+### Verificado
+24 vistas (escritorio y celular): contraste 0 fallos, áreas táctiles bajo 44px 0,
+radios ≠0 → 0, sombras 0, sin desbordamiento horizontal. `impeccable detect` exit 0.
+`tsc`, `eslint`, `next build` en verde. **`e2e/publico.spec.ts` 15/15 sin modificar
+ningún test** (se arregló el código, no las pruebas).
+
+### Artefactos nuevos
+`PRODUCT.md` · `DESIGN.md` · `.impeccable/design.json` ·
+`.impeccable/surfaces/src-app-page-tsx.md` (contrato de dirección con el seed).
+
+### Lo que NO entró
+**Fase 3 — paneles y roles**: `DashboardShell` y los paneles de taller, vendedor y
+admin heredaron tokens, tipografías e inputs, pero su composición sigue siendo la del
+mundo anterior (13 archivos). Ver `PENDIENTES-MANANA.md`.
+
+---
+
+## ✅ Fase 11 — Tono de fondo más claro (sesión 2026-09-18)
+
+Edgar reportó que el papel crema del rediseño (Fase 10) se leía amarillo. Se
+bajó saturación y se subió luminosidad manteniendo el concepto "papel
+periódico" y el resto del mundo (tinta negra, rojo racionado, cero sombras)
+sin tocar.
+
+- `--color-surface-page`: `#ecddbc` → `#f1ede2`.
+- `--color-surface-card`: `#f4e9cf` → `#faf7ef`.
+- `--color-border-subtle`: `#c4b79e` → `#cec7b6` (mismo nivel de sutileza
+  contra el fondo: 1.44:1 vs 1.47:1 antes).
+- Color hardcodeado `PAPEL` en `MapaUbicacion.tsx` (relleno del pin del mapa)
+  actualizado a juego.
+- Contraste de texto y acentos (foreground-secondary, emergency, whatsapp,
+  status) **mejoró en todos los casos** al aclarar el fondo — verificado por
+  cálculo WCAG, no solo a ojo.
+- Verificado: `tsc --noEmit` en verde, revisión visual en `/` y `/solicitar`
+  con el dev server (puerto 3200).
+- **Migración `0006` corrida en Supabase** el mismo día — desbloquea
+  `/refacciones` y `/vendedor/*`.
+- **Sin commitear** al cierre de la sesión.
 
 ## 🔜 Pendientes que requieren acción humana
 
@@ -265,6 +354,29 @@ por ahora. Todo replica el patrón de `talleres`.
   ⚠️ **No usar `max-w-{xs,sm,md,lg,xl,2xl}`** → usar valores arbitrarios (`max-w-[28rem]`) o `max-w-7xl`.
   Radios, `text-*` y breakpoints `md:` NO se ven afectados.
 - **Config de Tailwind es CSS-first** (`@theme` en `globals.css`), NO hay `tailwind.config.ts`.
+- **Los tokens son la palanca (fase 10)**: los nombres son semánticos
+  (`bg-action-primary`, `text-foreground-secondary`), así que reasignar valores en
+  `globals.css` propaga el mundo a todo el sitio. **No renombrar los tokens.**
+- **`rounded-full` es el único radio que los tokens NO alcanzan.** Todos los
+  `--radius-*` están en `0px`, así que `rounded-lg/xl/2xl` ya salen cuadrados solos;
+  `rounded-full` hay que cambiarlo a mano.
+- **`inputBaseClass`** (en `components/ui/FormField.tsx`) alcanza 6 archivos:
+  editarlo propaga a todos los formularios. Misma palanca que los tokens.
+- **`.filete-banderin`** pinta el borde con el fondo (`border-box` tinta,
+  `padding-box` papel) porque una sombra interior la corta el `clip-path` del
+  banderín y el filete queda abierto por la derecha. No sustituir por `box-shadow`.
+- **`--sos-invade`** mide cuánto invade el sello SOS el contenido, **contra el
+  viewport y no contra el contenedor**: a 1280px el `max-w-7xl` toca el borde y el
+  sello entra 240px. El sello está siempre visible por decisión del cliente; son los
+  controles los que lo esquivan.
+- **El copy del producto no cambia con el rediseño.** Los tests E2E dependen de
+  textos exactos ("talleres encontrados", "Disponibilidad", "Cerca de ti · todos los
+  talleres"). Ya se rompieron una vez por renombrarlos.
+- **El puerto 3000 lo suele tomar otro proyecto** (XALAPA/PLAN, Trevana). Levantar
+  con `npx next dev -p 3200` y **verificar la identidad del sitio antes de medir o
+  capturar**: en la sesión del 2026-09-07 se midió el sitio equivocado una vez.
+- **Playwright no arranca si hay un `next dev` del mismo proyecto arriba**: Next 16
+  rechaza un segundo dev server. Bajar el 3200 antes de correr los E2E.
 - **`.env.local` NO se commitea** (está en `.gitignore` como `.env*`). Las mismas variables
   viven en Vercel → Settings → Environment Variables.
 - **Ejecutar SQL**: el pegado automatizado en el editor Monaco de Supabase no funciona;
@@ -303,6 +415,9 @@ por ahora. Todo replica el patrón de `talleres`.
 ## ▶️ Cómo retomar
 
 ```bash
-cd ~/Desktop/MecaWeb
-npm run dev          # http://localhost:3000 (usa .env.local → Supabase)
+cd ~/Desktop/Daniel/NewProjects/MecaWeb
+npx next dev -p 3200   # el 3000 suele estar ocupado por otro proyecto
+                       # http://localhost:3200 (usa .env.local → Supabase)
 ```
+
+Lo pendiente inmediato vive en **`PENDIENTES-MANANA.md`**.
